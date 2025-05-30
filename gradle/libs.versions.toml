@@ -1,0 +1,97 @@
+[versions]
+activityCompose = "1.10.1"
+agp = "8.8.2"
+androidxSecurityCryptoKtx = "1.1.0-alpha06"
+coilCompose = "2.5.0"
+compiler = "4.16.0"
+composeBom = "2025.03.00"
+composeBomVersion = "2023.10.01"
+composeCharts = "latest_version"
+composeChartsVersion = "0.1.0"
+converterGson = "2.9.0"
+core = "0.9.0"
+datastorePreferences = "1.1.6"
+datetimeVersion = "0.9.0"
+foundation = "1.8.1"
+githubComposeCharts = "0.1.2"
+glide = "4.16.0"
+javaJwt = "4.4.0"
+kotlin = "2.1.0"
+coreKtx = "1.15.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+kotlinxCoroutinesAndroidVersion = "1.9.0"
+kotlinxCoroutinesPlayServicesVersion = "1.9.0"
+lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtxVersion = "2.8.6"
+material = "1.12.0"
+activity = "1.10.1"
+constraintlayout = "2.2.1"
+materialIconsExtended = "1.7.8"
+navigationCompose = "2.8.9"
+navigationComposeVersion = "2.7.5"
+retrofit = "2.9.0"
+roomCompiler = "2.7.1"
+roomRuntime = "2.7.1"
+securityCryptoKtx = "1.0.0"
+securityCryptoVersion = "1.0.0"
+supportAnnotations = "28.0.0"
+signalrVersion = "6.0.1"
+textRecognition = "16.0.1"
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityCompose" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-bom-v20231001 = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-runtime-ktx-v286 = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-navigation-compose-v275 = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-testing = { module = "androidx.room:room-testing" }
+androidx-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCryptoVersion" }
+androidx-security-crypto-ktx-v110alpha06 = { module = "androidx.security:security-crypto-ktx", version.ref = "androidxSecurityCryptoKtx" }
+androidx-ui = { module = "androidx.compose.ui:ui" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
+compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
+compose-charts-v010 = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeChartsVersion" }
+compose-charts-v012 = { module = "io.github.ehsannarmani:compose-charts", version.ref = "githubComposeCharts" }
+compose-material-dialogs-datetime = { module = "io.github.vanpra.compose-material-dialogs:datetime", version.ref = "datetimeVersion" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+core = { module = "io.github.vanpra.compose-material-dialogs:core", version.ref = "core" }
+foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
+jetbrains-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroidVersion" }
+jetbrains-kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServicesVersion" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+microsoft-signalr = { module = "com.microsoft.signalr:signalr", version.ref = "signalrVersion" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
+support-annotations = { group = "com.android.support", name = "support-annotations", version.ref = "supportAnnotations" }
+text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
