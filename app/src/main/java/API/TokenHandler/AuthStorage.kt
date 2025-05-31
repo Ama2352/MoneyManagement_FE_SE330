@@ -1,42 +1,49 @@
 package DI.API.TokenHandler
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
 import com.auth0.jwt.JWT
 import com.auth0.jwt.exceptions.JWTDecodeException
+import Utils.SecureStorage
 
 object AuthStorage {
-    private const val PREFS_NAME = "auth_prefs"
     private const val TOKEN_KEY = "auth_token"
+    private const val TAG = "AuthStorage"
+    private var secureStorage: SecureStorage? = null
 
-    private fun getEncryptedPrefs(context: Context): SharedPreferences {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-        return EncryptedSharedPreferences.create(
-            context,
-            PREFS_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+    private fun getStorage(context: Context): SecureStorage {
+        if (secureStorage == null) {
+            secureStorage = SecureStorage(context.applicationContext)
+        }
+        return secureStorage!!
     }
 
     fun storeToken(context: Context, token: String) {
-        getEncryptedPrefs(context).edit().putString(TOKEN_KEY, token).apply()
-        Log.d("AuthStorage", "Stored token: $token")
+        try {
+            getStorage(context).saveSecureString(TOKEN_KEY, token)
+            Log.d(TAG, "Stored token successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error storing token", e)
+        }
     }
 
     fun getToken(context: Context): String? {
-        return getEncryptedPrefs(context).getString(TOKEN_KEY, null)
+        return try {
+            val token = getStorage(context).getSecureString(TOKEN_KEY, "")
+            if (token.isEmpty()) null else token
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting token", e)
+            null
+        }
     }
 
     fun clearToken(context: Context) {
-        getEncryptedPrefs(context).edit().remove(TOKEN_KEY).apply()
-        Log.d("AuthStorage", "Cleared token")
+        try {
+            getStorage(context).clearAll()
+            Log.d(TAG, "Cleared token")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error clearing token", e)
+        }
     }
 
     // Decode token and get userId
@@ -47,6 +54,7 @@ object AuthStorage {
             val decodedJWT = JWT.decode(token)
             decodedJWT.getClaim("sub").asString()  // replace "sub" if your token uses a different claim
         } catch (e: JWTDecodeException) {
+            Log.e(TAG, "Error decoding JWT", e)
             null
         }
     }

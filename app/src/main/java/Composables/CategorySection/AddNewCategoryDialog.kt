@@ -21,11 +21,13 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.moneymanagement_frontend.R
 
 @Composable
 fun AddNewCategoryDialog(
@@ -93,7 +95,7 @@ fun AddNewCategoryDialog(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Add New Category",
+                                text = stringResource(id = R.string.add_new_category),
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF2D3748)
@@ -107,7 +109,7 @@ fun AddNewCategoryDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = "Close",
+                                    contentDescription = stringResource(id = R.string.close),
                                     tint = Color(0xFF64748B)
                                 )
                             }
@@ -131,7 +133,7 @@ fun AddNewCategoryDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Category,
-                                contentDescription = "Category icon",
+                                contentDescription = stringResource(id = R.string.category_icon),
                                 tint = Color.White,
                                 modifier = Modifier.size(36.dp)
                             )
@@ -146,26 +148,26 @@ fun AddNewCategoryDialog(
                             },
                             label = {
                                 Text(
-                                    "Category Name",
+                                    stringResource(id = R.string.category_name),
                                     fontWeight = FontWeight.Medium
                                 )
                             },
                             placeholder = {
                                 Text(
-                                    "Enter category name",
+                                    stringResource(id = R.string.enter_category_name),
                                     color = Color(0xFF94A3B8)
                                 )
                             },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Label,
-                                    contentDescription = "Category name",
+                                    contentDescription = stringResource(id = R.string.category_name),
                                     tint = if (isError) Color(0xFFDC2626) else Color(0xFF667eea)
                                 )
                             },
                             isError = isError,
                             supportingText = if (isError) {
-                                { Text("Category name cannot be empty") }
+                                { Text(stringResource(id = R.string.category_name_empty_error)) }
                             } else null,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp),
@@ -202,7 +204,7 @@ fun AddNewCategoryDialog(
                                 )
                             ) {
                                 Text(
-                                    "Cancel",
+                                    stringResource(id = R.string.cancel),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Color(0xFF64748B)
@@ -233,12 +235,12 @@ fun AddNewCategoryDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
-                                    contentDescription = "Save",
+                                    contentDescription = stringResource(id = R.string.save),
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    "Save",
+                                    stringResource(id = R.string.save),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -249,4 +251,4 @@ fun AddNewCategoryDialog(
             }
         }
     }
-} 
+}

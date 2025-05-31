@@ -2,7 +2,6 @@ package DI
 
 import API.ApiService
 import DI.API.TokenHandler.AuthInterceptor
-import Repositories.AuthRepository
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -73,11 +72,5 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthRepository(apiService: ApiService): AuthRepository {
-        return AuthRepository(apiService)
     }
 }

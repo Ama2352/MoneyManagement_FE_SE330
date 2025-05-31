@@ -5,8 +5,10 @@ import DI.Models.Category.Category
 import DI.Models.Category.UpdateCategoryRequest
 import DI.Models.UiEvent.UiEvent
 import DI.Repositories.CategoryRepository
+import Utils.StringResourceProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moneymanagement_frontend.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val repository: CategoryRepository
+    private val repository: CategoryRepository,
+    private val stringProvider: StringResourceProvider
 ) : ViewModel() {
     private val _categories = MutableStateFlow<Result<List<Category>>?>(null)
     val categories: StateFlow<Result<List<Category>>?> = _categories.asStateFlow()
@@ -51,9 +54,16 @@ class CategoryViewModel @Inject constructor(
             val result = repository.addCategory(newCategoryName)
             if (result.isSuccess) {
                 getCategories()
-                _addCategoryEvent.emit(UiEvent.ShowMessage("Category added!"))
+                _addCategoryEvent.emit(UiEvent.ShowMessage(stringProvider.getString(R.string.category_added_success)))
             } else {
-                _addCategoryEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _addCategoryEvent.emit(
+                    UiEvent.ShowMessage(
+                        stringProvider.getString(
+                            R.string.error_message,
+                            result.exceptionOrNull()?.message ?: stringProvider.getString(R.string.unknown_error)
+                        )
+                    )
+                )
             }
         }
     }
@@ -70,9 +80,16 @@ class CategoryViewModel @Inject constructor(
             val result = repository.updateCategory(updatedCategory)
             if (result.isSuccess) {
                 getCategories()
-                _updateCategoryEvent.emit(UiEvent.ShowMessage("Category updated!"))
+                _updateCategoryEvent.emit(UiEvent.ShowMessage(stringProvider.getString(R.string.category_updated_success)))
             } else {
-                _updateCategoryEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _updateCategoryEvent.emit(
+                    UiEvent.ShowMessage(
+                        stringProvider.getString(
+                            R.string.error_message,
+                            result.exceptionOrNull()?.message ?: stringProvider.getString(R.string.unknown_error)
+                        )
+                    )
+                )
             }
         }
     }
@@ -82,9 +99,16 @@ class CategoryViewModel @Inject constructor(
             val result = repository.deleteCategory(id)
             if (result.isSuccess) {
                 getCategories()
-                _deleteCategoryEvent.emit(UiEvent.ShowMessage("Category deleted!"))
+                _deleteCategoryEvent.emit(UiEvent.ShowMessage(stringProvider.getString(R.string.category_deleted_success)))
             } else {
-                _deleteCategoryEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _deleteCategoryEvent.emit(
+                    UiEvent.ShowMessage(
+                        stringProvider.getString(
+                            R.string.error_message,
+                            result.exceptionOrNull()?.message ?: stringProvider.getString(R.string.unknown_error)
+                        )
+                    )
+                )
             }
         }
     }

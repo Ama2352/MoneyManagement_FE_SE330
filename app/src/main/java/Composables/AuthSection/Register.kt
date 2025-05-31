@@ -20,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.moneymanagement_frontend.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,14 +50,20 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    // Pre-load string resources in the Composable context
+    val successMessage = stringResource(R.string.registration_successful)
+    val failureMessageFormat = stringResource(R.string.registration_failed)
+
     LaunchedEffect(registerState) {
         registerState?.let { result ->
             coroutineScope.launch {
                 if (result.isSuccess) {
-                    snackbarHostState.showSnackbar("Registration successful!")
+                    snackbarHostState.showSnackbar(successMessage)
                     onNavigateToLogin()
                 } else {
-                    snackbarHostState.showSnackbar("Registration failed: ${result.exceptionOrNull()?.message}")
+                    snackbarHostState.showSnackbar(
+                        String.format(failureMessageFormat, result.exceptionOrNull()?.message ?: "")
+                    )
                 }
             }
             viewModel.resetRegisterState()
@@ -79,7 +87,7 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                text = "Create Account",
+                text = stringResource(R.string.create_account),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -88,7 +96,7 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Please fill in the form to continue",
+                text = stringResource(R.string.fill_form_to_continue),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -99,7 +107,7 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
             InputField(
                 value = firstName,
                 onValueChange = { firstName = it; firstNameError = null },
-                label = "First Name",
+                label = stringResource(R.string.first_name),
                 icon = Icons.Default.Person,
                 error = firstNameError
             )
@@ -107,7 +115,7 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
             InputField(
                 value = lastName,
                 onValueChange = { lastName = it; lastNameError = null },
-                label = "Last Name",
+                label = stringResource(R.string.last_name),
                 icon = Icons.Default.Person,
                 error = lastNameError
             )
@@ -115,7 +123,7 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
             InputField(
                 value = email,
                 onValueChange = { email = it; emailError = null },
-                label = "Email",
+                label = stringResource(R.string.email),
                 icon = Icons.Default.Email,
                 error = emailError
             )
@@ -123,14 +131,14 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
             PasswordInputField(
                 value = password,
                 onValueChange = { password = it; passwordError = null },
-                label = "Password",
+                label = stringResource(R.string.password),
                 error = passwordError
             )
 
             PasswordInputField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it; confirmPasswordError = null },
-                label = "Confirm Password",
+                label = stringResource(R.string.confirm_password),
                 error = confirmPasswordError
             )
 
@@ -169,7 +177,7 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Text("Sign Up", fontSize = 16.sp)
+                Text(stringResource(R.string.sign_up), fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -180,12 +188,12 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Already have an account? ",
+                    text = stringResource(R.string.already_have_account),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Log In",
+                    text = stringResource(R.string.login),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -276,7 +284,10 @@ private fun PasswordInputField(
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                        contentDescription = if (passwordVisible)
+                            stringResource(R.string.hide_password)
+                        else
+                            stringResource(R.string.show_password),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
