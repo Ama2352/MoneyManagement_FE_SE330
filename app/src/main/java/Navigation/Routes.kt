@@ -12,6 +12,8 @@ object Routes {
     const val AddTransaction = "add_transaction"
     const val TransactionDetail = "transaction_detail/{transactionId}"
     const val TransactionEdit = "transaction_edit/{transactionId}"
+    const val SavingGoal = "saving_goal"
+    const val CreateEditSavingGoal = "create_edit_saving_goal?savingGoalId={savingGoalId}"
 
-    val all = setOf(Login, Register, Main, Auth, Calendar, ChatMessage)
+    val all = setOf(Login, Register, Main, Auth, Calendar, ChatMessage, SavingGoal, CreateEditSavingGoal)
 }

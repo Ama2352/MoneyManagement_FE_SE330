@@ -21,6 +21,7 @@ import DI.ViewModels.FriendViewModel
 import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.OcrViewModel
+import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
 import ModernCategoriesScreen
@@ -47,6 +48,9 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.friendsapp.FriendsScreen
 import com.example.friendsapp.FriendsScreenTheme
+import DI.Composables.SavingGoalSection.CreateEditSavingGoalScreen
+import DI.Composables.SavingGoalSection.SavingGoalScreen
+
 
 fun NavGraphBuilder.authGraph(navController: NavController) {
     navigation(startDestination = Routes.Login, route = Routes.Auth) {
@@ -101,6 +105,7 @@ private fun InnerNavHost(
     val transactionViewModel = hiltViewModel<TransactionViewModel>(parentEntry)
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
     val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
+    val savingGoalViewModel = hiltViewModel<SavingGoalViewModel>(parentEntry)
 
     NavHost(
         navController    = navController,
@@ -245,6 +250,32 @@ private fun InnerNavHost(
                 viewModel = transactionViewModel,
                 categoryViewModel = categoryViewModel,
                 walletViewModel = walletViewModel
+            )
+        }
+
+        composable(BottomNavItem.SavingGoal.route) {
+            SavingGoalScreen(
+                navController = navController,
+                savingGoalViewModel = savingGoalViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel
+            )
+        }
+
+        composable(
+            route = Routes.CreateEditSavingGoal,
+            arguments = listOf(navArgument("savingGoalId") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) { backStackEntry ->
+            val savingGoalId = backStackEntry.arguments?.getString("savingGoalId")
+            CreateEditSavingGoalScreen(
+                navController = navController,
+                savingGoalViewModel = savingGoalViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel,
+                savingGoalId = savingGoalId,
             )
         }
     }

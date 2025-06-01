@@ -10,6 +10,7 @@ import DI.Models.Category.Transaction
 import DI.Models.Transaction.TransactionSearchRequest
 import DI.Repositories.CategoryRepository
 import DI.Repositories.TransactionRepository
+import DI.Utils.EventBus
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val eventBus: EventBus
 ) : ViewModel() {
 
     private val _selectedType = mutableStateOf("All")
@@ -105,6 +107,7 @@ class TransactionViewModel @Inject constructor(
             onResult(result.isSuccess)
             if (result.isSuccess) {
                 fetchTransactions()
+                eventBus.emitEvent("refresh_saving_goals")
             }
         }
     }
@@ -150,6 +153,7 @@ class TransactionViewModel @Inject constructor(
 
             if (result.isSuccess) {
                 fetchTransactions()
+                eventBus.emitEvent("refresh_saving_goals")
                 onResult(true)
             } else {
                 Log.e("TransactionVM", "Update failed: ${result.exceptionOrNull()?.message}")
@@ -163,6 +167,7 @@ class TransactionViewModel @Inject constructor(
             val result = transactionRepository.deleteTransaction(id)
             if (result.isSuccess) {
                 fetchTransactions()
+                eventBus.emitEvent("refresh_saving_goals")
                 onResult(true)
             } else {
                 Log.e("TransactionVM", "Delete failed: ${result.exceptionOrNull()?.message}")

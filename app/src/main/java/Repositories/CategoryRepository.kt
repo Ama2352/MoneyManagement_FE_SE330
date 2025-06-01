@@ -13,6 +13,7 @@ class CategoryRepository @Inject constructor(private val apiService: ApiService)
     suspend fun getCategories() : Result<List<Category>> {
         return try {
             val response = apiService.getCategories()
+            Log.d("SavingGoalDebug", "Category API response: $response")
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
