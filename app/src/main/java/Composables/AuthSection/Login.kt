@@ -1,6 +1,7 @@
 package DI.Composables.AuthSection
 
 import DI.Navigation.Routes
+import Utils.StringResourceProvider
 import ViewModels.AuthViewModel
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -27,13 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.moneymanagement_frontend.R
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     onNavigateToRegister: () -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -44,17 +47,23 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
+    // Pre-load string resources in the Composable context
+    val successMessage = stringResource(R.string.login_successful)
+    val failureMessageFormat = stringResource(R.string.login_failed)
+
     LaunchedEffect(loginState) {
         loginState?.let { result ->
             if (result.isSuccess) {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Login successful!")
+                    snackbarHostState.showSnackbar(successMessage)
                 }
                 navController.navigate(Routes.Main) {
                     popUpTo(Routes.Login) { inclusive = true }
                 }
             } else {
-                snackbarHostState.showSnackbar("Login failed: ${result.exceptionOrNull()?.message}")
+                snackbarHostState.showSnackbar(
+                    String.format(failureMessageFormat, result.exceptionOrNull()?.message ?: "")
+                )
             }
             viewModel.resetLoginState()
         }
@@ -80,7 +89,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(60.dp)) // Increased top spacing for login
 
             Text(
-                text = "Welcome Back",
+                text = stringResource(R.string.welcome_back),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -89,7 +98,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Sign in to continue",
+                text = stringResource(R.string.sign_in_to_continue),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -99,7 +108,7 @@ fun LoginScreen(
             InputField(
                 value = email,
                 onValueChange = { email = it; emailError = null },
-                label = "Email",
+                label = stringResource(R.string.email),
                 icon = Icons.Default.Email,
                 error = emailError
             )
@@ -107,7 +116,7 @@ fun LoginScreen(
             PasswordInputField(
                 value = password,
                 onValueChange = { password = it; passwordError = null },
-                label = "Password",
+                label = stringResource(R.string.password),
                 error = passwordError
             )
 
@@ -118,7 +127,7 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    text = "Forgot Password?",
+                    text = stringResource(R.string.forgot_password),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                     modifier = Modifier.clickable { }
@@ -150,7 +159,7 @@ fun LoginScreen(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Text("Log In", fontSize = 16.sp)
+                Text(stringResource(R.string.login), fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -161,12 +170,12 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Don't have an account? ",
+                    text = stringResource(R.string.dont_have_account),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(R.string.sign_up),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -257,7 +266,10 @@ private fun PasswordInputField(
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                        contentDescription = if (passwordVisible) 
+                            stringResource(R.string.hide_password) 
+                        else 
+                            stringResource(R.string.show_password),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -294,3 +306,5 @@ private fun PasswordInputField(
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
+
+

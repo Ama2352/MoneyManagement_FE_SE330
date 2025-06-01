@@ -6,6 +6,7 @@ import DI.Models.Category.Category
 import DI.Models.Category.UpdateCategoryRequest
 import DI.Models.UiEvent.UiEvent
 import DI.ViewModels.CategoryViewModel
+import Utils.LanguageManager
 import ViewModels.AuthViewModel
 import android.widget.Toast
 import androidx.compose.animation.*
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.moneymanagement_frontend.R
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -148,6 +151,7 @@ fun ModernCategoryDetailDialog(
     var categoryName by remember { mutableStateOf(category.name) }
     var isNameValid by remember { mutableStateOf(true) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     val density = LocalDensity.current
     var isVisible by remember { mutableStateOf(false) }
@@ -256,7 +260,7 @@ fun ModernCategoryDetailDialog(
                             },
                             label = {
                                 Text(
-                                    "Category Name",
+                                    stringResource(R.string.category_name),
                                     fontWeight = FontWeight.Medium
                                 )
                             },
@@ -272,7 +276,7 @@ fun ModernCategoryDetailDialog(
                             supportingText = if (!isNameValid) {
                                 {
                                     Text(
-                                        "Category name cannot be empty",
+                                        stringResource(R.string.category_name_empty_error),
                                         color = ModernColors.Error,
                                         fontSize = 12.sp
                                     )
@@ -295,13 +299,13 @@ fun ModernCategoryDetailDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Schedule,
-                                    contentDescription = "Created",
+                                    contentDescription = stringResource(R.string.created),
                                     tint = ModernColors.OnSurfaceVariant,
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Created: ${category.createdAt}",
+                                    text = stringResource(R.string.created_at, category.createdAt),
                                     fontSize = 14.sp,
                                     color = ModernColors.OnSurfaceVariant,
                                     fontWeight = FontWeight.Medium
@@ -337,12 +341,12 @@ fun ModernCategoryDetailDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
-                                    contentDescription = "Save",
+                                    contentDescription = stringResource(R.string.save),
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    "Save",
+                                    stringResource(R.string.save),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -363,12 +367,12 @@ fun ModernCategoryDetailDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete",
+                                    contentDescription = stringResource(R.string.delete),
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    "Delete",
+                                    stringResource(R.string.delete),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -390,7 +394,7 @@ fun ModernCategoryDetailDialog(
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Text(
-                                text = "Cancel",
+                                text = stringResource(R.string.cancel),
                                 color = ModernColors.OnSurfaceVariant,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium
@@ -407,14 +411,14 @@ fun ModernCategoryDetailDialog(
                 onDismissRequest = { showDeleteConfirmation = false },
                 title = {
                     Text(
-                        "Delete Category",
+                        stringResource(R.string.delete_category),
                         fontWeight = FontWeight.Bold,
                         color = ModernColors.OnSurface
                     )
                 },
                 text = {
                     Text(
-                        "Are you sure you want to delete \"${category.name}\"? This action cannot be undone.",
+                        stringResource(R.string.delete_category_confirm, category.name),
                         color = ModernColors.OnSurfaceVariant
                     )
                 },
@@ -429,7 +433,7 @@ fun ModernCategoryDetailDialog(
                         ),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text("Delete", fontWeight = FontWeight.SemiBold)
+                        Text(stringResource(R.string.delete), fontWeight = FontWeight.SemiBold)
                     }
                 },
                 dismissButton = {
@@ -438,7 +442,7 @@ fun ModernCategoryDetailDialog(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            "Cancel",
+                            stringResource(R.string.cancel),
                             color = ModernColors.OnSurfaceVariant,
                             fontWeight = FontWeight.Medium
                         )
@@ -456,6 +460,8 @@ fun ModernCategoriesScreen(
     categoryViewModel: CategoryViewModel,
     authViewModel: AuthViewModel,
 ) {
+    val context = LocalContext.current
+    
     // Reload init data when token is refreshed
     val refreshTokenState by authViewModel.refreshTokenState.collectAsState()
     LaunchedEffect(refreshTokenState) {
@@ -466,8 +472,6 @@ fun ModernCategoriesScreen(
 
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var showAddDialog by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         // Collect events for add, update, and delete actions
@@ -532,7 +536,7 @@ fun ModernCategoriesScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Apps,
-                                    contentDescription = "Categories",
+                                    contentDescription = stringResource(R.string.category),
                                     tint = Color.White,
                                     modifier = Modifier.size(28.dp)
                                 )
@@ -542,13 +546,22 @@ fun ModernCategoriesScreen(
 
                             Column {
                                 Text(
-                                    text = "My Categories",
+                                    text = stringResource(R.string.my_categories),
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White
                                 )
                                 Text(
-                                    text = "${categories.size} ${if (categories.size == 1) "category" else "categories"}",
+                                    text = stringResource(
+                                        R.string.category_count,
+                                        categories.size,
+                                        stringResource(
+                                            if (categories.size == 1)
+                                                R.string.category_single
+                                            else
+                                                R.string.category_plural
+                                        )
+                                    ),
                                     fontSize = 16.sp,
                                     color = Color.White.copy(alpha = 0.9f),
                                     fontWeight = FontWeight.Medium
@@ -573,7 +586,7 @@ fun ModernCategoriesScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add category",
+                    contentDescription = stringResource(R.string.add_category),
                     modifier = Modifier.size(28.dp)
                 )
             }

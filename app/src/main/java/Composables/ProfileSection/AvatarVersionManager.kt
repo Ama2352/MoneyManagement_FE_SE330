@@ -1,28 +1,25 @@
 package DI.Composables.ProfileSection
 
 import android.content.Context
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import Utils.PreferencesManager
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-
-
-private const val DATASTORE_NAME = "user_prefs"
-private val Context.dataStore by preferencesDataStore(name = DATASTORE_NAME)
 
 object AvatarVersionManager {
-    private val AVATAR_VERSION_KEY = stringPreferencesKey("avatar_version")
+    private const val AVATAR_VERSION_KEY = "avatar_version"
+    private var prefsManager: PreferencesManager? = null
+
+    private fun getPrefsManager(context: Context): PreferencesManager {
+        if (prefsManager == null) {
+            prefsManager = PreferencesManager(context.applicationContext, "avatar_prefs")
+        }
+        return prefsManager!!
+    }
 
     fun getAvatarVersion(context: Context): Flow<String> {
-        return context.dataStore.data.map { prefs ->
-            prefs[AVATAR_VERSION_KEY] ?: "v1"
-        }
+        return getPrefsManager(context).getStringFlow(AVATAR_VERSION_KEY, "v1")
     }
 
     suspend fun setAvatarVersion(context: Context, version: String) {
-        context.dataStore.edit { prefs ->
-            prefs[AVATAR_VERSION_KEY] = version
-        }
+        getPrefsManager(context).setString(AVATAR_VERSION_KEY, version)
     }
 }

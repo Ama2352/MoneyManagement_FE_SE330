@@ -29,10 +29,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.moneymanagement_frontend.R
 
 // Define modern color scheme
 private val PrimaryColor = Color(0xFF00C853)  // Bright green
@@ -225,7 +227,7 @@ fun ChatTopBar(
             IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.back),
                     tint = PrimaryColor
                 )
             }
@@ -276,7 +278,7 @@ fun ChatTopBar(
                     color = Color.Black
                 )
                 Text(
-                    text = if (isOnline) "Online" else "Offline",
+                    text = if (isOnline) stringResource(R.string.online) else stringResource(R.string.offline),
                     fontSize = 13.sp,
                     color = if (isOnline) OnlineColor else OfflineColor
                 )
@@ -285,7 +287,7 @@ fun ChatTopBar(
             IconButton(onClick = onInfoClick) {
                 Icon(
                     imageVector = Icons.Default.Info,
-                    contentDescription = "Info",
+                    contentDescription = stringResource(R.string.info),
                     tint = PrimaryColor
                 )
             }
@@ -318,7 +320,7 @@ fun MessageInputBar(
                     .weight(1f)
                     .heightIn(min = 40.dp, max = 100.dp)
                     .clip(RoundedCornerShape(24.dp)),
-                placeholder = { Text("Type a message") },
+                placeholder = { Text(stringResource(R.string.type_message)) },
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = BackgroundColor,
                     focusedContainerColor = BackgroundColor,
@@ -338,7 +340,7 @@ fun MessageInputBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Send",
+                    contentDescription = stringResource(R.string.send),
                     modifier = Modifier.size(20.dp)
                 )
             }

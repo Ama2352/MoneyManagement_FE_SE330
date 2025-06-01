@@ -1,3 +1,4 @@
+import Composables.LanguageSelector
 import DI.Composables.ProfileSection.AvatarImage
 import DI.Composables.ProfileSection.BackgroundColor
 import DI.Composables.ProfileSection.CardColor
@@ -124,6 +125,7 @@ fun ProfileScreen(
 
                 // Support and Info
                 SectionTitle("Support & Info")
+                LanguageSelector()
                 SettingsItem(
                     icon = Icons.Default.Help,
                     title = "Help & Support",

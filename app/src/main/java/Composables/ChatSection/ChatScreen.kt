@@ -47,6 +47,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.SolidColor
 import androidx.navigation.NavController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
+import com.example.moneymanagement_frontend.R
 
 @Composable
 fun ChatScreen(
@@ -120,8 +122,6 @@ fun ChatScreen(
         }
     }
 
-
-
     val friendsResult = friendViewModel.friends.collectAsState()
     val friends = friendsResult.value?.getOrNull() ?: emptyList()
 
@@ -131,7 +131,7 @@ fun ChatScreen(
             .background(Color(0xFF53dba9))
             .padding(16.dp),
     ) {
-        Text("Messages", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(stringResource(R.string.messages), fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Spacer(modifier = Modifier.height(16.dp))
         SearchBar(
             query = searchQuery,
@@ -144,35 +144,28 @@ fun ChatScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-//                CircularProgressIndicator(
-//                    modifier = Modifier.size(50.dp),
-//                    color = Color.White,
-//                    strokeWidth = 5.dp
-//                )
-                Text("No conversations found.", fontSize = 16.sp)
+                Text(stringResource(R.string.no_conversations), fontSize = 16.sp)
             }
         } else if(filteredChats.isEmpty() && searchQuery.isNotEmpty()) {
-            // Show "No results found" when search has no matches
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "No conversations found",
+                        text = stringResource(R.string.no_conversations_search),
                         color = Color.White,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Try a different search term",
+                        text = stringResource(R.string.try_different_search),
                         color = Color.White.copy(alpha = 0.7f),
                         fontSize = 16.sp
                     )
                 }
             }
-
         } else {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -186,7 +179,7 @@ fun ChatScreen(
                             else filteredChats[index].latestMessage.senderName,
                         message =
                             if(filteredChats[index].latestMessage.senderName == profile?.displayName)
-                                "you: ${filteredChats[index].latestMessage.content}"
+                                stringResource(R.string.you_prefix, filteredChats[index].latestMessage.content)
                             else filteredChats[index].latestMessage.content,
                         time = filteredChats[index].latestMessage.sentAt,
                         count = filteredChats[index].unreadCount,
@@ -227,7 +220,7 @@ fun SearchBar(
         ) {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(R.string.search),
                 tint = Color.White,
                 modifier = Modifier.size(20.dp)
             )
@@ -247,7 +240,7 @@ fun SearchBar(
                 ) {
                     if (query.isEmpty()) {
                         Text(
-                            text = "Search conversations...",
+                            text = stringResource(R.string.search_conversations),
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 16.sp
                         )
@@ -256,7 +249,6 @@ fun SearchBar(
                 }
             }
 
-            // Clear button appears when there's text
             AnimatedVisibility(
                 visible = query.isNotEmpty(),
                 enter = fadeIn(),
@@ -268,7 +260,7 @@ fun SearchBar(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Clear",
+                        contentDescription = stringResource(R.string.clear),
                         tint = Color.White
                     )
                 }
