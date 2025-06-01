@@ -24,7 +24,7 @@ object NetworkModule {
 
 //    private const val BASE_URL = "http://10.0.2.2:5215/api/" // Emulator localhost
  //   private const val BASE_URL = "http://192.168.1.4:8080/api/"
-    private const val BASE_URL = "http://143.198.208.227:5000/api/"
+    private const val BASE_URL = "http://192.168.1.10:8080/api/"
 
     // Make this a @Provides function for better DI practices and add logging
     @Provides

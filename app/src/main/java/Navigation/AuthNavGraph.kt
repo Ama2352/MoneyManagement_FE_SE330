@@ -10,6 +10,7 @@ import DI.Composables.ChatSection.ChatMessageScreen
 import DI.Composables.ChatSection.ChatScreen
 import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
+import DI.Composables.ReportSection.ReportScreen
 import DI.Composables.TransactionSection.TransactionDetailScreen
 import DI.Composables.TransactionSection.TransactionEditScreen
 import DI.Composables.TransactionSection.TransactionScreen
@@ -21,6 +22,7 @@ import DI.ViewModels.FriendViewModel
 import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.OcrViewModel
+import DI.ViewModels.ReportViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
 import ModernCategoriesScreen
@@ -101,6 +103,7 @@ private fun InnerNavHost(
     val transactionViewModel = hiltViewModel<TransactionViewModel>(parentEntry)
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
     val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
+    val reportViewModel = hiltViewModel<ReportViewModel>(parentEntry)
 
     NavHost(
         navController    = navController,
@@ -215,6 +218,12 @@ private fun InnerNavHost(
             ModernCategoriesScreen(
                 categoryViewModel = categoryViewModel,
                 authViewModel = authViewModel,
+            )
+        }
+
+        composable(BottomNavItem.Report.route) {
+            ReportScreen(
+                reportViewModel = reportViewModel,
             )
         }
 

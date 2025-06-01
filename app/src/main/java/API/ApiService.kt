@@ -24,6 +24,7 @@ import DI.Models.Friend.Friend
 import DI.Models.Friend.FriendRequest
 import DI.Models.Friend.RejectFriendRequestResponse
 import DI.Models.Ocr.OcrData
+import DI.Models.Report.ReportRequest
 import DI.Models.UserInfo.AvatarUploadResponse
 import DI.Models.UserInfo.Profile
 import DI.Models.UserInfo.UpdatedProfile
@@ -194,4 +195,8 @@ interface ApiService {
 
     @GET("Calendar/yearly")
     suspend fun getYearlySummary(@Query("year") year: String): YearlySummary
+
+    // Report
+    @POST("Reports/generate")
+    suspend fun generateReport(@Body request: ReportRequest): Response<ResponseBody>
 }
