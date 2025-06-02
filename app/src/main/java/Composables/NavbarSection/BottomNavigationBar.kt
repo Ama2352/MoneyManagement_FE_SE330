@@ -1,5 +1,5 @@
 package DI.Composables.NavbarSection
-import DI.Models.BottomNavItem
+import DI.Models.NavBar.BottomNavItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -76,7 +75,7 @@ fun BottomNavigationBar(navController: NavController) {
                         Icon(
                             painter = painterResource(id = item.icon),
                             contentDescription = item.title,
-                            tint = if (currentRoute == item.route) Color.White else Color.Black.copy(alpha = 0.7f),
+                            tint = if (currentRoute == item.route) Color.White else Color.Black.copy(alpha = 0.6f),
                             modifier = Modifier.size(24.dp)
                         )
                     }

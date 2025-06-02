@@ -23,11 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.moneymanagement_frontend.R
 
 @Composable
 fun TransactionDetailScreen(
@@ -81,15 +83,14 @@ fun TransactionDetailScreen(
 
             val category = categoryList.find { it.categoryID == generalTransaction.categoryID }
             val wallet = walletList.find { it.walletID == generalTransaction.walletID }
-
             TransactionDetailBody(
                 navController = navController,
                 title = generalTransaction.title,
-                categoryName = category?.name ?: "Unknown",
+                categoryName = category?.name ?: stringResource(R.string.unknown),
                 amount = generalTransaction.amount,
-                walletName = wallet?.walletName ?: "Unknown",
-                date = generalTransaction.timestamp ?: "Unknown",
-                type = if (generalTransaction.isIncome) "Income" else "Expense",
+                walletName = wallet?.walletName ?: stringResource(R.string.unknown),
+                date = generalTransaction.timestamp ?: stringResource(R.string.unknown),
+                type = if (generalTransaction.isIncome) stringResource(R.string.income) else stringResource(R.string.expense),
                 transactionId = transactionId,
                 viewModel = viewModel,
                 context = context
@@ -141,17 +142,16 @@ fun TransactionDetailHeader(
                             Color(0xFF667eea).copy(alpha = 0.1f),
                             CircleShape
                         )
-                ) {
-                    Icon(
+                ) {                    Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = stringResource(R.string.back),
                         tint = Color(0xFF667eea),
                         modifier = Modifier.size(24.dp)
                     )
                 }
 
                 Text(
-                    text = "Transaction Detail",
+                    text = stringResource(R.string.transaction_detail),
                     color = Color(0xFF2D3748),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -169,7 +169,7 @@ fun TransactionDetailHeader(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit",
+                        contentDescription = stringResource(R.string.edit),
                         tint = Color(0xFF48BB78),
                         modifier = Modifier.size(22.dp)
                     )
@@ -278,9 +278,8 @@ fun TransactionDetailBody(
                             .fillMaxWidth()
                             .padding(24.dp),
                         verticalArrangement = Arrangement.spacedBy(20.dp)
-                    ) {
-                        Text(
-                            text = "Transaction Details",
+                    ) {                        Text(
+                            text = stringResource(R.string.transaction_details),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF2D3748),
@@ -289,28 +288,28 @@ fun TransactionDetailBody(
 
                         ModernDetailItem(
                             icon = Icons.Default.Title,
-                            label = "Title",
+                            label = stringResource(R.string.title),
                             value = title,
                             iconTint = Color(0xFF667eea)
                         )
 
                         ModernDetailItem(
                             icon = Icons.Default.Category,
-                            label = "Category",
+                            label = stringResource(R.string.category),
                             value = categoryName,
                             iconTint = Color(0xFF9F7AEA)
                         )
 
                         ModernDetailItem(
                             icon = Icons.Default.AccountBalanceWallet,
-                            label = "Wallet",
+                            label = stringResource(R.string.wallet),
                             value = walletName,
                             iconTint = Color(0xFF38B2AC)
                         )
 
                         ModernDetailItem(
                             icon = Icons.Default.DateRange,
-                            label = "Date",
+                            label = stringResource(R.string.date),
                             value = date,
                             iconTint = Color(0xFFED8936)
                         )
@@ -333,10 +332,9 @@ fun TransactionDetailBody(
                 defaultElevation = 12.dp,
                 pressedElevation = 16.dp
             )
-        ) {
-            Icon(
+        ) {            Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Delete",
+                contentDescription = stringResource(R.string.delete),
                 modifier = Modifier.size(28.dp)
             )
         }
@@ -443,9 +441,8 @@ fun ModernDeleteDialog(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
-                    text = "Delete Transaction",
+                    text = stringResource(R.string.delete_transaction_confirm_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = Color(0xFF2D3748),
@@ -455,7 +452,7 @@ fun ModernDeleteDialog(
         },
         text = {
             Text(
-                text = "Are you sure you want to delete this transaction? This action cannot be undone.",
+                text = stringResource(R.string.delete_transaction_confirm_message),
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
                 color = Color(0xFF4A5568),
@@ -489,7 +486,7 @@ fun ModernDeleteDialog(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Delete",
+                        text = stringResource(R.string.delete),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
                     )
@@ -507,7 +504,7 @@ fun ModernDeleteDialog(
                         .height(48.dp)
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.cancel),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
                     )

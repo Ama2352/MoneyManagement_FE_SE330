@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -53,7 +54,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.moneymanagement_frontend.R
 import java.util.Calendar
-import com.vanpra.composematerialdialogs.*
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogState
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import java.time.LocalDate
@@ -155,17 +158,16 @@ fun TransactionEditHeader(
                     )
                     .clickable { navController.popBackStack() },
                 contentAlignment = Alignment.Center
-            ) {
-                Icon(
+            ) {                Icon(
                     painter = painterResource(R.drawable.ic_arrow_back),
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.back),
                     tint = Color(0xFF2D3748),
                     modifier = Modifier.size(20.dp)
                 )
             }
 
             Text(
-                text = "Edit Transaction",
+                text = stringResource(R.string.edit_transaction),
                 color = Color(0xFF2D3748),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -233,6 +235,19 @@ fun TransactionEditBody(
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
+    // Create non-composable strings object for error messages and toasts
+    val nonComposableStrings = remember {
+        object {
+            val titleEmptyError = context.getString(R.string.title_empty_error)
+            val amountInvalidError = context.getString(R.string.amount_invalid_error)
+            val categoryEmptyError = context.getString(R.string.category_empty_error)
+            val walletEmptyError = context.getString(R.string.wallet_empty_error)
+            val dateTimeEmptyError = context.getString(R.string.date_time_empty_error)
+            val transactionUpdateSuccess = context.getString(R.string.transaction_update_success)
+            val transactionUpdateFailed = context.getString(R.string.transaction_update_failed)
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -252,9 +267,8 @@ fun TransactionEditBody(
                 Column(
                     modifier = Modifier.padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Transaction Type (Unchangeable)",
+                ) {                    Text(
+                        text = stringResource(R.string.transaction_type_unchangeable),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF4A5568),
@@ -266,14 +280,14 @@ fun TransactionEditBody(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         TransactionTypeButton(
-                            text = "INCOME",
+                            text = stringResource(R.string.income_uppercase),
                             isSelected = isIncome,
                             selectedColor = Color(0xFF48BB78),
                             modifier = Modifier.weight(1f)
                         )
 
                         TransactionTypeButton(
-                            text = "EXPENSE",
+                            text = stringResource(R.string.expense_uppercase),
                             isSelected = isExpense,
                             selectedColor = Color(0xFFE53E3E),
                             modifier = Modifier.weight(1f)
@@ -294,17 +308,16 @@ fun TransactionEditBody(
                 Column(
                     modifier = Modifier.padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    TransactionTextField(
-                        label = "Title",
+                ) {                    TransactionTextField(
+                        label = stringResource(R.string.title),
                         value = title,
                         onValueChange = { title = it },
                         leadingIcon = Icons.Default.Edit,
-                        placeholder = "Enter transaction title"
+                        placeholder = stringResource(R.string.enter_transaction_title)
                     )
 
                     TransactionTextField(
-                        label = "Amount",
+                        label = stringResource(R.string.amount),
                         value = amount,
                         onValueChange = { amount = it },
                         keyboardType = KeyboardType.Number,
@@ -313,7 +326,7 @@ fun TransactionEditBody(
                     )
 
                     DropdownSelector(
-                        label = "Category",
+                        label = stringResource(R.string.category),
                         selectedName = categoryName,
                         options = categoryList.map { it.name to it.categoryID.toString() },
                         onSelect = { name, id ->
@@ -321,11 +334,11 @@ fun TransactionEditBody(
                             categoryId = id
                         },
                         icon = Icons.Default.Category,
-                        placeholder = "Select category"
+                        placeholder = stringResource(R.string.select_category)
                     )
 
                     DropdownSelector(
-                        label = "Wallet",
+                        label = stringResource(R.string.wallet),
                         selectedName = walletName,
                         options = walletList.map { it.walletName to it.walletID.toString() },
                         onSelect = { name, id ->
@@ -333,21 +346,21 @@ fun TransactionEditBody(
                             walletId = id
                         },
                         icon = Icons.Default.AccountBalanceWallet,
-                        placeholder = "Select wallet"
+                        placeholder = stringResource(R.string.select_wallet)
                     )
 
                     TransactionTextField(
-                        label = "Date & Time",
+                        label = stringResource(R.string.date_time),
                         value = displayDate,
                         onValueChange = {},
                         isDropdown = true,
                         leadingIcon = Icons.Default.DateRange,
-                        placeholder = "Select date and time",
+                        placeholder = stringResource(R.string.select_date_time),
                         trailingIcon = {
                             IconButton(onClick = { dateDialogState.show() }) {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowDown,
-                                    contentDescription = "Select Date",
+                                    contentDescription = stringResource(R.string.select_date),
                                     tint = Color(0xFF00D09E)
                                 )
                             }
@@ -378,29 +391,28 @@ fun TransactionEditBody(
             }
 
             // Save Button
-            Button(
-                onClick = {
+            Button(                onClick = {
                     // Validate all fields
                     when {
                         title.isBlank() -> {
                             showError = true
-                            errorMessage = "Title cannot be empty"
+                            errorMessage = nonComposableStrings.titleEmptyError
                         }
                         amount.isBlank() || amount.toDoubleOrNull() == null -> {
                             showError = true
-                            errorMessage = "Please enter a valid amount"
+                            errorMessage = nonComposableStrings.amountInvalidError
                         }
                         categoryId.isBlank() -> {
                             showError = true
-                            errorMessage = "Please select a category"
+                            errorMessage = nonComposableStrings.categoryEmptyError
                         }
                         walletId.isBlank() -> {
                             showError = true
-                            errorMessage = "Please select a wallet"
+                            errorMessage = nonComposableStrings.walletEmptyError
                         }
                         selectedDateTime.value == null -> {
                             showError = true
-                            errorMessage = "Please select a date and time"
+                            errorMessage = nonComposableStrings.dateTimeEmptyError
                         }
                         else -> {
                             showError = false
@@ -425,10 +437,10 @@ fun TransactionEditBody(
                                 transactionDate = updatedTransaction.transactionDate
                             ) { success ->
                                 if (success) {
-                                    Toast.makeText(context, "Transaction updated successfully", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, nonComposableStrings.transactionUpdateSuccess, Toast.LENGTH_SHORT).show()
                                     navController.popBackStack()
                                 } else {
-                                    Toast.makeText(context, "Failed to update transaction", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, nonComposableStrings.transactionUpdateFailed, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
@@ -449,14 +461,12 @@ fun TransactionEditBody(
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Save Changes",
+                ) {                    Text(
+                        text = stringResource(R.string.save_changes),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.White
-                    )
-                }
+                    )                }
             }
         }
     }
@@ -465,15 +475,15 @@ fun TransactionEditBody(
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
-            positiveButton("Next") { timeDialogState.show() }
-            negativeButton("Cancel")
+            positiveButton(stringResource(R.string.ok))
+            negativeButton(stringResource(R.string.cancel))
         }
     ) {
         datepicker(
             initialDate = selectedDateTime.value?.let {
                 LocalDate.of(it.get(Calendar.YEAR), it.get(Calendar.MONTH) + 1, it.get(Calendar.DAY_OF_MONTH))
             } ?: LocalDate.now(),
-            title = "Select a date"
+            title = stringResource(R.string.select_a_date)
         ) { localDate ->
             val currentCal = selectedDateTime.value ?: Calendar.getInstance()
             val newCal = Calendar.getInstance().apply {
@@ -483,21 +493,22 @@ fun TransactionEditBody(
                 set(Calendar.DAY_OF_MONTH, localDate.dayOfMonth)
             }
             selectedDateTime.value = newCal
+            timeDialogState.show()
         }
     }
 
     MaterialDialog(
         dialogState = timeDialogState,
         buttons = {
-            positiveButton("OK")
-            negativeButton("Cancel")
+            positiveButton(stringResource(R.string.ok))
+            negativeButton(stringResource(R.string.cancel))
         }
     ) {
         timepicker(
             initialTime = selectedDateTime.value?.let {
                 LocalTime.of(it.get(Calendar.HOUR_OF_DAY), it.get(Calendar.MINUTE))
             } ?: LocalTime.now(),
-            title = "Select a time"
+            title = stringResource(R.string.select_a_time)
         ) { time ->
             val currentCal = selectedDateTime.value ?: Calendar.getInstance()
             val newCal = Calendar.getInstance().apply {

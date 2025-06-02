@@ -14,7 +14,7 @@ import DI.Composables.TransactionSection.TransactionDetailScreen
 import DI.Composables.TransactionSection.TransactionEditScreen
 import DI.Composables.TransactionSection.TransactionScreen
 import DI.Composables.WalletSection.WalletScreen
-import DI.Models.BottomNavItem
+import DI.Models.NavBar.BottomNavItem
 import DI.ViewModels.AnalysisViewModel
 import DI.ViewModels.ChatViewModel
 import DI.ViewModels.FriendViewModel

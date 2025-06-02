@@ -15,50 +15,31 @@ import kotlinx.coroutines.launch
 @HiltAndroidApp
 class MyApp : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-    
+
     companion object {
         private const val TAG = "MoneyManagementApp"
     }
-    
+
     override fun onCreate() {
         super.onCreate()
-        initializeLanguage()
+        // Ensure language is properly applied after app initialization
+        try {
+            val savedLanguage = LanguageManager.getLanguagePreferenceSync(applicationContext)
+            Log.d(TAG, "Applying language in onCreate: $savedLanguage")
+            LanguageManager.setLocale(applicationContext, savedLanguage)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error applying language in onCreate", e)
+        }
     }
-    
+
     override fun attachBaseContext(base: Context) {
         try {
-            val languageCode = runCatching {
-                base.resources.configuration.locales[0].language
-            }.getOrDefault("en")
-            
-            super.attachBaseContext(LanguageManager.updateResources(base, languageCode))
+            val savedLanguage = LanguageManager.getLanguagePreferenceSync(base)
+            Log.d(TAG, "Loading saved language: $savedLanguage")
+            super.attachBaseContext(LanguageManager.updateResources(base, savedLanguage))
         } catch (e: Exception) {
             Log.e(TAG, "Error in attachBaseContext", e)
             super.attachBaseContext(base)
-        }
-    }
-
-    private fun initializeLanguage() {
-        applicationScope.launch {
-            try {
-                val savedLanguage = LanguageManager.getLanguagePreference(applicationContext).first()
-                LanguageManager.setLocale(applicationContext, savedLanguage)
-            } catch (e: Exception) {
-                Log.e(TAG, "Error initializing language", e)
-                setDefaultLanguage()
-            }
-        }
-    }
-
-    private fun setDefaultLanguage() {
-        try {
-            val defaultLanguage = "en"
-            LanguageManager.setLocale(applicationContext, defaultLanguage)
-            applicationScope.launch {
-                LanguageManager.saveLanguagePreference(applicationContext, defaultLanguage)
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error setting default language", e)
         }
     }
 
@@ -66,7 +47,8 @@ class MyApp : Application() {
         super.onConfigurationChanged(newConfig)
         try {
             applicationScope.launch {
-                val savedLanguage = LanguageManager.getLanguagePreference(applicationContext).first()
+                val savedLanguage =
+                    LanguageManager.getLanguagePreference(applicationContext).first()
                 LanguageManager.setLocale(applicationContext, savedLanguage)
             }
         } catch (e: Exception) {
@@ -74,4 +56,3 @@ class MyApp : Application() {
         }
     }
 }
-

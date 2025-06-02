@@ -4,8 +4,10 @@ import DI.Models.Wallet.AddWalletRequest
 import DI.Models.Wallet.Wallet
 import DI.Models.UiEvent.UiEvent
 import DI.Repositories.WalletRepository
+import Utils.StringResourceProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moneymanagement_frontend.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WalletViewModel @Inject constructor(
-    private val repository: WalletRepository
+    private val repository: WalletRepository,
+    private val stringProvider: StringResourceProvider
 ) : ViewModel() {
     private val _wallets = MutableStateFlow<Result<List<Wallet>>?>(null)
     val wallets: StateFlow<Result<List<Wallet>>?> = _wallets.asStateFlow()
@@ -50,9 +53,15 @@ class WalletViewModel @Inject constructor(
             val result = repository.createWallet(request)
             if (result.isSuccess) {
                 getWallets()
-                _addWalletEvent.emit(UiEvent.ShowMessage("Wallet added!"))
+                _addWalletEvent.emit(UiEvent.ShowMessage(stringProvider.getString(R.string.wallet_form_add_success)))
             } else {
-                _addWalletEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _addWalletEvent.emit(UiEvent.ShowMessage(
+                    stringProvider.getString(
+                        R.string.wallet_form_add_error,
+                        result.exceptionOrNull()?.message ?: stringProvider.getString(R.string.unknown_error)
+                        )
+                    )
+                )
             }
         }
     }
@@ -69,9 +78,15 @@ class WalletViewModel @Inject constructor(
             val result = repository.updateWallet(wallet)
             if (result.isSuccess) {
                 getWallets()
-                _updateWalletEvent.emit(UiEvent.ShowMessage("Wallet updated!"))
+                _updateWalletEvent.emit(UiEvent.ShowMessage(stringProvider.getString(R.string.wallet_form_update_success)))
             } else {
-                _updateWalletEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _updateWalletEvent.emit(UiEvent.ShowMessage(
+                    stringProvider.getString(
+                        R.string.wallet_form_update_error,
+                        result.exceptionOrNull()?.message ?: stringProvider.getString(R.string.unknown_error)
+                        )
+                    )
+                )
             }
         }
     }
@@ -81,9 +96,15 @@ class WalletViewModel @Inject constructor(
             val result = repository.deleteWallet(id)
             if (result.isSuccess) {
                 getWallets()
-                _deleteWalletEvent.emit(UiEvent.ShowMessage("Wallet deleted!"))
+                _deleteWalletEvent.emit(UiEvent.ShowMessage(stringProvider.getString(R.string.wallet_form_delete_success)))
             } else {
-                _deleteWalletEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _deleteWalletEvent.emit(UiEvent.ShowMessage(
+                    stringProvider.getString(
+                        R.string.wallet_form_delete_error,
+                        result.exceptionOrNull()?.message ?: stringProvider.getString(R.string.unknown_error)
+                        )
+                    )
+                )
             }
         }
     }

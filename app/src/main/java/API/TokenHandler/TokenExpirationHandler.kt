@@ -24,7 +24,10 @@ fun TokenExpirationHandler(navController: NavController, authViewModel: AuthView
     LaunchedEffect(Unit) {
         AuthInterceptor.tokenExpiredFlow.collect {
             Log.d("TokenExpirationHandler", "Token expired event received")
-            showSessionExpiredDialog.value = true
+            // Only show dialog if user is still authenticated (not manually logged out)
+            if (authenticatedState) {
+                showSessionExpiredDialog.value = true
+            }
         }
     }
 

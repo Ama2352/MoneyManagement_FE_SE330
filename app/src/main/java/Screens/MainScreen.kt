@@ -1,6 +1,6 @@
 package Screens
 
-import DI.Models.BottomNavItem
+import DI.Models.NavBar.BottomNavItem
 import DI.Composables.NavbarSection.BottomNavigationBar
 import android.os.Build
 import android.app.Activity

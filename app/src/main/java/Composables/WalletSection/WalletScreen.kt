@@ -7,8 +7,6 @@ import DI.Models.Wallet.Wallet
 import DI.ViewModels.WalletViewModel
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,10 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.*
+import com.example.moneymanagement_frontend.R
 
 // Color scheme
 object WalletColors {
@@ -141,7 +141,7 @@ fun WalletScreen(
                 }
                 walletsResult.isFailure -> {
                     ErrorMessage(
-                        message = walletsResult.exceptionOrNull()?.message ?: "Unknown error",
+                        message = walletsResult.exceptionOrNull()?.message ?: stringResource(R.string.unknown_error),
                         onRetry = { viewModel.getWallets() }
                     )
                 }
@@ -217,16 +217,15 @@ private fun WalletHeader() {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
-            text = "My Wallets",
+            text = stringResource(R.string.my_wallets),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             color = WalletColors.OnSurface
         )
 
         Text(
-            text = "Manage your digital wallets with ease",
+            text = stringResource(R.string.manage_wallets),
             fontSize = 16.sp,
             color = WalletColors.OnSurfaceVariant,
             textAlign = TextAlign.Center
@@ -272,19 +271,18 @@ private fun WalletContent(
     }
 
     // Delete confirmation dialog - outside of LazyColumn
-    walletToDelete?.let { wallet ->
-        AlertDialog(
+    walletToDelete?.let { wallet ->        AlertDialog(
             onDismissRequest = { walletToDelete = null },
             title = {
                 Text(
-                    "Delete Wallet",
+                    stringResource(R.string.delete_wallet),
                     fontWeight = FontWeight.Bold,
                     color = ModernColors.OnSurface
                 )
             },
             text = {
                 Text(
-                    "Are you sure you want to delete \"${wallet.walletName}\"? This action cannot be undone.",
+                    stringResource(R.string.delete_wallet_confirm, wallet.walletName),
                     color = ModernColors.OnSurfaceVariant
                 )
             },
@@ -299,7 +297,7 @@ private fun WalletContent(
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Delete", fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.delete), fontWeight = FontWeight.SemiBold)
                 }
             },
             dismissButton = {
@@ -308,7 +306,7 @@ private fun WalletContent(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
-                        "Cancel",
+                        stringResource(R.string.cancel),
                         color = ModernColors.OnSurfaceVariant,
                         fontWeight = FontWeight.Medium
                     )
@@ -343,10 +341,9 @@ private fun TotalBalanceCard(totalBalance: Double) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
+            ) {                Column {
                     Text(
-                        text = "Total Balance",
+                        text = stringResource(R.string.total_balance),
                         color = WalletColors.OnPrimary.copy(alpha = 0.8f),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
@@ -400,7 +397,7 @@ private fun AddWalletButton(onClick: () -> Unit) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Add New Wallet",
+            text = stringResource(R.string.add_new_wallet),
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp
         )
@@ -455,10 +452,9 @@ private fun WalletCard(
                     IconButton(
                         onClick = onEdit,
                         modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
+                    ) {                        Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit",
+                            contentDescription = stringResource(R.string.edit),
                             tint = WalletColors.Primary,
                             modifier = Modifier.size(18.dp)
                         )
@@ -469,7 +465,7 @@ private fun WalletCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete",
+                            contentDescription = stringResource(R.string.delete),
                             tint = WalletColors.Error,
                             modifier = Modifier.size(18.dp)
                         )
@@ -507,16 +503,15 @@ private fun WalletCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+                verticalAlignment = Alignment.CenterVertically            ) {
                 Text(
-                    text = "Available Balance",
+                    text = stringResource(R.string.available_balance),
                     fontSize = 12.sp,
                     color = WalletColors.OnSurfaceVariant
                 )
 
                 Text(
-                    text = "Active",
+                    text = stringResource(R.string.active),
                     fontSize = 12.sp,
                     color = WalletColors.Success,
                     fontWeight = FontWeight.Medium
@@ -543,21 +538,19 @@ private fun AddWalletDialog(
             colors = CardDefaults.cardColors(containerColor = WalletColors.Surface)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
-            ) {
+                modifier = Modifier.padding(24.dp)            ) {
                 Text(
-                    text = "Add New Wallet",
+                    text = stringResource(R.string.add_new_wallet),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = WalletColors.OnSurface
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
-
                 OutlinedTextField(
                     value = walletName,
                     onValueChange = { walletName = it },
-                    label = { Text("Wallet Name") },
+                    label = { Text(stringResource(R.string.wallet_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = WalletColors.Primary,
@@ -570,7 +563,7 @@ private fun AddWalletDialog(
                 OutlinedTextField(
                     value = balance,
                     onValueChange = { balance = it },
-                    label = { Text("Initial Balance") },
+                    label = { Text(stringResource(R.string.initial_balance)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -596,10 +589,9 @@ private fun AddWalletDialog(
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = WalletColors.Primary
-                        ),
-                        enabled = walletName.isNotBlank()
+                        ),                        enabled = walletName.isNotBlank()
                     ) {
-                        Text("Add")
+                        Text(stringResource(R.string.wallet_form_add))
                     }
 
                     OutlinedButton(
@@ -610,7 +602,7 @@ private fun AddWalletDialog(
                         ),
                         border = BorderStroke(1.dp, WalletColors.OnSurfaceVariant.copy(alpha = 0.3f))
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             }
@@ -636,21 +628,19 @@ private fun EditWalletDialog(
             colors = CardDefaults.cardColors(containerColor = WalletColors.Surface)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
-            ) {
+                modifier = Modifier.padding(24.dp)            ) {
                 Text(
-                    text = "Edit Wallet",
+                    text = stringResource(R.string.wallet_form_edit_title),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = WalletColors.OnSurface
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
-
                 OutlinedTextField(
                     value = walletName,
                     onValueChange = { walletName = it },
-                    label = { Text("Wallet Name") },
+                    label = { Text(stringResource(R.string.wallet_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = WalletColors.Primary,
@@ -663,7 +653,7 @@ private fun EditWalletDialog(
                 OutlinedTextField(
                     value = balance,
                     onValueChange = { balance = it },
-                    label = { Text("Balance") },
+                    label = { Text(stringResource(R.string.wallet_form_amount)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -689,10 +679,9 @@ private fun EditWalletDialog(
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = WalletColors.Primary
-                        ),
-                        enabled = walletName.isNotBlank()
+                        ),                        enabled = walletName.isNotBlank()
                     ) {
-                        Text("Update")
+                        Text(stringResource(R.string.save))
                     }
 
                     OutlinedButton(
@@ -703,7 +692,7 @@ private fun EditWalletDialog(
                         ),
                         border = BorderStroke(1.dp, WalletColors.OnSurfaceVariant.copy(alpha = 0.3f))
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             }
@@ -729,9 +718,8 @@ private fun ErrorMessage(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
-            text = "Something went wrong",
+            text = stringResource(R.string.something_went_wrong),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = WalletColors.OnSurface
@@ -756,7 +744,7 @@ private fun ErrorMessage(
         ) {
             Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Try Again")
+            Text(stringResource(R.string.try_again))
         }
     }
 }

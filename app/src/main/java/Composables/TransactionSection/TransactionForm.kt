@@ -51,11 +51,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import java.util.Calendar
-import com.vanpra.composematerialdialogs.*
+import com.example.moneymanagement_frontend.R
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import java.text.NumberFormat
@@ -70,9 +68,14 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -180,36 +183,35 @@ fun TransactionForm(
             }
         }
     }
-
     fun validateForm(): Boolean {
         var isValid = true
 
         if (walletId.isEmpty()) {
-            walletError = "Please select a wallet"
+            walletError = context.getString(R.string.please_select_wallet)
             isValid = false
         } else {
             walletError = null
         }
 
         if (categoryId.isEmpty()) {
-            categoryError = "Please select a category"
+            categoryError = context.getString(R.string.please_select_category)
             isValid = false
         } else {
             categoryError = null
         }
 
         if (rawAmount.isEmpty()) {
-            amountError = "Please enter an amount"
+            amountError = context.getString(R.string.please_enter_amount)
             isValid = false
         } else if (rawAmount.toLongOrNull() == null) {
-            amountError = "Please enter a valid amount"
+            amountError = context.getString(R.string.amount_invalid_error)
             isValid = false
         } else {
             amountError = null
         }
 
         if (title.trim().isEmpty()) {
-            titleError = "Please enter a title"
+            titleError = context.getString(R.string.please_enter_title)
             isValid = false
         } else {
             titleError = null
@@ -223,15 +225,14 @@ fun TransactionForm(
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Wallet & Category Section
+    ) {        // Wallet & Category Section
         FormSection(
-            title = "Account Details",
+            title = stringResource(R.string.account_details),
             icon = Icons.Default.AccountBalanceWallet
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 DropdownSelector(
-                    label = "Wallet",
+                    label = stringResource(R.string.wallet),
                     selectedName = walletName,
                     options = walletsResult?.getOrNull()?.map { it.walletName to it.walletID } ?: emptyList(),
                     onSelect = { name, id ->
@@ -244,7 +245,7 @@ fun TransactionForm(
                 )
 
                 DropdownSelector(
-                    label = "Category",
+                    label = stringResource(R.string.category),
                     selectedName = categoryName,
                     options = categoriesResult?.getOrNull()?.map { it.name to it.categoryID } ?: emptyList(),
                     onSelect = { name, id ->
@@ -256,16 +257,14 @@ fun TransactionForm(
                     error = categoryError
                 )
             }
-        }
-
-        // Amount Section
+        }        // Amount Section
         FormSection(
-            title = "Amount",
+            title = stringResource(R.string.amount),
             icon = Icons.Default.Payments
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 TransactionTextField(
-                    label = "Amount (VND)",
+                    label = stringResource(R.string.amount_vnd),
                     value = formattedAmount,
                     onValueChange = {
                         rawAmount = unformatAmount(it.filter { char -> char.isDigit() })
@@ -293,28 +292,26 @@ fun TransactionForm(
                     }
                 }
             }
-        }
-
-        // Transaction Details Section
+        }        // Transaction Details Section
         FormSection(
-            title = "Transaction Details",
+            title = stringResource(R.string.transaction_details_form),
             icon = Icons.Default.Receipt
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 TransactionTextField(
-                    label = "Title",
+                    label = stringResource(R.string.title),
                     value = title,
                     onValueChange = { 
                         title = it
                         titleError = null
                     },
                     leadingIcon = Icons.Default.Title,
-                    placeholder = "Enter transaction title",
+                    placeholder = stringResource(R.string.enter_transaction_title),
                     error = titleError
                 )
 
                 TransactionTextField(
-                    label = "Date & Time",
+                    label = stringResource(R.string.date_time),
                     value = displayDate,
                     onValueChange = {},
                     isDropdown = true,
@@ -330,7 +327,7 @@ fun TransactionForm(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
-                                contentDescription = "Select Date",
+                                contentDescription = stringResource(R.string.select_date),
                                 tint = Color(0xFF00D09E)
                             )
                         }
@@ -351,13 +348,12 @@ fun TransactionForm(
                             categoryId = categoryId,
                             walletId = walletId,
                             type = type,
-                            transactionDate = storageDate
-                        ) { success ->
+                            transactionDate = storageDate                        ) { success ->
                             if (success) {
-                                Toast.makeText(context, "Transaction saved successfully", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.transaction_saved), Toast.LENGTH_SHORT).show()
                                 navController.popBackStack()
                             } else {
-                                Toast.makeText(context, "Failed to save transaction", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.save_transaction_failed), Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -371,21 +367,18 @@ fun TransactionForm(
                 containerColor = Color(0xFF00D09E)
             ),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-        ) {
-            Text(
-                "Save Transaction",
+        ) {            Text(
+                stringResource(R.string.save_transaction),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
         }
-    }
-
-    // Date & Time Dialogs
+    }    // Date & Time Dialogs
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
-            positiveButton("Ok")
-            negativeButton("Cancel")
+            positiveButton(stringResource(R.string.ok))
+            negativeButton(stringResource(R.string.cancel))
         }
     ) {
         datepicker(
@@ -407,8 +400,8 @@ fun TransactionForm(
     MaterialDialog(
         dialogState = timeDialogState,
         buttons = {
-            positiveButton("Ok")
-            negativeButton("Cancel")
+            positiveButton(stringResource(R.string.ok))
+            negativeButton(stringResource(R.string.cancel))
         }
     ) {
         timepicker(

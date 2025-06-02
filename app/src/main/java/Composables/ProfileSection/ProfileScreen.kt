@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.moneymanagement_frontend.R
 
 @Composable
 fun ProfileScreen(
@@ -81,60 +83,54 @@ fun ProfileScreen(
                 // Profile Card
                 ProfileHeaderCard(profile, navController, profileViewModel)
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Account Settings
-                SectionTitle("Account Settings")
+                Spacer(modifier = Modifier.height(24.dp))                // Account Settings
+                SectionTitle(stringResource(R.string.account_settings))
                 SettingsItem(
                     icon = Icons.Default.Person,
-                    title = "Personal Information",
-                    subtitle = "Update your personal details"
+                    title = stringResource(R.string.personal_information),
+                    subtitle = stringResource(R.string.update_personal_details)
                 )
                 SettingsItem(
                     icon = Icons.Default.Lock,
-                    title = "Security",
-                    subtitle = "Password and authentication"
+                    title = stringResource(R.string.security),
+                    subtitle = stringResource(R.string.password_and_authentication)
                 )
                 SettingsItem(
                     icon = Icons.Default.Notifications,
-                    title = "Notifications",
-                    subtitle = "Manage your alerts and notifications"
+                    title = stringResource(R.string.notifications_settings),
+                    subtitle = stringResource(R.string.manage_alerts_notifications)
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Financial Settings
-                SectionTitle("Financial Settings")
+                Spacer(modifier = Modifier.height(24.dp))                // Financial Settings
+                SectionTitle(stringResource(R.string.financial_settings))
                 SettingsItem(
                     icon = Icons.Default.CreditCard,
-                    title = "Payment Methods",
-                    subtitle = "Manage your cards and bank accounts"
+                    title = stringResource(R.string.payment_methods),
+                    subtitle = stringResource(R.string.manage_cards_bank_accounts)
                 )
                 SettingsItem(
                     icon = Icons.Default.Savings,
-                    title = "Savings Goals",
-                    subtitle = "Set and track your financial goals"
+                    title = stringResource(R.string.savings_goals),
+                    subtitle = stringResource(R.string.set_track_financial_goals)
                 )
                 SettingsItem(
                     icon = Icons.Default.BarChart,
-                    title = "Budget Categories",
-                    subtitle = "Customize your spending categories"
+                    title = stringResource(R.string.budget_categories),
+                    subtitle = stringResource(R.string.customize_spending_categories)
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Support and Info
-                SectionTitle("Support & Info")
+                Spacer(modifier = Modifier.height(24.dp))                // Support and Info
+                SectionTitle(stringResource(R.string.support_info))
                 LanguageSelector()
                 SettingsItem(
                     icon = Icons.Default.Help,
-                    title = "Help & Support",
-                    subtitle = "FAQs and contact information"
+                    title = stringResource(R.string.help_support),
+                    subtitle = stringResource(R.string.faqs_contact_info)
                 )
                 SettingsItem(
                     icon = Icons.Default.Info,
-                    title = "About",
-                    subtitle = "App version and legal information"
+                    title = stringResource(R.string.about),
+                    subtitle = stringResource(R.string.app_version_legal_info)
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -150,10 +146,9 @@ fun ProfileScreen(
                         .fillMaxWidth(0.5f)
                         .padding(vertical = 8.dp)
                         .align(Alignment.CenterHorizontally),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                ) {
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)                ) {
                     Text(
-                        text = "Log Out",
+                        text = stringResource(R.string.log_out),
                         style = MaterialTheme.typography.labelLarge,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(vertical = 8.dp)
@@ -171,10 +166,9 @@ fun TopAppBar() {
             .fillMaxWidth()
             .padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+        horizontalArrangement = Arrangement.SpaceBetween    ) {
         Text(
-            text = "Profile",
+            text = stringResource(R.string.profile_screen_title),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = TextPrimaryColor
@@ -184,7 +178,7 @@ fun TopAppBar() {
         IconButton(onClick = { /* Handle settings */ }) {
             Icon(
                 imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
+                contentDescription = stringResource(R.string.settings),
                 tint = TextPrimaryColor
             )
         }
@@ -211,10 +205,8 @@ fun ProfileHeaderCard(
                 .fillMaxWidth()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            if(profile == null) {
-                Text("No Profile Data", color = TextPrimaryColor)
+        ) {            if(profile == null) {
+                Text(stringResource(R.string.no_profile_data), color = TextPrimaryColor)
                 return@Column
             }
 
@@ -257,6 +249,7 @@ fun ProfileHeaderCard(
             val clipboardManager = LocalClipboardManager.current
             val context = LocalContext.current
             val idText = profile.id
+            val copiedMessage = stringResource(R.string.id_copied)
 
             Column(
                 modifier = Modifier
@@ -279,7 +272,7 @@ fun ProfileHeaderCard(
                         )
                         Spacer(modifier = Modifier.width(5.dp))
                         Text(
-                            text = "User ID",
+                            text = stringResource(R.string.user_id),
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MainColor
@@ -287,17 +280,16 @@ fun ProfileHeaderCard(
 
                         )
                     }
-
                     IconButton(
                         onClick = {
                             clipboardManager.setText(AnnotatedString(idText))
-                            Toast.makeText(context, "ID copied to clipboard", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, copiedMessage, Toast.LENGTH_SHORT).show()
                         },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy ID",
+                            contentDescription = stringResource(R.string.copy_id),
                             tint = MainColor,
                             modifier = Modifier.size(16.dp)
                         )
@@ -331,18 +323,16 @@ fun ProfileHeaderCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Profile Stats / Finance Summary
+            Spacer(modifier = Modifier.height(16.dp))            // Profile Stats / Finance Summary
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatItem("Budget", "$3,450")
+                StatItem(stringResource(R.string.budget), "$3,450")
                 VerticalDivider()
-                StatItem("Savings", "$12,580")
+                StatItem(stringResource(R.string.savings), "$12,580")
                 VerticalDivider()
-                StatItem("Spent", "$1,245")
+                StatItem(stringResource(R.string.spent), "$1,245")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -364,7 +354,7 @@ fun ProfileHeaderCard(
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Edit Profile")
+                Text(text = stringResource(R.string.edit_profile))
             }
         }
     }
@@ -464,10 +454,9 @@ fun SettingsItem(
                     )
                 )
             }
-
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Navigate",
+                contentDescription = stringResource(R.string.navigate),
                 tint = TextSecondaryColor
             )
         }
