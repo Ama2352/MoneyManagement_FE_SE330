@@ -5,23 +5,25 @@ import DI.Composables.AnalysisSection.AnalysisBody
 import DI.Composables.AnalysisSection.CalendarScreen
 import DI.Composables.AuthSection.LoginScreen
 import DI.Composables.AuthSection.RegisterScreen
-import DI.Composables.TransactionSection.AddTransactionScreen
 import DI.Composables.ChatSection.ChatMessageScreen
 import DI.Composables.ChatSection.ChatScreen
 import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
 import DI.Composables.ReportSection.ReportScreen
+import DI.Composables.TransactionSection.AddTransactionScreen
 import DI.Composables.TransactionSection.TransactionDetailScreen
 import DI.Composables.TransactionSection.TransactionEditScreen
 import DI.Composables.TransactionSection.TransactionScreen
 import DI.Composables.WalletSection.WalletScreen
 import DI.Models.BottomNavItem
+import DI.Screens.BudgetScreen
 import DI.ViewModels.AnalysisViewModel
+import DI.ViewModels.BudgetViewModel
+import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.ChatViewModel
 import DI.ViewModels.FriendViewModel
-import DI.ViewModels.ProfileViewModel
-import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.OcrViewModel
+import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.ReportViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
@@ -78,7 +80,13 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             LocalMainNavBackStackEntry provides parentEntry
         ) {
             MainLayout { innerNavController, modifier ->
-                InnerNavHost(navController, innerNavController, modifier, parentEntry, authViewModel)
+                InnerNavHost(
+                    navController,
+                    innerNavController,
+                    modifier,
+                    parentEntry,
+                    authViewModel
+                )
             }
             TokenExpirationHandler(navController)
         }
@@ -89,7 +97,7 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun InnerNavHost(
-    appNavController : NavController,
+    appNavController: NavController,
     navController: NavHostController,
     modifier: Modifier,
     parentEntry: NavBackStackEntry,
@@ -104,11 +112,12 @@ private fun InnerNavHost(
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
     val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
     val reportViewModel = hiltViewModel<ReportViewModel>(parentEntry)
+    val budgetViewModel = hiltViewModel<BudgetViewModel>(parentEntry)
 
     NavHost(
-        navController    = navController,
+        navController = navController,
         startDestination = BottomNavItem.Profile.route,
-        modifier         = modifier
+        modifier = modifier
     ) {
         composable(BottomNavItem.Home.route) {
 
@@ -155,7 +164,7 @@ private fun InnerNavHost(
         ) { backStackEntry ->
             val friendId = backStackEntry.arguments?.getString("friendId") ?: ""
             ChatMessageScreen(
-                navController = navController ,
+                navController = navController,
                 friendId = friendId,
                 chatViewModel = chatViewModel,
                 profileViewModel = profileViewModel,
@@ -210,7 +219,8 @@ private fun InnerNavHost(
                 transactionViewModel = transactionViewModel,
                 categoryViewModel = categoryViewModel,
                 walletViewModel = walletViewModel,
-                ocrViewModel = ocrViewModel
+                ocrViewModel = ocrViewModel,
+                budgetViewModel = budgetViewModel
             )
         }
 
@@ -224,6 +234,14 @@ private fun InnerNavHost(
         composable(BottomNavItem.Report.route) {
             ReportScreen(
                 reportViewModel = reportViewModel,
+            )
+        }
+
+        composable(BottomNavItem.Budget.route) {
+            BudgetScreen(
+                viewModel = budgetViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel
             )
         }
 

@@ -1,5 +1,6 @@
 package DI.Composables.TransactionSection
 
+import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
@@ -82,6 +83,7 @@ fun TransactionForm(
     type: String,
     categoryViewModel: CategoryViewModel,
     ocrViewModel: OcrViewModel,
+    budgetViewModel: BudgetViewModel,
     walletViewModel: WalletViewModel
 ) {
     val context = LocalContext.current
@@ -355,6 +357,7 @@ fun TransactionForm(
                         ) { success ->
                             if (success) {
                                 Toast.makeText(context, "Transaction saved successfully", Toast.LENGTH_SHORT).show()
+                                budgetViewModel.getBudgetProgressAndAlerts()
                                 navController.popBackStack()
                             } else {
                                 Toast.makeText(context, "Failed to save transaction", Toast.LENGTH_SHORT).show()

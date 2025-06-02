@@ -1,5 +1,6 @@
 package DI.Composables.TransactionSection
 
+import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.TransactionViewModel
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -42,6 +43,7 @@ fun AddTransactionScreen(
     transactionViewModel: TransactionViewModel,
     categoryViewModel: CategoryViewModel,
     walletViewModel: WalletViewModel,
+    budgetViewModel: BudgetViewModel,
     ocrViewModel: OcrViewModel
 ) {
     var type by remember { mutableStateOf("Expense") }
@@ -177,7 +179,8 @@ fun AddTransactionScreen(
                     type = type,
                     categoryViewModel = categoryViewModel,
                     walletViewModel = walletViewModel,
-                    ocrViewModel = ocrViewModel
+                    ocrViewModel = ocrViewModel,
+                    budgetViewModel = budgetViewModel
                 )
             }
         }

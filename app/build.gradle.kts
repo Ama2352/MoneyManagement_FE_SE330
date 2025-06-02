@@ -71,6 +71,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+
     // Dùng BOM để đồng bộ các thư viện Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -147,6 +148,7 @@ dependencies {
 
     // Adds support for date and time pickers in the dialogs
     implementation(libs.compose.material.dialogs.datetime)
+    implementation("androidx.compose.material3:material3:1.3.0")
 
     // Compose testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
