@@ -11,7 +11,7 @@ import DI.Models.Auth.SignInRequest
 import DI.Models.Auth.SignUpRequest
 import DI.Models.Category.AddCategoryRequest
 import DI.Models.Category.Category
-import DI.Models.Category.Transaction
+import DI.Models.Transaction.Transaction
 import DI.Models.Category.UpdateCategoryRequest
 import DI.Models.Chat.Chat
 import DI.Models.Chat.ChatMessage
@@ -190,8 +190,6 @@ interface ApiService {
     suspend fun getWeeklySummary(@Query("startDate") startDate: String): WeeklySummary
 
     @GET("Calendar/monthly")
-    suspend fun getMonthlySummary(@Query("year") year: String, @Query("month") month: String): MonthlySummary
-
-    @GET("Calendar/yearly")
+    suspend fun getMonthlySummary(@Query("year") year: String, @Query("month") month: String): MonthlySummary    @GET("Calendar/yearly")
     suspend fun getYearlySummary(@Query("year") year: String): YearlySummary
 }

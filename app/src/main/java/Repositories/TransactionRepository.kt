@@ -1,7 +1,7 @@
 package DI.Repositories
 
 import API.ApiService
-import DI.Models.Category.Transaction
+import DI.Models.Transaction.Transaction
 import DI.Models.Transaction.TransactionSearchRequest
 import android.util.Log
 import javax.inject.Inject

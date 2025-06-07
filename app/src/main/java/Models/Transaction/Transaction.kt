@@ -1,4 +1,4 @@
-package DI.Models.Category
+package DI.Models.Transaction
 
 data class Transaction(
     val transactionID: String,

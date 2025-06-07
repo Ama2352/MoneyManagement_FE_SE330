@@ -89,8 +89,8 @@
     <string name="category_name_empty_error">Tên danh mục không được để trống</string>
     <string name="category_added_success">Đã thêm danh mục!</string>
     <string name="category_updated_success">Đã cập nhật danh mục!</string>
-    <string name="category_deleted_success">Đã xóa danh mục!</string>
-    <string name="unknown_category">Danh mục không xác định</string>
+    <string name="category_deleted_success">Đã xóa danh mục!</string>    <string name="unknown_category">Danh mục không xác định</string>
+    <string name="category_deleted_or_unknown">Danh mục đã xóa</string>
     <string name="select_category">Chọn danh mục</string>
     <string name="please_select_category">Vui lòng chọn danh mục</string>
     <string name="category_empty_error">Vui lòng chọn danh mục</string>
@@ -417,5 +417,21 @@
 
     <!-- ================== MISCELLANEOUS ================== -->
     <string name="language">Ngôn ngữ</string>
+
+    <!-- ================== CURRENCY SETTINGS ================== -->
+    <string name="currency_settings">Cài đặt tiền tệ</string>
+    <string name="currency">Tiền tệ</string>
+    <string name="vnd_currency">VND (₫)</string>
+    <string name="usd_currency">USD ($)</string>
+    <string name="current_currency">Hiện tại: %1$s</string>
+
+    <!-- ================== TRANSACTION STRINGS ================== -->
+    <string name="update_transaction">Cập nhật giao dịch</string>
+    <string name="transaction_description">Nhập mô tả</string>
+    <string name="transactions">Các giao dịch</string>
+    <string name="no_transactions">Không tìm thấy giao dịch nào</string>
+    <string name="delete_transaction_confirmation">Bạn có chắc chắn muốn xóa giao dịch này?</string>
+    <string name="display_currency">Hiển thị tiền tệ</string>
+    <string name="description">Mô tả</string>
 
 </resources>

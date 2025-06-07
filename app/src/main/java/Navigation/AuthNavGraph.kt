@@ -5,14 +5,10 @@ import DI.Composables.AnalysisSection.AnalysisBody
 import DI.Composables.AnalysisSection.CalendarScreen
 import DI.Composables.AuthSection.LoginScreen
 import DI.Composables.AuthSection.RegisterScreen
-import DI.Composables.TransactionSection.AddTransactionScreen
 import DI.Composables.ChatSection.ChatMessageScreen
 import DI.Composables.ChatSection.ChatScreen
 import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
-import DI.Composables.TransactionSection.TransactionDetailScreen
-import DI.Composables.TransactionSection.TransactionEditScreen
-import DI.Composables.TransactionSection.TransactionScreen
 import DI.Composables.WalletSection.WalletScreen
 import DI.Models.NavBar.BottomNavItem
 import DI.ViewModels.AnalysisViewModel
@@ -22,6 +18,7 @@ import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.OcrViewModel
 import DI.ViewModels.TransactionViewModel
+import DI.ViewModels.CurrencyConverterViewModel
 import DI.ViewModels.WalletViewModel
 import ModernCategoriesScreen
 import ProfileScreen
@@ -93,12 +90,14 @@ private fun InnerNavHost(
     parentEntry: NavBackStackEntry,
     authViewModel: AuthViewModel
 ) {
+
     val friendViewModel = hiltViewModel<FriendViewModel>(parentEntry)
     val chatViewModel = hiltViewModel<ChatViewModel>(parentEntry)
     val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
     val analysisViewModel = hiltViewModel<AnalysisViewModel>(parentEntry)
     val categoryViewModel = hiltViewModel<CategoryViewModel>(parentEntry)
     val transactionViewModel = hiltViewModel<TransactionViewModel>(parentEntry)
+    val currencyConverterViewModel = hiltViewModel<CurrencyConverterViewModel>(parentEntry)
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
     val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
 
@@ -131,13 +130,8 @@ private fun InnerNavHost(
                 navController = navController
             )
         }
-
         composable(BottomNavItem.Transaction.route) {
-            TransactionScreen(
-                navController = navController,
-                viewModel = transactionViewModel,
-                categoryViewModel = categoryViewModel
-            )
+
         }
 
         composable(BottomNavItem.Wallet.route) {
@@ -172,20 +166,26 @@ private fun InnerNavHost(
                 navController = navController
             )
         }
-
         composable(BottomNavItem.Profile.route) {
             ProfileScreen(
                 appNavController = appNavController,
                 navController = navController,
                 authViewModel = authViewModel,
-                profileViewModel = profileViewModel
+                profileViewModel = profileViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
-
         composable(Routes.EditProfile) {
             EditProfileScreen(
                 navController = navController,
                 profileViewModel = profileViewModel
+            )
+        }
+        
+        composable(Routes.CurrencyTest) {
+            Composables.ProfileSection.CurrencyTestScreen(
+                navController = navController,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
 
@@ -200,15 +200,9 @@ private fun InnerNavHost(
         composable(Routes.Calendar) {
             CalendarScreen(analysisViewModel = analysisViewModel)
         }
-
         composable(Routes.AddTransaction) {
-            AddTransactionScreen(
-                navController = navController,
-                transactionViewModel = transactionViewModel,
-                categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel,
-                ocrViewModel = ocrViewModel
-            )
+
+
         }
 
         composable(BottomNavItem.Category.route) {
@@ -217,35 +211,21 @@ private fun InnerNavHost(
                 authViewModel = authViewModel,
             )
         }
-
         composable(
             route = Routes.TransactionDetail,
             arguments = listOf(navArgument("transactionId") { type = NavType.StringType })
         ) { backStackEntry ->
             val transactionId = backStackEntry.arguments?.getString("transactionId") ?: ""
 
-            TransactionDetailScreen(
-                navController = navController,
-                transactionId = transactionId,
-                viewModel = transactionViewModel,
-                categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel
-            )
-        }
 
+        }
         composable(
             route = Routes.TransactionEdit,
-            arguments = listOf(navArgument("transactionId") { type = NavType.StringType })
+            arguments = listOf(navArgument("transactionId") { type = NavType.IntType })
         ) { backStackEntry ->
-            val transactionId = backStackEntry.arguments?.getString("transactionId") ?: ""
+            val transactionId = backStackEntry.arguments?.getInt("transactionId") ?: 0
 
-            TransactionEditScreen(
-                navController = navController,
-                transactionId = transactionId,
-                viewModel = transactionViewModel,
-                categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel
-            )
+
         }
     }
 }
