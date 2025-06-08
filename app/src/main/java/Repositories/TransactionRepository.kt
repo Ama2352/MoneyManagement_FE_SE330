@@ -2,112 +2,92 @@ package DI.Repositories
 
 import API.ApiService
 import DI.Models.Transaction.Transaction
+import DI.Models.Transaction.TransactionDetail
+import DI.Models.Transaction.CreateTransactionRequest
+import DI.Models.Transaction.UpdateTransactionRequest
 import DI.Models.Transaction.TransactionSearchRequest
+import DI.Models.Transaction.GetTransactionsByDateRangeRequest
 import android.util.Log
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TransactionRepository @Inject constructor(private val apiService: ApiService) {
 
-    suspend fun getTransactions(): Result<List<Transaction>> {
+    suspend fun getAllTransactions(): Response<List<Transaction>> {
         return try {
-            val response = apiService.getTransactions()
-            Log.d("TransactionRepositoryTry", response.toString())
-            Result.success(response)
+            apiService.getAllTransactions()
         } catch (e: Exception) {
-            Log.d("TransactionRepository", e.toString())
-            Result.failure(e)
+            Log.e("TransactionRepository", "Error getting all transactions", e)
+            throw e
         }
     }
 
-    suspend fun createTransaction(transaction: Transaction): Result<Unit> {
+    suspend fun getTransactionsByWalletId(walletId: String): Response<List<Transaction>> {
         return try {
-            val response = apiService.createTransaction(transaction)
-            if (response.isSuccessful) {
-                Log.d("TransactionRepository", "Transaction created successfully")
-                Result.success(Unit)
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("TransactionRepository", "Failed: ${response.code()} - $errorBody")
-                Result.failure(Exception("Failed to create transaction: $errorBody"))
-            }
+            apiService.getTransactionsByWalletId(walletId)
         } catch (e: Exception) {
-            Log.e("TransactionRepository", "Exception: ${e.localizedMessage}", e)
-            Result.failure(e)
+            Log.e("TransactionRepository", "Error getting transactions by wallet", e)
+            throw e
         }
     }
 
-    suspend fun getTransactionById(id: String): Result<Transaction> {
+    suspend fun getTransactionById(id: String): Response<Transaction> {
         return try {
-            val response = apiService.getTransactionById(id)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    Result.success(it)
-                } ?: Result.failure(Exception("Empty response body"))
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("TransactionRepository", "Get by ID failed: ${response.code()} - $errorBody")
-                Result.failure(Exception("Failed to get transaction by ID: $errorBody"))
-            }
+            apiService.getTransactionById(id)
         } catch (e: Exception) {
-            Log.e("TransactionRepository", "Exception during get by ID: ${e.localizedMessage}", e)
-            Result.failure(e)
+            Log.e("TransactionRepository", "Error getting transaction by id", e)
+            throw e
         }
     }
 
-
-    suspend fun updateTransaction(transaction: Transaction): Result<Transaction> {
+    suspend fun createTransaction(request: CreateTransactionRequest): Response<Transaction> {
         return try {
-            val response = apiService.updateTransaction(transaction)
-            if (response.isSuccessful) {
-                Log.d("TransactionRepository", "Transaction updated successfully")
-                response.body()?.let { Result.success(it) } ?: Result.failure(Exception("Empty response body"))
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("TransactionRepository", "Update failed: ${response.code()} - $errorBody")
-                Result.failure(Exception("Failed to update transaction: $errorBody"))
-            }
+            apiService.createTransaction(request)
         } catch (e: Exception) {
-            Log.e("TransactionRepository", "Exception during update: ${e.localizedMessage}", e)
-            Result.failure(e)
+            Log.e("TransactionRepository", "Error creating transaction", e)
+            throw e
         }
     }
 
-    suspend fun deleteTransaction(id: String): Result<Unit> {
+    suspend fun updateTransaction(request: UpdateTransactionRequest): Response<Transaction> {
         return try {
-            val response = apiService.deleteTransaction(id)
-            if (response.isSuccessful) {
-                Log.d("TransactionRepository", "Transaction deleted successfully")
-                Result.success(Unit)
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("TransactionRepository", "Delete failed: ${response.code()} - $errorBody")
-                Result.failure(Exception("Failed to delete transaction: $errorBody"))
-            }
+            apiService.updateTransaction(request)
         } catch (e: Exception) {
-            Log.e("TransactionRepository", "Exception during delete: ${e.localizedMessage}", e)
-            Result.failure(e)
+            Log.e("TransactionRepository", "Error updating transaction", e)
+            throw e
         }
     }
 
-    suspend fun getTransactionsByDateRange(fromDate: String, toDate: String): Result<List<Transaction>> {
+    suspend fun deleteTransaction(id: String): Response<String> {
         return try {
-            val response = apiService.getTransactionsByDateRange(fromDate, toDate)
-            if (response.isSuccessful) {
-                Log.d("TransactionRepositoryDate", response.toString())
-                Result.success(response.body() ?: emptyList())
-            } else {
-                Result.failure(Exception("API failed"))
-            }
+            apiService.deleteTransaction(id)
         } catch (e: Exception) {
-            Result.failure(e)
+            Log.e("TransactionRepository", "Error deleting transaction", e)
+            throw e
         }
     }
 
-    suspend fun searchTransactions(request: TransactionSearchRequest): Result<List<Transaction>> {
+    suspend fun getTransactionsByDateRange(request: GetTransactionsByDateRangeRequest): Response<List<TransactionDetail>> {
         return try {
-            val response = apiService.searchTransactions(
+            apiService.getTransactionsByDateRange(
+                startDate = request.startDate,
+                endDate = request.endDate,
+                type = request.type,
+                category = request.category,
+                timeRange = request.timeRange,
+                dayOfWeek = request.dayOfWeek
+            )
+        } catch (e: Exception) {
+            Log.e("TransactionRepository", "Error getting transactions by date range", e)
+            throw e
+        }
+    }
+
+    suspend fun searchTransactions(request: TransactionSearchRequest): Response<List<TransactionDetail>> {
+        return try {
+            apiService.searchTransactions(
                 startDate = request.startDate,
                 endDate = request.endDate,
                 type = request.type,
@@ -117,16 +97,9 @@ class TransactionRepository @Inject constructor(private val apiService: ApiServi
                 timeRange = request.timeRange,
                 dayOfWeek = request.dayOfWeek
             )
-
-            if (response.isSuccessful) {
-                Result.success(response.body() ?: emptyList())
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Result.failure(Exception("Search failed: $errorBody"))
-            }
         } catch (e: Exception) {
-            Result.failure(e)
+            Log.e("TransactionRepository", "Error searching transactions", e)
+            throw e
         }
     }
-
 }

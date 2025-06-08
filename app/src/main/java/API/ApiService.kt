@@ -12,6 +12,9 @@ import DI.Models.Auth.SignUpRequest
 import DI.Models.Category.AddCategoryRequest
 import DI.Models.Category.Category
 import DI.Models.Transaction.Transaction
+import DI.Models.Transaction.TransactionDetail
+import DI.Models.Transaction.CreateTransactionRequest
+import DI.Models.Transaction.UpdateTransactionRequest
 import DI.Models.Category.UpdateCategoryRequest
 import DI.Models.Chat.Chat
 import DI.Models.Chat.ChatMessage
@@ -90,28 +93,34 @@ interface ApiService {
     @DELETE("Wallets/{id}")
     suspend fun deleteWallet(@Path("id") id: String): Response<ResponseBody>
 
-
-
+    // Transactions
     @GET("Transactions")
-    suspend fun getTransactions(): List<Transaction>
+    suspend fun getAllTransactions(): Response<List<Transaction>>
 
-    @PUT("Transactions")
-    suspend fun updateTransaction(@Body transaction: Transaction): Response<Transaction>
-
-    @POST("Transactions")
-    suspend fun createTransaction(@Body transaction : Transaction): Response<Transaction>
+    @GET("Transactions/wallet/{walletId}")
+    suspend fun getTransactionsByWalletId(@Path("walletId") walletId: String): Response<List<Transaction>>
 
     @GET("Transactions/{id}")
-    suspend fun getTransactionById(@retrofit2.http.Path("id") id: String): Response<Transaction>
+    suspend fun getTransactionById(@Path("id") id: String): Response<Transaction>
+
+    @POST("Transactions")
+    suspend fun createTransaction(@Body transaction: CreateTransactionRequest): Response<Transaction>
+
+    @PUT("Transactions")
+    suspend fun updateTransaction(@Body transaction: UpdateTransactionRequest): Response<Transaction>
 
     @DELETE("Transactions/{id}")
-    suspend fun deleteTransaction(@retrofit2.http.Path("id") id: String): Response<ResponseBody>
+    suspend fun deleteTransaction(@Path("id") id: String): Response<String>
 
     @GET("Transactions/date-range")
     suspend fun getTransactionsByDateRange(
-        @Query("startDate") startDate: String,
-        @Query("endDate") endDate: String
-    ): Response<List<Transaction>>
+        @Query("startDate") startDate: String? = null,
+        @Query("endDate") endDate: String? = null,
+        @Query("type") type: String? = null,
+        @Query("category") category: String? = null,
+        @Query("timeRange") timeRange: String? = null,
+        @Query("dayOfWeek") dayOfWeek: String? = null
+    ): Response<List<TransactionDetail>>
 
     @GET("Transactions/search")
     suspend fun searchTransactions(
@@ -123,7 +132,7 @@ interface ApiService {
         @Query("keywords") keywords: String? = null,
         @Query("timeRange") timeRange: String? = null,
         @Query("dayOfWeek") dayOfWeek: String? = null
-    ): Response<List<Transaction>>
+    ): Response<List<TransactionDetail>>
 
     @GET("Statistics/category-breakdown")
     suspend fun getCategoryBreakdown(@Query("startDate") startDate: String, @Query("endDate") endDate: String): List<CategoryBreakdown>

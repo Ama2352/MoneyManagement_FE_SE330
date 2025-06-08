@@ -9,6 +9,7 @@ import DI.Composables.ChatSection.ChatMessageScreen
 import DI.Composables.ChatSection.ChatScreen
 import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
+import DI.Composables.TransactionSection.MainTransactionsScreen
 import DI.Composables.WalletSection.WalletScreen
 import DI.Models.NavBar.BottomNavItem
 import DI.ViewModels.AnalysisViewModel
@@ -28,6 +29,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -130,8 +132,19 @@ private fun InnerNavHost(
                 navController = navController
             )
         }
-        composable(BottomNavItem.Transaction.route) {
 
+        composable(BottomNavItem.Transaction.route) {
+            MainTransactionsScreen(
+                onNavigateToAdd = { navController.navigate(Routes.AddTransaction) },
+                onNavigateToDetail = {
+
+                },
+                onNavigateToSearch = { navController.navigate(Routes.TransactionSearch) },
+                transactionViewModel = transactionViewModel,
+                currencyViewModel = currencyConverterViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel
+            )
         }
 
         composable(BottomNavItem.Wallet.route) {
@@ -200,8 +213,8 @@ private fun InnerNavHost(
         composable(Routes.Calendar) {
             CalendarScreen(analysisViewModel = analysisViewModel)
         }
-        composable(Routes.AddTransaction) {
 
+        composable(Routes.AddTransaction) {
 
         }
 
@@ -211,22 +224,8 @@ private fun InnerNavHost(
                 authViewModel = authViewModel,
             )
         }
-        composable(
-            route = Routes.TransactionDetail,
-            arguments = listOf(navArgument("transactionId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val transactionId = backStackEntry.arguments?.getString("transactionId") ?: ""
 
 
-        }
-        composable(
-            route = Routes.TransactionEdit,
-            arguments = listOf(navArgument("transactionId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val transactionId = backStackEntry.arguments?.getInt("transactionId") ?: 0
-
-
-        }
     }
 }
 

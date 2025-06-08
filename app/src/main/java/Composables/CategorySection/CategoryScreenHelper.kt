@@ -26,20 +26,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
-// Modern color scheme
+// Modern bright green color scheme
 object ModernColors {
-    val Background = Color(0xFFF8FAFC)
-    val Surface = Color.White
-    val SurfaceVariant = Color(0xFFF1F5F9)
-    val Primary = Color(0xFF6366F1)
-    val PrimaryLight = Color(0xFF818CF8)
-    val Secondary = Color(0xFF10B981)
-    val SecondaryLight = Color(0xFF34D399)
-    val Accent = Color(0xFFEC4899)
-    val OnSurface = Color(0xFF0F172A)
-    val OnSurfaceVariant = Color(0xFF64748B)
-    val Error = Color(0xFFEF4444)
-    val Success = Color(0xFF10B981)
+    val Background = Color(0xFFF0FDF4)          // Ultra Light Green Background
+    val Surface = Color.White                    // Pure White
+    val SurfaceVariant = Color(0xFFE8F5E9)      // Very Light Green
+    val Primary = Color(0xFF22C55E)             // Bright Green (main color)
+    val PrimaryLight = Color(0xFF4ADE80)        // Light Bright Green
+    val Secondary = Color(0xFF16A34A)           // Medium Green
+    val SecondaryLight = Color(0xFF34D399)      // Light Green
+    val Accent = Color(0xFF10B981)              // Emerald Green
+    val OnSurface = Color(0xFF0F172A)           // Dark text
+    val OnSurfaceVariant = Color(0xFF059669)    // Dark Green text
+    val Error = Color(0xFFEF4444)               // Bright Red
+    val Success = Color(0xFF10B981)             // Emerald Success
 
     val primaryGradient = Brush.linearGradient(
         colors = listOf(Primary, PrimaryLight)
