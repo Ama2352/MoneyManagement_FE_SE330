@@ -4,6 +4,7 @@ import android.util.Log
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.abs
 
 object CurrencyUtils {
     
@@ -22,15 +23,16 @@ object CurrencyUtils {
      * Format VND amount with proper thousands separator
      */
     fun formatVND(amount: Double): String {
-        return "${vndFormatter.format(amount)}₫"
+        val absAmount = abs(amount)
+        return if(amount < 0) "-${vndFormatter.format(absAmount)}₫" else "${vndFormatter.format(absAmount)}₫"
     }
     
     /**
      * Format USD amount with proper decimal places
      */
     fun formatUSD(amount: Double): String {
-        Log.d("CurrencyUtils", "Formatting USD amount: $amount")
-        return "$${usdFormatter.format(amount)}"
+        val absAmount = abs(amount)
+        return if(amount < 0) "-$${usdFormatter.format(absAmount)}" else "$${usdFormatter.format(absAmount)}"
     }   
     
     /**

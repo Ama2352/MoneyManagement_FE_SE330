@@ -30,7 +30,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,10 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import com.example.moneymanagement_frontend.R
 
 // Color scheme for transaction screen
 object TransactionColors {
@@ -60,7 +57,6 @@ object TransactionColors {
     val Transfer = Color(0xFF3B82F6) // Blue for transfer
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTransactionsScreen(
     onNavigateToAdd: () -> Unit,
@@ -74,13 +70,14 @@ fun MainTransactionsScreen(
     val strings = rememberAppStrings()
 
     // Collect states from ViewModels
-    val transactions by transactionViewModel.transactions
-    val transactionDetails by transactionViewModel.transactionDetails
-    val isLoading by transactionViewModel.isLoading
-    val errorMessage by transactionViewModel.errorMessage
+    val transactions by transactionViewModel.transactions.collectAsStateWithLifecycle()
+    val transactionDetails by transactionViewModel.transactionDetails.collectAsStateWithLifecycle()
+    val isLoading by transactionViewModel.isLoading.collectAsStateWithLifecycle()
+    val errorMessage by transactionViewModel.errorMessage.collectAsStateWithLifecycle()
     val categories by categoryViewModel.categories.collectAsStateWithLifecycle()
     val wallets by walletViewModel.wallets.collectAsStateWithLifecycle()
     val isVND by currencyViewModel.isVND.collectAsStateWithLifecycle()
+    val exchangeRates by currencyViewModel.exchangeRates.collectAsStateWithLifecycle()
 
     // Create a map of categoryID to Category for quick lookup
     val categoryMap = remember(categories) {
@@ -114,8 +111,8 @@ fun MainTransactionsScreen(
         Log.d("TransactionScreen", "Applying filter: $selectedFilter, $baseTransactions")
         when (selectedFilter) {
             strings.filterAllValue -> baseTransactions
-            strings.filterIncomeValue -> baseTransactions.filter { it.type == "Income" }
-            strings.filterExpenseValue -> baseTransactions.filter { it.type == "Expense" }
+            strings.filterIncomeValue -> baseTransactions.filter { it.type.equals("Income", ignoreCase = true) }
+            strings.filterExpenseValue -> baseTransactions.filter { it.type.equals("Expense", ignoreCase = true) }
             else -> baseTransactions
         }
     }
@@ -134,6 +131,18 @@ fun MainTransactionsScreen(
         transactionViewModel.loadAllTransactions()
         categoryViewModel.getCategories()
         walletViewModel.getWallets()
+    }
+
+    // Monitor success message and clear search results when transaction is created
+    val successMessage by transactionViewModel.successMessage.collectAsStateWithLifecycle()
+    LaunchedEffect(successMessage) {
+        successMessage?.let {
+            if (it.contains("created successfully", ignoreCase = true)) {
+                // Clear any existing search results to show the updated main transaction list
+                transactionViewModel.clearTransactionDetails()
+                transactionViewModel.clearMessages()
+            }
+        }
     }
 
     LazyColumn(
@@ -308,7 +317,7 @@ fun MainTransactionsScreen(
         } else {
             // Summary Cards
             item {
-                TransactionSummarySection(displayTransactions, isVND)
+                TransactionSummarySection(displayTransactions, isVND, exchangeRates)
             }
 
             // Filter Section
@@ -341,13 +350,12 @@ fun MainTransactionsScreen(
                         color = TransactionColors.OnSurface
                     )
                 }
-            }
-
-            // Transaction Items
+            }            // Transaction Items
             items(finalTransactions.take(displayedItemCount)) { transaction ->
                 TransactionCard(
                     transaction = transaction,
                     isVND = isVND,
+                    exchangeRates = exchangeRates,
                     onTransactionClick = { onNavigateToDetail(transaction.transactionID) }
                 )
             }
@@ -384,11 +392,32 @@ fun MainTransactionsScreen(
 }
 
 @Composable
-fun TransactionSummarySection(transactions: List<TransactionDetail>, isVND: Boolean) {
+fun TransactionSummarySection(transactions: List<TransactionDetail>, isVND: Boolean, exchangeRates: DI.Models.Currency.CurrencyRates?) {
     val strings = rememberAppStrings()
-    val totalIncome = transactions.filter { it.type.equals("Income", ignoreCase = true) }.sumOf { it.amount }
-    val totalExpense = transactions.filter { it.type.equals("Expense", ignoreCase = true) }.sumOf { it.amount }
-    val balance = totalIncome - totalExpense
+    
+    // Calculate totals in VND (as stored in backend)
+    val totalIncomeVND = transactions.filter { it.type.equals("Income", ignoreCase = true) }.sumOf { it.amount }
+    val totalExpenseVND = transactions.filter { it.type.equals("Expense", ignoreCase = true) }.sumOf { it.amount }
+    val balanceVND = totalIncomeVND - totalExpenseVND
+    
+    // Convert to USD for display if needed
+    val totalIncome = if (!isVND && exchangeRates != null) {
+        CurrencyUtils.vndToUsd(totalIncomeVND, exchangeRates.usdToVnd)
+    } else {
+        totalIncomeVND
+    }
+    
+    val totalExpense = if (!isVND && exchangeRates != null) {
+        CurrencyUtils.vndToUsd(totalExpenseVND, exchangeRates.usdToVnd)
+    } else {
+        totalExpenseVND
+    }
+    
+    val balance = if (!isVND && exchangeRates != null) {
+        CurrencyUtils.vndToUsd(balanceVND, exchangeRates.usdToVnd)
+    } else {
+        balanceVND
+    }
     
     Card(
         modifier = Modifier
@@ -473,8 +502,13 @@ fun SummaryItem(
             color = TransactionColors.OnSurfaceVariant,
             modifier = Modifier.padding(top = 8.dp)
         )
-          Text(
-            text = if (isVND) CurrencyUtils.formatVND(amount) else CurrencyUtils.formatAmount(amount, isVND),
+        
+        Text(
+            text = if (isVND) {
+                CurrencyUtils.formatVND(amount)
+            } else {
+                CurrencyUtils.formatUSD(amount)
+            },
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = color,
@@ -589,6 +623,7 @@ fun FilterChip(
 fun TransactionCard(
     transaction: TransactionDetail,
     isVND: Boolean = false,
+    exchangeRates: DI.Models.Currency.CurrencyRates? = null,
     onTransactionClick: () -> Unit = {}
 ) {
     val strings = rememberAppStrings()
@@ -596,6 +631,7 @@ fun TransactionCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onTransactionClick() }
+            .padding(8.dp)
             .shadow(4.dp, RoundedCornerShape(12.dp)),
         colors = CardDefaults.cardColors(containerColor = TransactionColors.Surface),
         shape = RoundedCornerShape(12.dp)
@@ -673,9 +709,21 @@ fun TransactionCard(
                 Text(
                     text = "${transaction.dayOfWeek}, ${transaction.date}",
                     fontSize = 12.sp,
-                )                
-                  Text(
-                    text = "${if (transaction.type.equals("Expense", ignoreCase = true)) "-" else "+"}${if (isVND) CurrencyUtils.formatVND(transaction.amount) else CurrencyUtils.formatAmount(transaction.amount, isVND)}",
+                )
+                Text(
+                    text = "${if (transaction.type.equals("Expense", ignoreCase = true)) "-" else "+"}${
+                        if (isVND) {
+                            CurrencyUtils.formatVND(transaction.amount)
+                        } else {
+                            // Convert VND (stored in backend) to USD for display
+                            val usdAmount = if (exchangeRates != null) {
+                                CurrencyUtils.vndToUsd(transaction.amount, exchangeRates.usdToVnd)
+                            } else {
+                                transaction.amount // Fallback if no exchange rate
+                            }
+                            CurrencyUtils.formatUSD(usdAmount)
+                        }
+                    }",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = TransactionUtils.getTransactionColor(transaction.type),
@@ -690,27 +738,70 @@ fun TransactionCard(
 fun convertTransactionToDetail(transaction: Transaction, categoryMap: Map<String, Category>, walletName: String, unknownText: String): TransactionDetail {
     val category = categoryMap[transaction.categoryID]
     
-    // Parse the transaction date
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+    // Log the original transaction date for debugging
+    Log.d("TransactionScreen", "Converting transaction ${transaction.transactionID} with date: ${transaction.transactionDate}")
+    
+    // Parse the transaction date with multiple possible formats using US locale for consistency
+    val possibleFormats = listOf(
+        "yyyy-MM-dd'T'HH:mm:ss",
+        "yyyy-MM-dd'T'HH:mm:ss.SSS",
+        "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+        "yyyy-MM-dd'T'HH:mm:ssXXX",
+        "yyyy-MM-dd HH:mm:ss",
+        "yyyy-MM-dd"
+    )
+    
     val date = try {
-        dateFormat.parse(transaction.transactionDate)
+        var parsedDate: Date? = null
+        var usedFormat = ""
+        
+        for (formatPattern in possibleFormats) {
+            try {
+                // Use US locale for parsing server dates (ISO format)
+                val formatter = SimpleDateFormat(formatPattern, Locale.US)
+                formatter.isLenient = false // Strict parsing
+                parsedDate = formatter.parse(transaction.transactionDate)
+                usedFormat = formatPattern
+                Log.d("TransactionScreen", "Successfully parsed date using format: $usedFormat")
+                break
+            } catch (e: Exception) {
+                // Try next format
+                continue
+            }
+        }
+        
+        if (parsedDate != null) {
+            Log.d("TransactionScreen", "Parsed date result: $parsedDate")
+            parsedDate
+        } else {
+            Log.e("TransactionScreen", "Failed to parse date with all formats: ${transaction.transactionDate}")
+            Date() // Fallback to current date
+        }
     } catch (e: Exception) {
-        // Fallback to current date if parsing fails
+        Log.e("TransactionScreen", "Error parsing date: ${transaction.transactionDate}", e)
         Date()
     }
     
+    // Use user's locale for display formatting (will show in English or Vietnamese based on app language)
     val dayFormatter = SimpleDateFormat("EEEE", Locale.getDefault())
     val monthFormatter = SimpleDateFormat("MMMM", Locale.getDefault())
     val dateDisplayFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
     val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
     
+    val formattedDate = dateDisplayFormatter.format(date)
+    val formattedTime = timeFormatter.format(date)
+    val dayOfWeek = dayFormatter.format(date)
+    val month = monthFormatter.format(date)
+    
+    Log.d("TransactionScreen", "Formatted for display - Date: $formattedDate, Time: $formattedTime, Day: $dayOfWeek")
+    
     return TransactionDetail(
         transactionID = transaction.transactionID,
         transactionDate = transaction.transactionDate,
-        date = dateDisplayFormatter.format(date),
-        time = timeFormatter.format(date),
-        dayOfWeek = dayFormatter.format(date),
-        month = monthFormatter.format(date),
+        date = formattedDate,
+        time = formattedTime,
+        dayOfWeek = dayOfWeek,
+        month = month,
         amount = transaction.amount,
         type = transaction.type,
         category = category?.name ?: unknownText,

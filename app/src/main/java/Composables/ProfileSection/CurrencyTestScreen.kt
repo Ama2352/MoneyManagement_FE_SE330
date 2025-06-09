@@ -39,7 +39,9 @@ fun CurrencyTestScreen(
     val scope = rememberCoroutineScope()
     
     // Extract the exchange rate value, with fallback
-    val exchangeRate = exchangeRates?.usdToVnd ?: 24000.0    // Change your state from String to TextFieldValue
+    val exchangeRate = exchangeRates?.usdToVnd ?: 24000.0
+
+    // Change your state from String to TextFieldValue
     var testAmount by remember { mutableStateOf(TextFieldValue("")) }
     var parsedAmount by remember { mutableStateOf<Double?>(null) }
     var formattedAmount by remember { mutableStateOf("") }

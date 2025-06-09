@@ -7,15 +7,15 @@ import DI.Models.Transaction.CreateTransactionRequest
 import DI.Models.Transaction.UpdateTransactionRequest
 import DI.Models.Transaction.TransactionSearchRequest
 import DI.Models.Transaction.GetTransactionsByDateRangeRequest
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.State
 import DI.Repositories.CategoryRepository
 import DI.Repositories.TransactionRepository
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,37 +25,37 @@ class TransactionViewModel @Inject constructor(
 ) : ViewModel() {
 
     // State for all transactions
-    private val _transactions = mutableStateOf<List<Transaction>>(emptyList())
-    val transactions: State<List<Transaction>> = _transactions
+    private val _transactions = MutableStateFlow<List<Transaction>>(emptyList())
+    val transactions: StateFlow<List<Transaction>> = _transactions.asStateFlow()
 
     // State for transaction details (used for search and date range filtering)
-    private val _transactionDetails = mutableStateOf<List<TransactionDetail>>(emptyList())
-    val transactionDetails: State<List<TransactionDetail>> = _transactionDetails
+    private val _transactionDetails = MutableStateFlow<List<TransactionDetail>>(emptyList())
+    val transactionDetails: StateFlow<List<TransactionDetail>> = _transactionDetails.asStateFlow()
 
     // State for selected transaction
-    private val _selectedTransaction = mutableStateOf<Transaction?>(null)
-    val selectedTransaction: State<Transaction?> = _selectedTransaction
+    private val _selectedTransaction = MutableStateFlow<Transaction?>(null)
+    val selectedTransaction: StateFlow<Transaction?> = _selectedTransaction.asStateFlow()
 
     // Loading states
-    private val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _isCreating = mutableStateOf(false)
-    val isCreating: State<Boolean> = _isCreating
+    private val _isCreating = MutableStateFlow(false)
+    val isCreating: StateFlow<Boolean> = _isCreating.asStateFlow()
 
-    private val _isUpdating = mutableStateOf(false)
-    val isUpdating: State<Boolean> = _isUpdating
+    private val _isUpdating = MutableStateFlow(false)
+    val isUpdating: StateFlow<Boolean> = _isUpdating.asStateFlow()
 
-    private val _isDeleting = mutableStateOf(false)
-    val isDeleting: State<Boolean> = _isDeleting
+    private val _isDeleting = MutableStateFlow(false)
+    val isDeleting: StateFlow<Boolean> = _isDeleting.asStateFlow()
 
     // Error states
-    private val _errorMessage = mutableStateOf<String?>(null)
-    val errorMessage: State<String?> = _errorMessage
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
     // Success states
-    private val _successMessage = mutableStateOf<String?>(null)
-    val successMessage: State<String?> = _successMessage
+    private val _successMessage = MutableStateFlow<String?>(null)
+    val successMessage: StateFlow<String?> = _successMessage.asStateFlow()
 
     init {
         loadAllTransactions()
@@ -69,7 +69,7 @@ class TransactionViewModel @Inject constructor(
             try {
                 val response = transactionRepository.getAllTransactions()
                 if (response.isSuccessful) {
-                    _transactions.value = response.body() ?: emptyList()
+                    _transactions.value = response.body()?.reversed() ?: emptyList()
                 } else {
                     _errorMessage.value = "Failed to load transactions: ${response.message()}"
                 }
@@ -239,6 +239,11 @@ class TransactionViewModel @Inject constructor(
     fun clearMessages() {
         _errorMessage.value = null
         _successMessage.value = null
+    }
+
+    // Clear transaction details (search/filter results)
+    fun clearTransactionDetails() {
+        _transactionDetails.value = emptyList()
     }
 
     // Clear selected transaction

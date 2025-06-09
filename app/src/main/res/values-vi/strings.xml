@@ -109,6 +109,15 @@
     <string name="type_income">Thu nhập</string>
     <string name="type_expense">Chi tiêu</string>
 
+    <!-- Transaction Form -->
+    <string name="transaction_type">Loại giao dịch</string>
+    <string name="amount">Số tiền</string>
+    <string name="time">Thời gian</string>
+    <string name="enter_amount">Nhập số tiền</string>
+    <string name="enter_description">Nhập mô tả</string>
+    <string name="select_wallet">Chọn ví</string>
+    <string name="save_transaction">Lưu giao dịch</string>
+
     <!-- Transaction Details -->
     <string name="transaction_detail">Chi tiết giao dịch</string>
     <string name="transaction_details">Thông tin giao dịch</string>
@@ -117,23 +126,22 @@
     <string name="edit_transaction">Chỉnh sửa giao dịch</string>
     <string name="delete_transaction">Xóa giao dịch</string>
     <string name="delete_transaction_confirm_title">Xóa giao dịch</string>
-    <string name="delete_transaction_confirm_message">Bạn có chắc muốn xóa giao dịch này? Hành động này không thể hoàn tác.</string>
-    <string name="transaction_deleted_success">Xóa giao dịch thành công ✓</string>
+    <string name="delete_transaction_confirm_message">Bạn có chắc muốn xóa giao dịch này? Hành động này không thể hoàn tác.</string>    <string name="transaction_deleted_success">Xóa giao dịch thành công ✓</string>
     <string name="transaction_deleted_failed">Xóa giao dịch thất bại ✗</string>
-    <string name="transaction_type">Loại giao dịch</string>
+    <string name="transaction_id">Mã giao dịch</string>
+    <string name="created_on">Được tạo vào</string>
+    <string name="transaction_info">Thông tin giao dịch</string>    <string name="no_description_provided">Không có mô tả</string>
+    <string name="deleting">Đang xóa...</string>
     <string name="transaction_type_unchangeable">Loại giao dịch (Không thể thay đổi)</string>
 
     <!-- Transaction Form Fields -->
     <string name="title">Tiêu đề</string>
-    <string name="amount">Số tiền</string>
     <string name="amount_vnd">Số tiền (VND)</string>
     <string name="amount_placeholder">0 ₫</string>
     <string name="enter_transaction_title">Nhập tiêu đề giao dịch</string>
-    <string name="select_wallet">Chọn ví</string>
     <string name="date_time">Ngày &amp; Giờ</string>
     <string name="select_date_time">Chọn ngày và giờ</string>
     <string name="save_changes">Lưu thay đổi</string>
-    <string name="save_transaction">Lưu giao dịch</string>
     <string name="scan_receipt">Quét hóa đơn</string>
     <string name="scan_receipt_description">Quét hóa đơn</string>
 
@@ -431,7 +439,7 @@
     <!-- ================== TRANSACTION STRINGS ================== -->
     <string name="update_transaction">Cập nhật giao dịch</string>
     <string name="transaction_description">Nhập mô tả</string>
-    <string name="transactions">Các giao dịch</string>
+    <string name="transactions">Danh sách giao dịch</string>
     <string name="no_transactions">Không tìm thấy giao dịch nào</string>
     <string name="delete_transaction_confirmation">Bạn có chắc chắn muốn xóa giao dịch này?</string>
     <string name="display_currency">Hiển thị tiền tệ</string>
@@ -443,7 +451,9 @@
     <string name="add_expense">Thêm chi phí</string>
     <string name="analytics">Phân tích</string>
     <string name="net_balance">Số dư ròng</string>
-    <string name="description_optional">Mô tả (không bắt buộc)</string>    <string name="filters">Bộ lọc</string>    <string name="refresh">Làm mới</string>
+    <string name="description_optional">Mô tả (không bắt buộc)</string>
+    <string name="filters">Bộ lọc</string>
+    <string name="refresh">Làm mới</string>
     <string name="detailed_add">Thêm chi tiết</string>
     <string name="no_transactions_yet">Chưa có giao dịch nào</string>
     <string name="start_adding_transactions">Bắt đầu thêm giao dịch để theo dõi tài chính</string>
@@ -458,6 +468,19 @@
     <string name="filter_this_month_value">Tháng này</string>
     <string name="filter_income_value">Thu nhập</string>
     <string name="filter_expense_value">Chi tiêu</string>
+
+    <!-- Add/Edit Transaction Screen -->
+    <string name="transaction_amount">Số tiền</string>
+    <string name="select_type">Chọn loại</string>
+    <string name="select_time">Chọn thời gian</string>
+    <string name="transaction_type_income">Thu nhập</string>
+    <string name="transaction_type_expense">Chi tiêu</string>
+    <string name="required_field">Trường này bắt buộc</string>
+    <string name="invalid_amount">Vui lòng nhập số tiền hợp lệ</string>
+    <string name="creating_transaction">Đang tạo giao dịch...</string>
+    <string name="transaction_created_successfully">Tạo giao dịch thành công</string>
+    <string name="fill_required_fields">Vui lòng điền tất cả các trường bắt buộc</string>
+    <string name="transaction_type_cannot_change">Không thể thay đổi loại giao dịch để tránh không nhất quán dữ liệu</string>
 
     <!-- Transaction Screen Strings -->
     <string name="track_your_money_flow">Theo dõi dòng tiền của bạn</string>

@@ -1,5 +1,8 @@
 package DI.Navigation
 
+import Composables.TransactionSection.AddTransactionScreen
+import Composables.TransactionSection.EditTransactionScreen
+import Composables.TransactionSection.TransactionDetailScreen
 import DI.API.TokenHandler.TokenExpirationHandler
 import DI.Composables.AnalysisSection.AnalysisBody
 import DI.Composables.AnalysisSection.CalendarScreen
@@ -136,8 +139,8 @@ private fun InnerNavHost(
         composable(BottomNavItem.Transaction.route) {
             MainTransactionsScreen(
                 onNavigateToAdd = { navController.navigate(Routes.AddTransaction) },
-                onNavigateToDetail = {
-
+                onNavigateToDetail = { transactionId ->
+                    navController.navigate("transaction_detail/$transactionId")
                 },
                 onNavigateToSearch = { navController.navigate(Routes.TransactionSearch) },
                 transactionViewModel = transactionViewModel,
@@ -215,7 +218,39 @@ private fun InnerNavHost(
         }
 
         composable(Routes.AddTransaction) {
+            AddTransactionScreen(
+                navController = navController,
+                transactionViewModel = transactionViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
+            )
+        }
 
+        composable(
+            route = Routes.TransactionDetail,
+            arguments = listOf(navArgument("transactionId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val transactionId = backStackEntry.arguments?.getString("transactionId") ?: ""
+            TransactionDetailScreen(
+                transactionId = transactionId,
+                navController = navController
+            )
+        }
+
+        composable(
+            route = Routes.TransactionEdit,
+            arguments = listOf(navArgument("transactionId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val transactionId = backStackEntry.arguments?.getString("transactionId") ?: ""
+            EditTransactionScreen(
+                transactionId = transactionId,
+                navController = navController,
+                transactionViewModel = transactionViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel,
+            )
         }
 
         composable(BottomNavItem.Category.route) {

@@ -94,7 +94,8 @@ fun rememberAppStrings(): AppStrings {
 
 
         unknownWallet = stringResource(R.string.wallet_form_unknown_wallet),
-          // Transaction Screen specific strings
+
+        // Transaction Screen specific strings
         trackYourMoneyFlow = stringResource(R.string.track_your_money_flow),
         totalSummary = stringResource(R.string.total_summary),
         showMore = stringResource(R.string.show_more),
@@ -104,7 +105,37 @@ fun rememberAppStrings(): AppStrings {
         addTransactionsDesc = stringResource(R.string.add_transactions_desc),
         loadingTransactions = stringResource(R.string.loading_transactions),
         error = stringResource(R.string.error),
-        unknown = stringResource(R.string.unknown)
+        unknown = stringResource(R.string.unknown),
+        date = stringResource(R.string.date),
+        time = stringResource(R.string.time),
+        
+        // Add Transaction Screen
+        transactionAmount = stringResource(R.string.transaction_amount),
+        transactionDescription = stringResource(R.string.transaction_description),
+        selectType = stringResource(R.string.select_type),
+        selectDate = stringResource(R.string.select_date),
+        selectTime = stringResource(R.string.select_time),
+        transactionTypeIncome = stringResource(R.string.transaction_type_income),
+        transactionTypeExpense = stringResource(R.string.transaction_type_expense),
+        requiredField = stringResource(R.string.required_field),
+        invalidAmount = stringResource(R.string.invalid_amount),
+        saveTransaction = stringResource(R.string.save_transaction),
+        creatingTransaction = stringResource(R.string.creating_transaction),
+        transactionCreatedSuccessfully = stringResource(R.string.transaction_created_successfully),
+        fillRequiredFields = stringResource(R.string.fill_required_fields),
+
+        // Edit Transaction Screen
+        transactionTypeUnchangeable = stringResource(R.string.transaction_type_cannot_change),
+
+        // Transaction Detail Screen
+        transactionDetails = stringResource(R.string.transaction_details),
+        deleteTransaction = stringResource(R.string.delete_transaction),
+        deleteTransactionConfirmation = stringResource(R.string.delete_transaction_confirm_message),
+        transactionId = stringResource(R.string.transaction_id),
+        createdOn = stringResource(R.string.created_on),
+        transactionInfo = stringResource(R.string.transaction_info),
+        noDescriptionProvided = stringResource(R.string.no_description_provided),
+        deleting = stringResource(R.string.deleting)
     )
 }
 
@@ -124,7 +155,6 @@ data class AppStrings(
     
     // Transaction UI
     val transactions: String = "",
-    val addTransaction: String = "",
     val recentTransactions: String = "",
     val noTransactionsFound: String = "",
     val quickActions: String = "",
@@ -157,6 +187,8 @@ data class AppStrings(
     val category: String = "",
     val wallet: String = "",
     val dateTime: String = "",
+    val date: String = "",
+    val time: String = "",
     
     // Selection
     val selectCategory: String = "",
@@ -226,6 +258,10 @@ data class AppStrings(
     val transactionDetails: String = "",
     val deleteTransaction: String = "",
     val deleteTransactionConfirmation: String = "",
+    val transactionId: String = "",
+    val createdOn: String = "",
+    val transactionInfo: String = "",
+
     val deleting: String = "",
     val amountLabel: String = "",
     val categoryLabel: String = "",
@@ -246,7 +282,26 @@ data class AppStrings(
     val addTransactionsDesc: String = "",
     val loadingTransactions: String = "",
     val error: String = "",
-    val unknown: String = ""
+    val unknown: String = "",
+    
+    // Add Transaction Screen
+    val addTransaction: String = "",
+    val transactionAmount: String = "",
+    val transactionDescription: String = "",
+    val selectType: String = "",
+    val selectDate: String = "",
+    val selectTime: String = "",
+    val transactionTypeIncome: String = "",
+    val transactionTypeExpense: String = "",
+    val requiredField: String = "",
+    val invalidAmount: String = "",
+    val saveTransaction: String = "",
+    val creatingTransaction: String = "",
+    val transactionCreatedSuccessfully: String = "",
+    val fillRequiredFields: String = "",
+
+    // Edit Transaction Screen
+    val transactionTypeUnchangeable: String = "",
 ) {
 
 }

@@ -154,4 +154,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation (libs.sheets.compose.dialogs.core)
+    implementation (libs.calendar)
+    implementation (libs.clock)
+
 }

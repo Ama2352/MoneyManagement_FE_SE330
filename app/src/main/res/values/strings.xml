@@ -99,7 +99,17 @@
     <string name="add_transaction">Add Transaction</string>
     <string name="recent_transactions">Recent Transactions</string>
     <string name="no_transactions_found">No transactions found</string>
-      <!-- Transaction UI -->
+    
+    <!-- Transaction Form -->
+    <string name="transaction_type">Transaction Type</string>
+    <string name="amount">Amount</string>
+    <string name="time">Time</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="enter_description">Enter description</string>
+    <string name="select_wallet">Select wallet</string>
+    <string name="save_transaction">Save Transaction</string>
+    
+    <!-- Transaction UI -->
     <string name="quick_actions">Quick Actions</string>
     <string name="add_income">Add Income</string>
     <string name="add_expense">Add Expense</string>
@@ -120,7 +130,6 @@
     <string name="no_transactions_yet">No transactions yet</string>
     <string name="start_adding_transactions">Start by adding your first transaction</string>
     <string name="view_all_transactions">View all %1$d transactions</string>
-    <string name="select_wallet">Select Wallet</string>
     <string name="balance">Balance: $%1$s</string>
     <string name="income">Income</string>
     <string name="expense">Expense</string>
@@ -137,22 +146,21 @@
     <string name="edit_transaction">Edit Transaction</string>
     <string name="delete_transaction">Delete Transaction</string>
     <string name="delete_transaction_confirm_title">Delete Transaction</string>
-    <string name="delete_transaction_confirm_message">Are you sure you want to delete this transaction? This action cannot be undone.</string>
-    <string name="transaction_deleted_success">Transaction deleted successfully ✓</string>
+    <string name="delete_transaction_confirm_message">Are you sure you want to delete this transaction? This action cannot be undone.</string>    <string name="transaction_deleted_success">Transaction deleted successfully ✓</string>
     <string name="transaction_deleted_failed">Failed to delete transaction ✗</string>
-    <string name="transaction_type">Transaction Type</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="created_on">Created On</string>
+    <string name="transaction_info">Transaction Information</string>    <string name="no_description_provided">No description provided</string>
+    <string name="deleting">Deleting...</string>
     <string name="transaction_type_unchangeable">Transaction Type (Unchangeable)</string>
-    
-    <!-- Transaction Form Fields -->
+      <!-- Transaction Form Fields -->
     <string name="title">Title</string>
-    <string name="amount">Amount</string>
     <string name="amount_vnd">Amount (VND)</string>
     <string name="amount_placeholder">$0.00</string>
     <string name="enter_transaction_title">Enter transaction title</string>
     <string name="date_time">Date &amp; Time</string>
     <string name="select_date_time">Select date and time</string>
     <string name="save_changes">Save Changes</string>
-    <string name="save_transaction">Save Transaction</string>
     <string name="scan_receipt">Scan Receipt</string>
     <string name="scan_receipt_description">Scan Receipt</string>
     
@@ -447,33 +455,31 @@
     <string name="current_currency">Current: %1$s</string>
 
     <!-- ================== TRANSACTION STRINGS ================== -->
-    <string name="transaction_description">Enter description</string>
     <string name="no_transactions">No transactions found</string>
     <string name="display_currency">Display Currency</string>
     <string name="description">Description</string>
-    <string name="cancel">Cancel</string>
+    <string name="transactions">Transactions</string>
+    <string name="delete_transaction_confirmation">Are you sure you want to delete this transaction?</string>
+    <string name="add">Add</string>
 
     <!-- Transaction Detail Screen -->
     <string name="delete">Delete</string>
     
     <!-- Add/Edit Transaction Screen -->
-
-
-    <!-- Transaction Search Screen -->
-
-    <!-- Transaction List Screen -->
-    <string name="transactions">Transactions</string>
-
-    <!-- Additional UI Labels -->
-    <string name="add">Add</string>
-
-
-    <!-- Transaction Detail Screen -->
-    <string name="delete_transaction_confirmation">Are you sure you want to delete this transaction? This action cannot be undone.</string>
-
-    
-    <!-- Add/Edit Transaction Screen - Only add new ones that don't exist -->
     <string name="update_transaction">Update Transaction</string>
+    <string name="transaction_amount">Amount</string>
+    <string name="transaction_description">Description</string>
+    <string name="select_type">Select Type</string>
+    <string name="select_time">Select Time</string>
+    <string name="transaction_type_income">Income</string>
+    <string name="transaction_type_expense">Expense</string>
+    <string name="required_field">This field is required</string>
+    <string name="invalid_amount">Please enter a valid amount</string>
+    <string name="cancel">Cancel</string>
+    <string name="creating_transaction">Creating transaction…</string>
+    <string name="transaction_created_successfully">Transaction created successfully</string>
+    <string name="fill_required_fields">Please fill all required fields</string>
+    <string name="transaction_type_cannot_change">Transaction type cannot be changed to avoid data inconsistency</string>
 
     <!-- Transaction Screen Strings -->
     <string name="track_your_money_flow">Track your money flow</string>
@@ -482,7 +488,7 @@
     <string name="recent_transactions_count">Recent Transactions (%1$d of %2$d)</string>
     <string name="search_transactions_desc">Search Transactions</string>
     <string name="add_transactions_desc">Add Transactions</string>
-    <string name="loading_transactions">Loading transactions...</string>
+    <string name="loading_transactions">Loading transactions…</string>
     <string name="error">Error</string>
 
 

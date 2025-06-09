@@ -14,3 +14,15 @@ object TransactionUtils {
         }
     }
 }
+
+enum class TransactionType {
+    INCOME,
+    EXPENSE;
+
+    override fun toString(): String {
+        return when (this) {
+            INCOME -> "Income"
+            EXPENSE -> "Expense"
+        }
+    }
+}
