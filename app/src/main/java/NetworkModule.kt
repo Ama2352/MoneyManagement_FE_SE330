@@ -35,7 +35,7 @@ annotation class ExchangeRetrofit
 object NetworkModule {
 
     // private const val BASE_URL = "http://10.0.2.2:5215/api/" // Emulator localhost
-    private const val BASE_URL = "http://172.21.5.70:8080/api/"
+    private const val BASE_URL = "http://192.168.0.129:8080/api/"
 //     private const val BASE_URL = "http://143.198.208.227:5000/api/"
     // Exchange API base URL
     private const val EXCHANGE_API_BASE_URL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/"
@@ -103,7 +103,7 @@ object NetworkModule {
                 setLevel(HttpLoggingInterceptor.Level.BASIC)
             })
             .build()
-            
+
         return Retrofit.Builder()
             .baseUrl(EXCHANGE_API_BASE_URL)
             .client(client)
@@ -116,7 +116,7 @@ object NetworkModule {
     fun provideApiService(@MainRetrofit retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
-    
+
     @Provides
     @Singleton
     fun provideExchangeApiService(@ExchangeRetrofit retrofit: Retrofit): ExchangeApiService {

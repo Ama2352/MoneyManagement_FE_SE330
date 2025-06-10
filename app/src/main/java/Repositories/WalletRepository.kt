@@ -3,6 +3,7 @@ package DI.Repositories
 import API.ApiService
 import DI.Models.Wallet.AddWalletRequest
 import DI.Models.Wallet.Wallet
+import android.util.Log
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,6 +13,7 @@ class WalletRepository @Inject constructor(private val apiService: ApiService) {
     suspend fun getWallets(): Result<List<Wallet>> {
         return try {
             val wallets = apiService.getWallets()
+            Log.d("SavingGoalDebug", "Wallet API response: $wallets")
             Result.success(wallets)
         } catch (e: Exception) {
             Result.failure(e)

@@ -27,6 +27,9 @@ import DI.Models.Friend.Friend
 import DI.Models.Friend.FriendRequest
 import DI.Models.Friend.RejectFriendRequestResponse
 import DI.Models.Ocr.OcrData
+import DI.Models.SavingGoal.CreateSavingGoal
+import DI.Models.SavingGoal.SavingGoal
+import DI.Models.SavingGoal.UpdateSavingGoal
 import DI.Models.UserInfo.AvatarUploadResponse
 import DI.Models.UserInfo.Profile
 import DI.Models.UserInfo.UpdatedProfile
@@ -204,4 +207,24 @@ interface ApiService {
 
     @GET("Calendar/yearly")
     suspend fun getYearlySummary(@Query("year") year: String): YearlySummary
+
+    // Saving goal
+
+    @POST("SavingGoals")
+    suspend fun createSavingGoal(@Body request: CreateSavingGoal): Response<SavingGoal>
+
+    @GET("SavingGoals")
+    suspend fun getAllSavingGoals(): Response<List<SavingGoal>>
+
+    @GET("SavingGoals/{savingGoalId}")
+    suspend fun getSavingGoalById(@Path("savingGoalId") savingGoalId: String): Response<SavingGoal>
+
+    @PUT("SavingGoals/{savingGoalId}")
+    suspend fun updateSavingGoal(@Body request: UpdateSavingGoal): Response<SavingGoal>
+
+    @DELETE("SavingGoals/{savingGoalId}")
+    suspend fun deleteSavingGoal(@Path("savingGoalId") savingGoalId: String): Response<ResponseBody>
+
+    @GET("SavingGoals/progress")
+    suspend fun getSavingGoalProgressAndAlerts(): Response<List<SavingGoal>>
 }
