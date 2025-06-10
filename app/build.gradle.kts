@@ -71,6 +71,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+
     // Dùng BOM để đồng bộ các thư viện Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -121,8 +122,7 @@ dependencies {
 
     // Compose Charts
     implementation(libs.compose.charts.v012)
-
-    // The compose calendar library for Android
+// The compose calendar library for Android
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.1.5")
     implementation("com.kizitonwose.calendar:compose:2.6.2")
 
@@ -148,6 +148,7 @@ dependencies {
 
     // Adds support for date and time pickers in the dialogs
     implementation(libs.compose.material.dialogs.datetime)
+    implementation("androidx.compose.material3:material3:1.3.0")
 
     // Compose testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
