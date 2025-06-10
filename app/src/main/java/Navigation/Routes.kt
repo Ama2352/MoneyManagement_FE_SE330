@@ -16,6 +16,8 @@ object Routes {
     const val CurrencyTest = "currency_test"
     const val SavingGoal = "saving_goal"
     const val CreateEditSavingGoal = "create_edit_saving_goal?savingGoalId={savingGoalId}"
+    const val Budget = "budget"
+    const val CreateEditBudget = "create_edit_budget?budgetId={budgetId}"
 
-    val all = setOf(Login, Register, Main, Auth, Calendar, ChatMessage, CurrencyTest, SavingGoal, CreateEditSavingGoal)
+    val all = setOf(Login, Register, Main, Auth, Calendar, ChatMessage, CurrencyTest, SavingGoal, CreateEditSavingGoal, Budget, CreateEditBudget)
 }

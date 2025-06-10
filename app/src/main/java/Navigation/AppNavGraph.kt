@@ -17,17 +17,17 @@ import DI.Composables.ProfileSection.EditProfileScreen
 import DI.Composables.ReportSection.ReportScreen
 import DI.Composables.SavingGoalUI.CreateEditSavingGoalScreen
 import DI.Composables.SavingGoalUI.SavingGoalScreen
+import DI.Composables.BudgetUI.BudgetScreen
+import DI.Composables.BudgetUI.CreateEditBudgetScreen
 import DI.Composables.TransactionSection.MainTransactionsScreen
 import DI.Composables.WalletSection.WalletScreen
 import DI.Models.BottomNavItem
-import DI.Screens.BudgetScreen
 import DI.ViewModels.AnalysisViewModel
 import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.ChatViewModel
 import DI.ViewModels.FriendViewModel
 import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.CategoryViewModel
-import DI.ViewModels.OcrViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.CurrencyConverterViewModel
 import DI.ViewModels.ReportViewModel
@@ -102,9 +102,7 @@ private fun InnerNavHost(
     modifier: Modifier,
     parentEntry: NavBackStackEntry,
     authViewModel: AuthViewModel
-) {
-
-    val friendViewModel = hiltViewModel<FriendViewModel>(parentEntry)
+) {    val friendViewModel = hiltViewModel<FriendViewModel>(parentEntry)
     val chatViewModel = hiltViewModel<ChatViewModel>(parentEntry)
     val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
     val analysisViewModel = hiltViewModel<AnalysisViewModel>(parentEntry)
@@ -112,7 +110,6 @@ private fun InnerNavHost(
     val transactionViewModel = hiltViewModel<TransactionViewModel>(parentEntry)
     val currencyConverterViewModel = hiltViewModel<CurrencyConverterViewModel>(parentEntry)
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
-    val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
     val savingGoalViewModel = hiltViewModel<SavingGoalViewModel>(parentEntry)
     val budgetViewModel = hiltViewModel<BudgetViewModel>(parentEntry)
     val reportViewModel = hiltViewModel<ReportViewModel>(parentEntry)
@@ -309,12 +306,31 @@ private fun InnerNavHost(
                 currencyConverterViewModel = currencyConverterViewModel
             )
         }
-
         composable(BottomNavItem.Budget.route) {
             BudgetScreen(
-                viewModel = budgetViewModel,
+                navController = navController,
+                budgetViewModel = budgetViewModel,
                 categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
+            )
+        }
+
+        composable(
+            route = Routes.CreateEditBudget,
+            arguments = listOf(navArgument("budgetId") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) { backStackEntry ->
+            val budgetId = backStackEntry.arguments?.getString("budgetId")
+            CreateEditBudgetScreen(
+                navController = navController,
+                budgetViewModel = budgetViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel,
+                budgetId = budgetId,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
 
