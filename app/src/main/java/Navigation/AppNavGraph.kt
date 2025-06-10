@@ -9,16 +9,11 @@ import DI.Composables.AnalysisSection.AnalysisBody
 import DI.Composables.AnalysisSection.CalendarScreen
 import DI.Composables.AuthSection.LoginScreen
 import DI.Composables.AuthSection.RegisterScreen
-import DI.Composables.ChatSection.ChatMessageScreen
-import DI.Composables.ChatSection.ChatScreen
-import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
 import DI.Composables.TransactionSection.MainTransactionsScreen
 import DI.Composables.WalletSection.WalletScreen
 import DI.Models.NavBar.BottomNavItem
 import DI.ViewModels.AnalysisViewModel
-import DI.ViewModels.ChatViewModel
-import DI.ViewModels.FriendViewModel
 import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.OcrViewModel
@@ -47,8 +42,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.example.friendsapp.FriendsScreen
-import com.example.friendsapp.FriendsScreenTheme
 
 fun NavGraphBuilder.authGraph(navController: NavController) {
     navigation(startDestination = Routes.Login, route = Routes.Auth) {
@@ -96,45 +89,18 @@ private fun InnerNavHost(
     authViewModel: AuthViewModel
 ) {
 
-    val friendViewModel = hiltViewModel<FriendViewModel>(parentEntry)
-    val chatViewModel = hiltViewModel<ChatViewModel>(parentEntry)
     val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
     val analysisViewModel = hiltViewModel<AnalysisViewModel>(parentEntry)
     val categoryViewModel = hiltViewModel<CategoryViewModel>(parentEntry)
     val transactionViewModel = hiltViewModel<TransactionViewModel>(parentEntry)
     val currencyConverterViewModel = hiltViewModel<CurrencyConverterViewModel>(parentEntry)
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
-    val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
 
     NavHost(
         navController    = navController,
         startDestination = BottomNavItem.Profile.route,
         modifier         = modifier
     ) {
-        composable(BottomNavItem.Home.route) {
-
-        }
-
-        composable(BottomNavItem.Friend.route) {
-            FriendsScreenTheme {
-                FriendsScreen(
-                    authViewModel = authViewModel,
-                    friendViewModel = friendViewModel,
-                    profileViewModel = profileViewModel,
-                    navController = navController
-                )
-            }
-        }
-
-        composable(BottomNavItem.Chat.route) {
-            ChatScreen(
-                authViewModel = authViewModel,
-                chatViewModel = chatViewModel,
-                profileViewModel = profileViewModel,
-                friendViewModel = friendViewModel,
-                navController = navController
-            )
-        }
 
         composable(BottomNavItem.Transaction.route) {
             MainTransactionsScreen(
@@ -153,35 +119,10 @@ private fun InnerNavHost(
         composable(BottomNavItem.Wallet.route) {
             WalletScreen(
                 viewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
 
-        composable(
-            route = Routes.ChatMessage,
-            arguments = listOf(navArgument("friendId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val friendId = backStackEntry.arguments?.getString("friendId") ?: ""
-            ChatMessageScreen(
-                navController = navController ,
-                friendId = friendId,
-                chatViewModel = chatViewModel,
-                profileViewModel = profileViewModel,
-                friendViewModel = friendViewModel
-            )
-        }
-
-        composable(
-            route = Routes.FriendProfile,
-            arguments = listOf(navArgument("friendId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val friendId = backStackEntry.arguments?.getString("friendId") ?: ""
-            FriendProfileScreen(
-                friendId = friendId,
-                profileViewModel = profileViewModel,
-                friendViewModel = friendViewModel,
-                navController = navController
-            )
-        }
         composable(BottomNavItem.Profile.route) {
             ProfileScreen(
                 appNavController = appNavController,
@@ -197,24 +138,21 @@ private fun InnerNavHost(
                 profileViewModel = profileViewModel
             )
         }
-        
-        composable(Routes.CurrencyTest) {
-            Composables.ProfileSection.CurrencyTestScreen(
-                navController = navController,
-                currencyConverterViewModel = currencyConverterViewModel
-            )
-        }
 
         composable(BottomNavItem.Analysis.route) {
             AnalysisBody(
                 navController = navController,
                 authViewModel = authViewModel,
-                analysisViewModel = analysisViewModel
+                analysisViewModel = analysisViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
 
         composable(Routes.Calendar) {
-            CalendarScreen(analysisViewModel = analysisViewModel)
+            CalendarScreen(
+                analysisViewModel = analysisViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
+            )
         }
 
         composable(Routes.AddTransaction) {

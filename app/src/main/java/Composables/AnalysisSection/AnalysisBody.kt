@@ -2,7 +2,10 @@ package DI.Composables.AnalysisSection
 
 import DI.Navigation.Routes
 import DI.ViewModels.AnalysisViewModel
+import DI.ViewModels.CurrencyConverterViewModel
+import DI.Utils.CurrencyUtils
 import ViewModels.AuthViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -59,8 +62,8 @@ import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.IndicatorCount
 import ir.ehsannarmani.compose_charts.models.IndicatorPosition
 import ir.ehsannarmani.compose_charts.models.LabelProperties
+import ir.ehsannarmani.compose_charts.models.PopupProperties
 import java.time.LocalDate
-import java.util.Locale
 
 @Composable
 fun handleSelectedPeriodTitle(selectedPeriod: String): String {
@@ -77,8 +80,13 @@ fun handleSelectedPeriodTitle(selectedPeriod: String): String {
 fun AnalysisBody(
     navController: NavController,
     authViewModel: AuthViewModel,
-    analysisViewModel: AnalysisViewModel
+    analysisViewModel: AnalysisViewModel,
+    currencyConverterViewModel: CurrencyConverterViewModel
 ) {
+    // Collect currency state
+    val isVND by currencyConverterViewModel.isVND.collectAsStateWithLifecycle()
+    val exchangeRates by currencyConverterViewModel.exchangeRates.collectAsStateWithLifecycle()
+    
     // Reload init data when token is refreshed
     val refreshTokenState by authViewModel.refreshTokenState.collectAsState()
     LaunchedEffect(refreshTokenState) {
@@ -95,6 +103,7 @@ fun AnalysisBody(
 
     // Keep English strings for API calls
     val periodsApi = listOf("Daily", "Weekly", "Monthly", "Yearly")
+
     // Use localized strings for display
     val periodsDisplay =
         listOf(
@@ -115,21 +124,29 @@ fun AnalysisBody(
             }
         }
 
-    fun formatCompactCurrency(value: Double): String {
-        return when {
-            value >= 1_000_000_000 -> "$${String.format(Locale.US, "%.2fB", value / 1_000_000_000)}"
-            value >= 1_000_000 -> "$${String.format(Locale.US, "%.2fM", value / 1_000_000)}"
-            value >= 1_000 -> "$${String.format(Locale.US, "%.2fK", value / 1_000)}"
-            else -> "$${String.format(Locale.US, "%.2f", value)}"
-        }
-    }
-
     val labels = selectedData?.labels ?: emptyList()
     val incomeList = selectedData?.income ?: emptyList()
     val expenseList = selectedData?.expenses ?: emptyList()
-    val totalIncome = selectedData?.totalIncome?.let { formatCompactCurrency(it) } ?: "--"
+    
+    // Convert amounts based on currency preference and format compactly
+    val convertedTotalIncome = selectedData?.totalIncome?.let { vndAmount ->
+        if (isVND) {
+            vndAmount
+        } else {
+            exchangeRates?.let { rates -> CurrencyUtils.vndToUsd(vndAmount, rates.usdToVnd) } ?: vndAmount
+        }
+    }
 
-    val totalExpenses = selectedData?.totalExpenses?.let { formatCompactCurrency(it) } ?: "--"
+    val convertedTotalExpenses = selectedData?.totalExpenses?.let { vndAmount ->
+        if (isVND) {
+            vndAmount
+        } else {
+            exchangeRates?.let { rates -> CurrencyUtils.vndToUsd(vndAmount, rates.usdToVnd) } ?: vndAmount
+        }
+    }
+
+    val totalIncome = convertedTotalIncome?.let { "+${CurrencyUtils.formatCompactAmount(it, isVND)}" } ?: "--"
+    val totalExpenses = convertedTotalExpenses?.let { "-${CurrencyUtils.formatCompactAmount(it, isVND)}" } ?: "--"
 
     // Clean background matching profile screen
     Box(
@@ -173,7 +190,9 @@ fun AnalysisBody(
                         color = Color(0xFF8F9BB3) // Medium gray
                     )
                 }
-            } // Modern period selector with pill design
+            }
+
+            // Modern period selector with pill design
             ModernPeriodSelector(
                 periods = periodsDisplay,
                 selectedPeriod = selectedPeriod,
@@ -221,8 +240,92 @@ fun AnalysisBody(
                             labels = labels,
                             isMonthly = selectedPeriod == 2,
                             incomeLabel = stringResource(R.string.income),
-                            expenseLabel = stringResource(R.string.expenses)
+                            expenseLabel = stringResource(R.string.expenses),
+                            isVND = isVND,
+                            exchangeRates = exchangeRates
                         )
+                    }
+                    
+                    // Add notation legend
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    // Compact notation legend
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA)),
+                        shape = RoundedCornerShape(8.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.number_notation),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF2E3A59),
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                            
+                            Spacer(modifier = Modifier.height(8.dp))
+                            
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                // K notation
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "k",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF667EEA)
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.thousand),
+                                        fontSize = 10.sp,
+                                        color = Color(0xFF8F9BB3)
+                                    )
+                                }
+                                
+                                // M notation
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "M",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF667EEA)
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.million),
+                                        fontSize = 10.sp,
+                                        color = Color(0xFF8F9BB3)
+                                    )
+                                }
+                                
+                                // B notation
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "B",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF667EEA)
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.billion),
+                                        fontSize = 10.sp,
+                                        color = Color(0xFF8F9BB3)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -462,7 +565,9 @@ fun IncomeExpensesBarChart(
     labels: List<String>,
     isMonthly: Boolean,
     incomeLabel: String,
-    expenseLabel: String
+    expenseLabel: String,
+    isVND: Boolean = false,
+    exchangeRates: DI.Models.Currency.CurrencyRates? = null
 ) {
     val size = listOf(incomeValues.size, expenseValues.size, labels.size).minOrNull() ?: 0
 
@@ -482,8 +587,24 @@ fun IncomeExpensesBarChart(
         return
     }
 
+    // Convert values based on currency preference
+    val convertedIncomeValues = incomeValues.map { vndAmount ->
+        if (isVND) {
+            vndAmount
+        } else {
+            exchangeRates?.let { rates -> CurrencyUtils.vndToUsd(vndAmount, rates.usdToVnd) } ?: vndAmount
+        }
+    }
+    
+    val convertedExpenseValues = expenseValues.map { vndAmount ->
+        if (isVND) {
+            vndAmount
+        } else {
+            exchangeRates?.let { rates -> CurrencyUtils.vndToUsd(vndAmount, rates.usdToVnd) } ?: vndAmount        }
+    }
+
     val chartData =
-        remember(incomeValues, expenseValues, labels) {
+        remember(convertedIncomeValues, convertedExpenseValues, labels) {
             (0 until size).map { index ->
                 Bars(
                     label = labels[index],
@@ -491,7 +612,7 @@ fun IncomeExpensesBarChart(
                     listOf(
                         Bars.Data(
                             label = incomeLabel,
-                            value = incomeValues[index],
+                            value = convertedIncomeValues[index],
                             color =
                             Brush.verticalGradient(
                                 colors =
@@ -510,7 +631,7 @@ fun IncomeExpensesBarChart(
                         ),
                         Bars.Data(
                             label = expenseLabel,
-                            value = expenseValues[index],
+                            value = convertedExpenseValues[index],
                             color =
                             Brush.verticalGradient(
                                 colors =
@@ -532,18 +653,6 @@ fun IncomeExpensesBarChart(
             }
         }
 
-    fun formatLargeNumber(value: Double): String {
-        return when {
-            value >= 1_000_000_000 -> String.format(Locale.US, "%.1fb", value / 1_000_000_000)
-            value >= 1_000_000 -> String.format(Locale.US, "%.1fm", value / 1_000_000)
-            value >= 1_000 -> String.format(Locale.US, "%.1fk", value / 1_000)
-            else -> String.format(Locale.US, "%.0f", value)
-        }
-    }
-
-    val maxValue = maxOf(incomeValues.maxOrNull() ?: 0.0, expenseValues.maxOrNull() ?: 0.0)
-    val indicatorStep = maxValue / 4
-    val indicatorValues = List(5) { it * indicatorStep }.reversed()
     ColumnChart(
         modifier = Modifier.padding(
             horizontal = 8.dp,
@@ -593,8 +702,14 @@ fun IncomeExpensesBarChart(
             count = IndicatorCount.CountBased(count = 5),
             position = IndicatorPosition.Horizontal.Start,
             padding = 25.dp,
-            contentBuilder = { value -> formatLargeNumber(value) },
-            indicators = indicatorValues
+            contentBuilder = { value -> CurrencyUtils.formatCompactAmount(value, isVND) }
+        ),
+        popupProperties = PopupProperties(
+            enabled = true,
+            contentBuilder = { value ->
+                CurrencyUtils.formatAmount(value, isVND)
+            },
+            containerColor = Color.White,
         )
     )
 }

@@ -117,12 +117,19 @@ fun TransactionSearchScreen(
             val walletName = walletsList.find { it.walletID == transaction.walletID }?.walletName ?: transaction.walletName
             reformatTransactionDetail(transaction, categoryMap, walletName, strings.unknown)
         }
-    }
-
+    }    
+    
     // Load data on screen start
     LaunchedEffect(Unit) {
         categoryViewModel.getCategories()
         walletViewModel.getWallets()
+    }
+
+    // Clear search results when leaving the screen
+    DisposableEffect(Unit) {
+        onDispose {
+            transactionViewModel.clearTransactionDetails()
+        }
     }
 
     // Helper function to convert USD amount ranges to VND
@@ -206,7 +213,11 @@ fun TransactionSearchScreen(
                 ) 
             },
             navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
+                IconButton(onClick = { 
+                    // Clear search results when leaving the search screen
+                    transactionViewModel.clearTransactionDetails()
+                    navController.popBackStack() 
+                }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = strings.back)
                 }
             },
@@ -239,17 +250,27 @@ fun TransactionSearchScreen(
                 ) {
                     Column {
                         Text(
-                            text = strings.searchTransactions,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Text(
                             text = strings.searchTransactionsDesc,
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             color = Color.White.copy(alpha = 0.9f),
-                            modifier = Modifier.padding(top = 4.dp)
+                            modifier = Modifier.padding(bottom = 8.dp)
                         )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = strings.findYourTransactions,
+                                fontSize = 14.sp,
+                                color = Color.White.copy(alpha = 0.8f)
+                            )
+                        }
                     }
                 }
             }
@@ -302,7 +323,9 @@ fun TransactionSearchScreen(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(bottom = 12.dp)
-                        )                        // Transaction Type Filter
+                        )
+
+                        // Transaction Type Filter
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -311,7 +334,6 @@ fun TransactionSearchScreen(
                                 text = strings.all,
                                 isSelected = selectedType == null,
                                 onClick = { 
-                                    Log.d("SearchDebug", "📊 Quick filter selected: All")
                                     selectedType = null
                                     performSearch()
                                 }

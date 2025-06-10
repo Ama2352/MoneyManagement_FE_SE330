@@ -4,7 +4,6 @@ import android.util.Log
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.abs
 
 object CurrencyUtils {
     
@@ -18,22 +17,19 @@ object CurrencyUtils {
     private val usdFormatter: DecimalFormat = (DecimalFormat.getInstance(Locale.US) as DecimalFormat).apply {
         applyPattern("#,##0.00")
     }
-    
-    /**
+      /**
      * Format VND amount with proper thousands separator
      */
     fun formatVND(amount: Double): String {
-        val absAmount = abs(amount)
-        return if(amount < 0) "-${vndFormatter.format(absAmount)}₫" else "${vndFormatter.format(absAmount)}₫"
+        return "${vndFormatter.format(amount)}₫"
     }
     
     /**
      * Format USD amount with proper decimal places
      */
     fun formatUSD(amount: Double): String {
-        val absAmount = abs(amount)
-        return if(amount < 0) "-$${usdFormatter.format(absAmount)}" else "$${usdFormatter.format(absAmount)}"
-    }   
+        return "$${usdFormatter.format(amount)}"
+    }
     
     /**
      * Parse amount string removing currency symbols and separators
@@ -95,6 +91,39 @@ object CurrencyUtils {
             formatVND(amount)
         } else {
             formatUSD(amount)
+        }
+    }    
+    
+    /**
+     * Format amount in compact form (k, M, B) based on currency type
+     */
+    fun formatCompactAmount(amount: Double, isVND: Boolean): String {
+        val (value, suffix) = when {
+            amount >= 1_000_000_000 -> Pair(amount / 1_000_000_000, "B")
+            amount >= 1_000_000 -> Pair(amount / 1_000_000, "M")
+            amount >= 1_000 -> Pair(amount / 1_000, "k")
+            else -> Pair(amount, "")
+        }
+        
+        val formattedNumber = if (isVND) {
+            // VND: Use period as thousands separator, no decimal places for compact numbers
+            if (suffix.isEmpty()) {
+                // For small numbers, use full VND formatting with periods
+                vndFormatter.format(value)
+            } else {
+                // For compact numbers, format with 1 decimal place and replace comma with period
+                val temp = String.format(Locale.US, "%.1f", value).replace(",", ".")
+                temp
+            }
+        } else {
+            // USD: Use standard US formatting (comma for thousands, period for decimal)
+            String.format(Locale.US, "%.2f", value)
+        }
+        
+        return if (isVND) {
+            "${formattedNumber}${suffix}₫"
+        } else {
+            "$${formattedNumber}${suffix}"
         }
     }
     

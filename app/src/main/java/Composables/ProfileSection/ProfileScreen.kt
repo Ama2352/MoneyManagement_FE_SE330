@@ -1,8 +1,8 @@
-import Composables.LanguageSelector
+import DI.Composables.ProfileSection.LanguageSelector
 import DI.Composables.ProfileSection.AvatarImage
 import DI.Composables.ProfileSection.BackgroundColor
 import DI.Composables.ProfileSection.CardColor
-import DI.Composables.ProfileSection.DividerColor
+import DI.Composables.ProfileSection.CurrencySettingsItem
 import DI.Composables.ProfileSection.MainColor
 import DI.Composables.ProfileSection.TextPrimaryColor
 import DI.Composables.ProfileSection.TextSecondaryColor
@@ -15,7 +15,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -88,37 +87,8 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Account Settings
-                SectionTitle(stringResource(R.string.account_settings))
-                SettingsItem(
-                    icon = Icons.Default.Person,
-                    title = stringResource(R.string.personal_information),
-                    subtitle = stringResource(R.string.update_personal_details)
-                )
-                SettingsItem(
-                    icon = Icons.Default.Lock,
-                    title = stringResource(R.string.security),
-                    subtitle = stringResource(R.string.password_and_authentication)
-                )
-                SettingsItem(
-                    icon = Icons.Default.Notifications,
-                    title = stringResource(R.string.notifications_settings),
-                    subtitle = stringResource(R.string.manage_alerts_notifications)
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
                 // Financial Settings
                 SectionTitle(stringResource(R.string.financial_settings))
-                
-                // Currency Toggle
-                CurrencySettingsItem(currencyConverterViewModel)
-                
-                SettingsItem(
-                    icon = Icons.Default.CreditCard,
-                    title = stringResource(R.string.payment_methods),
-                    subtitle = stringResource(R.string.manage_cards_bank_accounts)
-                )
                 SettingsItem(
                     icon = Icons.Default.Savings,
                     title = stringResource(R.string.savings_goals),
@@ -128,81 +98,19 @@ fun ProfileScreen(
                     icon = Icons.Default.BarChart,
                     title = stringResource(R.string.budget_categories),
                     subtitle = stringResource(R.string.customize_spending_categories)
-                )                // Currency Settings
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Currency Settings
                 SectionTitle(stringResource(R.string.currency_settings))
                 CurrencySettingsItem(currencyConverterViewModel)
-                
-                // Currency Test Screen
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .clickable { navController.navigate(Routes.CurrencyTest) },
-                    shape = RoundedCornerShape(12.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardColor)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(MainColor.copy(alpha = 0.15f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AttachMoney,
-                                contentDescription = null,
-                                tint = MainColor
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Currency Test Screen",
-                                style = MaterialTheme.typography.titleSmall.copy(
-                                    fontWeight = FontWeight.Medium,
-                                    color = TextPrimaryColor
-                                )
-                            )
-                            Text(
-                                text = "Test currency parsing and formatting",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = TextSecondaryColor
-                                )
-                            )
-                        }
-
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = "Navigate",
-                            tint = TextSecondaryColor
-                        )
-                    }
-                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Support and Info
                 SectionTitle(stringResource(R.string.support_info))
                 LanguageSelector()
-                SettingsItem(
-                    icon = Icons.Default.Help,
-                    title = stringResource(R.string.help_support),
-                    subtitle = stringResource(R.string.faqs_contact_info)
-                )
-                SettingsItem(
-                    icon = Icons.Default.Info,
-                    title = stringResource(R.string.about),
-                    subtitle = stringResource(R.string.app_version_legal_info)
-                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -217,7 +125,8 @@ fun ProfileScreen(
                         .fillMaxWidth(0.5f)
                         .padding(vertical = 8.dp)
                         .align(Alignment.CenterHorizontally),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)                ) {
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
                     Text(
                         text = stringResource(R.string.log_out),
                         style = MaterialTheme.typography.labelLarge,
@@ -237,7 +146,8 @@ fun TopAppBar() {
             .fillMaxWidth()
             .padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween    ) {
+        horizontalArrangement = Arrangement.SpaceBetween    
+        ) {
         Text(
             text = stringResource(R.string.profile_screen_title),
             style = MaterialTheme.typography.headlineMedium.copy(
@@ -394,18 +304,6 @@ fun ProfileHeaderCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))            // Profile Stats / Finance Summary
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                StatItem(stringResource(R.string.budget), "$3,450")
-                VerticalDivider()
-                StatItem(stringResource(R.string.savings), "$12,580")
-                VerticalDivider()
-                StatItem(stringResource(R.string.spent), "$1,245")
-            }
-
             Spacer(modifier = Modifier.height(16.dp))
 
             // Edit Profile Button
@@ -429,37 +327,6 @@ fun ProfileHeaderCard(
             }
         }
     }
-}
-
-@Composable
-fun StatItem(label: String, value: String) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color = TextPrimaryColor
-            )
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall.copy(
-                color = TextSecondaryColor
-            )
-        )
-    }
-}
-
-@Composable
-fun VerticalDivider() {
-    Box(
-        modifier = Modifier
-            .width(1.dp)
-            .height(40.dp)
-            .background(DividerColor)
-    )
 }
 
 @Composable
@@ -534,99 +401,3 @@ fun SettingsItem(
     }
 }
 
-@Composable
-fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel) {
-    val isVND by currencyConverterViewModel.isVND.collectAsState()
-    val currentCurrency = if (isVND) "VND (₫)" else "USD ($)"
-    val isLoading by currencyConverterViewModel.isLoading.collectAsState()
-    
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = CardColor)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(MainColor.copy(alpha = 0.15f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.AttachMoney,
-                    contentDescription = null,
-                    tint = MainColor
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Currency",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        fontWeight = FontWeight.Medium,
-                        color = TextPrimaryColor
-                    )
-                )
-                Text(
-                    text = "Current: $currentCurrency",
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        color = TextSecondaryColor
-                    )
-                )
-            }
-            
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = MainColor,
-                    strokeWidth = 2.dp
-                )
-            } else {
-                // Currency Toggle Switch
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "VND",
-                        fontSize = 12.sp,
-                        color = if (isVND) MainColor else TextSecondaryColor,
-                        fontWeight = if (isVND) FontWeight.Bold else FontWeight.Normal
-                    )
-                    
-                    Switch(
-                        checked = !isVND, // Switch is checked when USD is selected
-                        onCheckedChange = { 
-                            currencyConverterViewModel.toggleCurrency()
-                            currencyConverterViewModel.refreshExchangeRates()
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = Color.White,
-                            checkedTrackColor = MainColor,
-                            uncheckedThumbColor = Color.White,
-                            uncheckedTrackColor = Color.Gray
-                        )
-                    )
-                    
-                    Text(
-                        text = "USD",
-                        fontSize = 12.sp,
-                        color = if (!isVND) MainColor else TextSecondaryColor,
-                        fontWeight = if (!isVND) FontWeight.Bold else FontWeight.Normal
-                    )
-                }
-            }
-        }
-    }
-}

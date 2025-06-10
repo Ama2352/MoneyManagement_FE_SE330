@@ -93,7 +93,8 @@
     <string name="select_category">Select category</string>
     <string name="please_select_category">Please select a category</string>
     <string name="category_empty_error">Please select a category</string>
-      <!-- ================== TRANSACTIONS ================== -->
+
+    <!-- ================== TRANSACTIONS ================== -->
     <string name="transaction">Transaction</string>
     <string name="transaction_screen_title">Transaction</string>
     <string name="add_transaction">Add Transaction</string>
@@ -154,7 +155,8 @@
     <string name="no_description_provided">No description provided</string>
     <string name="deleting">Deleting…</string>
     <string name="transaction_type_unchangeable">Transaction Type (Unchangeable)</string>
-      <!-- Transaction Form Fields -->
+
+    <!-- Transaction Form Fields -->
     <string name="title">Title</string>
     <string name="amount_vnd">Amount (VND)</string>
     <string name="amount_placeholder">$0.00</string>
@@ -299,19 +301,25 @@
     <string name="statistic_expense">Expense</string>
     <string name="no_data_to_display">No data to display</string>
     <string name="no_data_available">No Data Available</string>
-    <string name="select_date_range">Select a date range to view analytics</string>
+    <string name="select_date_range_to_view_analytics">Select a date range to view analytics</string>
     <string name="unknown">Unknown</string>
     <string name="aggregate">Aggregate</string>
     <string name="pie_charts">Pie Charts</string>
     <string name="budget">Budget</string>
     <string name="savings">Savings</string>
     <string name="spent">Spent</string>
-    
+
     <!-- Period Labels -->
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
     <string name="yearly">Yearly</string>
+    
+    <!-- Number Notation Legend -->
+    <string name="number_notation">Number Notation</string>
+    <string name="thousand">Thousand</string>
+    <string name="million">Million</string>
+    <string name="billion">Billion</string>
     
     <!-- Dropdown content description -->
     <string name="dropdown">Dropdown</string>
@@ -446,14 +454,19 @@
     <string name="unknown_error">Unknown error</string>
     <string name="error_message">Error: %1$s</string>
     <string name="something_went_wrong">Something went wrong</string>
+
       <!-- ================== MISCELLANEOUS ================== -->
     <string name="language">Language</string>
+
       <!-- ================== CURRENCY SETTINGS ================== -->
     <string name="currency_settings">Currency Settings</string>
     <string name="currency">Currency</string>
     <string name="vnd_currency">VND (₫)</string>
     <string name="usd_currency">USD ($)</string>
     <string name="current_currency">Current: %1$s</string>
+    <string name="preview_label">Preview: %1$s</string>
+    <string name="usd_decimal_warning">USD amounts support only 2 decimal places</string>
+
 
     <!-- ================== TRANSACTION STRINGS ================== -->
     <string name="no_transactions">No transactions found</string>
@@ -492,7 +505,7 @@
     <string name="loading_transactions">Loading transactions…</string>
     <string name="error">Error</string>
     <string name="search_transactions">Search Transactions</string>
-    <string name="search_transactions_placeholder">Search by description, amount, category…</string>
+    <string name="search_transactions_placeholder">Search by description</string>
     <string name="amount_range">Amount Range</string>
     <string name="transactions_found">%1$d transactions found</string>
     <string name="no_results_found">No results found</string>
@@ -505,7 +518,7 @@
     <string name="amount_50_to_100">$50 - $100</string>
     <string name="amount_100_to_500">$100 - $500</string>
     <string name="amount_500_plus">$500+</string>
-    <string name="apply_filters">Apply Filters</string>
-    <string name="clear_filters">Clear Filters</string>
+    <string name="apply_filters">Apply Filters</string>    <string name="clear_filters">Clear Filters</string>
+    <string name="find_your_transactions">"Find your transactions with ease"</string>
 
 </resources>

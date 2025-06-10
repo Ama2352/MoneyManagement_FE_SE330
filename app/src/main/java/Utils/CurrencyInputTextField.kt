@@ -7,9 +7,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import com.example.moneymanagement_frontend.R
 
 /**
  * A reusable currency input TextField component that handles both VND and USD currencies
@@ -149,7 +151,7 @@ fun CurrencyInputTextField(
             when {
                 !isVND && showDecimalWarning -> {
                     Text(
-                        "USD amounts support only 2 decimal places",
+                        text = stringResource(id = R.string.usd_decimal_warning),
                         color = MaterialTheme.colorScheme.error
                     )
                 }                supportingText != null -> {
@@ -177,7 +179,7 @@ fun USDInputPreview(
         if (parsed != null) {
             val preview = CurrencyUtils.formatUSD(parsed)
             Text(
-                text = "Preview: $preview",
+                text = stringResource(id = R.string.preview_label, preview),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 modifier = modifier

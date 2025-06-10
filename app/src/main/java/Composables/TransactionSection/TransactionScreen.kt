@@ -71,7 +71,6 @@ fun MainTransactionsScreen(
 
     // Collect states from ViewModels
     val transactions by transactionViewModel.transactions.collectAsStateWithLifecycle()
-    val transactionDetails by transactionViewModel.transactionDetails.collectAsStateWithLifecycle()
     val isLoading by transactionViewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by transactionViewModel.errorMessage.collectAsStateWithLifecycle()
     val categories by categoryViewModel.categories.collectAsStateWithLifecycle()
@@ -91,19 +90,15 @@ fun MainTransactionsScreen(
             convertTransactionToDetail(transaction, categoryMap, walletName, strings.unknown)
         }
     }
+    
     // Pagination state
     var displayedItemCount by remember { mutableIntStateOf(8) }
-    val itemsPerPage = 8
-
-    // Filter state
+    val itemsPerPage = 8    // Filter state
     var selectedFilter by remember { mutableStateOf(strings.filterAllValue) }
 
-    // Use transactionDetails if available (from search/date range), otherwise use converted transactions
-    val baseTransactions = if (transactionDetails.isNotEmpty()) {
-        transactionDetails
-    } else {
-        displayTransactions
-    }
+    // Transaction Screen should always use its own transactions, not search results
+    val baseTransactions = displayTransactions
+    
     Log.d("TransactionScreen", "Base transactions: $baseTransactions")
 
     // Apply filter to transactions

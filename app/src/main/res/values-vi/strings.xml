@@ -203,12 +203,16 @@
     <string name="transaction_form_unknown_title">Tiêu đề không xác định</string>
     <string name="transaction_form_unknown_description">Mô tả không xác định</string>
     <string name="transaction_form_unknown_id">ID không xác định</string>
-    <string name="transaction_form_unknown_error">Lỗi không xác định</string>
-
-    <!-- ================== DATE & TIME ================== -->
+    <string name="transaction_form_unknown_error">Lỗi không xác định</string>    <!-- ================== DATE & TIME ================== -->
     <string name="date">Ngày</string>
     <string name="calendar">Lịch</string>
     <string name="select_a_date">Chọn ngày</string>
+    
+    <!-- Number Notation Legend -->
+    <string name="number_notation">Ký hiệu số</string>
+    <string name="thousand">Nghìn</string>
+    <string name="million">Triệu</string>
+    <string name="billion">Tỷ</string>
     <string name="select_a_time">Chọn giờ</string>
     <string name="select_date">Chọn ngày</string>
     <string name="date_range">Khoảng ngày</string>
@@ -279,7 +283,7 @@
     <string name="statistic_expense">Chi tiêu</string>
     <string name="no_data_to_display">Không có dữ liệu để hiển thị</string>
     <string name="no_data_available">Không có dữ liệu</string>
-    <string name="select_date_range">Chọn khoảng ngày để xem phân tích</string>
+    <string name="select_date_range_to_view_analytics">Chọn khoảng ngày để xem phân tích</string>
     <string name="unknown">Không xác định</string>
     <string name="aggregate">Tổng hợp</string>
     <string name="pie_charts">Biểu đồ tròn</string>
@@ -292,7 +296,8 @@
     <string name="weekly">Hàng tuần</string>
     <string name="monthly">Hàng tháng</string>
     <string name="yearly">Hàng năm</string>
-      <!-- Dropdown content description -->
+
+    <!-- Dropdown content description -->
     <string name="dropdown">Danh sách thả xuống</string>
     
     <!-- Dynamic titles with period -->
@@ -435,6 +440,8 @@
     <string name="vnd_currency">VND (₫)</string>
     <string name="usd_currency">USD ($)</string>
     <string name="current_currency">Hiện tại: %1$s</string>
+    <string name="preview_label">Xem trước: %1$s</string>
+    <string name="usd_decimal_warning">Số tiền USD chỉ hỗ trợ tối đa 2 chữ số thập phân</string>
 
     <!-- ================== TRANSACTION STRINGS ================== -->
     <string name="update_transaction">Cập nhật giao dịch</string>
@@ -490,8 +497,9 @@
     <string name="search_transactions_desc">Tìm kiếm giao dịch</string>
     <string name="add_transactions_desc">Thêm giao dịch</string>
     <string name="loading_transactions">Đang tải giao dịch…</string>
-    <string name="error">Lỗi</string>    <string name="search_transactions">Tìm kiếm giao dịch</string>
-    <string name="search_transactions_placeholder">Tìm theo mô tả, số tiền, danh mục…</string>
+    <string name="error">Lỗi</string>
+    <string name="search_transactions">Tìm kiếm giao dịch</string>
+    <string name="search_transactions_placeholder">Tìm theo mô tả</string>
     <string name="amount_range">Khoảng số tiền</string>
     <string name="transactions_found">Tìm thấy %1$d giao dịch</string>
     <string name="no_results_found">Không tìm thấy kết quả</string>
@@ -504,7 +512,7 @@
     <string name="amount_50_to_100">50,000đ - 100,000đ</string>
     <string name="amount_100_to_500">100,000đ - 500,000đ</string>
     <string name="amount_500_plus">500,000đ+</string>
-    <string name="apply_filters">Áp dụng bộ lọc</string>
-    <string name="clear_filters">Xóa bộ lọc</string>
+    <string name="apply_filters">Áp dụng bộ lọc</string>    <string name="clear_filters">Xóa bộ lọc</string>
+    <string name="find_your_transactions">Tìm giao dịch của bạn một cách dễ dàng</string>
 
 </resources>

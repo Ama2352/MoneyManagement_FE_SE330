@@ -158,7 +158,14 @@ fun rememberAppStrings(): AppStrings {
         createdOn = stringResource(R.string.created_on),
         transactionInfo = stringResource(R.string.transaction_info),
         noDescriptionProvided = stringResource(R.string.no_description_provided),
-        deleting = stringResource(R.string.deleting)
+        deleting = stringResource(R.string.deleting),        // Transaction Search Screen
+        findYourTransactions = stringResource(R.string.find_your_transactions),
+        
+        // Calendar Analysis
+        aggregate = stringResource(R.string.aggregate),
+        pieCharts = stringResource(R.string.pie_charts),
+        noDataAvailable = stringResource(R.string.no_data_available),
+        selectDateRangeViewAnalytics = stringResource(R.string.select_date_range_to_view_analytics),
     )
 }
 
@@ -330,9 +337,14 @@ data class AppStrings(
     val applyFilters: String = "",
     val clearFilters: String = "",
     val dateRange: String = "",
-
-    // Edit Transaction Screen
+    val findYourTransactions: String = "",    // Edit Transaction Screen
     val transactionTypeUnchangeable: String = "",
+    
+    // Calendar Analysis
+    val aggregate: String = "",
+    val pieCharts: String = "",
+    val noDataAvailable: String = "",
+    val selectDateRangeViewAnalytics: String = "",
 ) {
 
 }

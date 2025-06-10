@@ -29,8 +29,7 @@ class AnalysisViewModel @Inject constructor(
     val periodGraph: StateFlow<Result<PeriodGraph>?> = _periodGraph.asStateFlow()
 
     private var _categoryBreakdown = MutableStateFlow<Result<List<CategoryBreakdown>>?>(null)
-    val categoryBreakdown: StateFlow<Result<List<CategoryBreakdown>>?> =
-        _categoryBreakdown.asStateFlow()
+    val categoryBreakdown: StateFlow<Result<List<CategoryBreakdown>>?> = _categoryBreakdown.asStateFlow()
 
     init {
         val today = LocalDate.now()
