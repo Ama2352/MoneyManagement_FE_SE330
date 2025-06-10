@@ -59,18 +59,18 @@ class SavingGoalViewModel @Inject constructor(
             val result = repository.getAllSavingGoals()
             _savingGoals.value = result
         }
-    }
-
-    fun addSavingGoal(newSavingGoal: CreateSavingGoal, onResult: (Boolean) -> Unit) {
+    }    fun addSavingGoal(newSavingGoal: CreateSavingGoal, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             Log.d("SavingGoalDebug", "Sending CreateSavingGoal: $newSavingGoal")
             val result = repository.createSavingGoal(newSavingGoal)
             Log.d("SavingGoalDebug", "CreateSavingGoal response: $result")
             onResult(result.isSuccess)
             if (result.isSuccess) {
-                getSavingGoals()
+                getSavingGoals() // Refresh main list
+                getSavingGoalProgressAndAlerts() // Refresh progress list
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Mục tiêu tiết kiệm đã được tạo thành công!"))
             } else {
-                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Lỗi: ${result.exceptionOrNull()?.message ?: "Không thể tạo mục tiêu"}"))
             }
         }
     }
@@ -80,28 +80,26 @@ class SavingGoalViewModel @Inject constructor(
             val result = repository.getSavingGoalById(savingGoalId)
             _selectedSavingGoal.value = result
         }
-    }
-
-    fun updateSavingGoal(updatedSavingGoal: UpdateSavingGoal) {
+    }    fun updateSavingGoal(updatedSavingGoal: UpdateSavingGoal) {
         viewModelScope.launch {
             val result = repository.updateSavingGoal(updatedSavingGoal)
             if (result.isSuccess) {
-                getSavingGoals()
-                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Saving goal updated!"))
+                getSavingGoals() // Refresh main list
+                getSavingGoalProgressAndAlerts() // Refresh progress list
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Mục tiêu tiết kiệm đã được cập nhật thành công!"))
             } else {
-                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Lỗi: ${result.exceptionOrNull()?.message ?: "Không thể cập nhật mục tiêu"}"))
             }
         }
-    }
-
-    fun deleteSavingGoal(savingGoalId: String) {
+    }    fun deleteSavingGoal(savingGoalId: String) {
         viewModelScope.launch {
             val result = repository.deleteSavingGoal(savingGoalId)
             if (result.isSuccess) {
-                getSavingGoals()
-                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage("Saving goal deleted!"))
+                getSavingGoals() // Refresh main list
+                getSavingGoalProgressAndAlerts() // Refresh progress list
+                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage("Mục tiêu tiết kiệm đã được xóa thành công!"))
             } else {
-                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage("Error: ${result.exceptionOrNull()?.message ?: "Unknown error"}"))
+                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage("Lỗi: ${result.exceptionOrNull()?.message ?: "Không thể xóa mục tiêu"}"))
             }
         }
     }

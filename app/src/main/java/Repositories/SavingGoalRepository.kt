@@ -19,7 +19,7 @@ class SavingGoalRepository @Inject constructor(private val apiService: ApiServic
                     Result.success(it)
                 } ?: Result.failure(Exception("Empty response body"))
             } else {
-                Result.failure(Exception("Failed with code ${response.code()}"))
+                Result.failure(Exception("Failed with code ${response.code()}: ${response.errorBody()?.string() ?: "No error body"}"))
             }
         } catch (e: Exception) {
             Result.failure(e)

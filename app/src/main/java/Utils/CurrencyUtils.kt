@@ -1,6 +1,7 @@
 package DI.Utils
 
 import android.util.Log
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -138,6 +139,14 @@ object CurrencyUtils {
                 minimumFractionDigits = 2
                 maximumFractionDigits = 2
             }.format(amount)
+        }
+    }
+
+    fun calculatePercentage(saved: BigDecimal, target: BigDecimal): Float {
+        return if (target > BigDecimal.ZERO) {
+            (saved.toFloat() / target.toFloat()).coerceIn(0f, 1f)
+        } else {
+            0f
         }
     }
 }

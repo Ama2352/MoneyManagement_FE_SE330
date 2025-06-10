@@ -11,6 +11,6 @@ data class UpdateSavingGoal(
     @SerializedName("startDate") val startDate: String,
     @SerializedName("targetAmount") val targetAmount: BigDecimal,
     @SerializedName("description") val description: String,
-    @SerializedName("categoryID") val categoryID: String,
-    @SerializedName("walletID") val walletID: String
+    @SerializedName("categoryId") val categoryID: String,
+    @SerializedName("walletId") val walletID: String
 )

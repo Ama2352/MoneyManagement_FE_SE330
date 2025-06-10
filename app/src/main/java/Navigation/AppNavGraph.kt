@@ -5,6 +5,7 @@ import Composables.TransactionSection.EditTransactionScreen
 import Composables.TransactionSection.TransactionDetailScreen
 import Composables.TransactionSection.TransactionSearchScreen
 import DI.API.TokenHandler.TokenExpirationHandler
+import DI.Navigation.LocalMainNavBackStackEntry
 import DI.Composables.AnalysisSection.AnalysisBody
 import DI.Composables.AnalysisSection.CalendarScreen
 import DI.Composables.AuthSection.LoginScreen
@@ -14,8 +15,8 @@ import DI.Composables.ChatSection.ChatScreen
 import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
 import DI.Composables.ReportSection.ReportScreen
-import DI.Composables.SavingGoalSection.CreateEditSavingGoalScreen
-import DI.Composables.SavingGoalSection.SavingGoalScreen
+import DI.Composables.SavingGoalUI.CreateEditSavingGoalScreen
+import DI.Composables.SavingGoalUI.SavingGoalScreen
 import DI.Composables.TransactionSection.MainTransactionsScreen
 import DI.Composables.WalletSection.WalletScreen
 import DI.Models.BottomNavItem
@@ -282,16 +283,15 @@ private fun InnerNavHost(
                 authViewModel = authViewModel,
             )
         }
-
         composable(BottomNavItem.SavingGoal.route) {
             SavingGoalScreen(
                 navController = navController,
                 savingGoalViewModel = savingGoalViewModel,
                 categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
-
         composable(
             route = Routes.CreateEditSavingGoal,
             arguments = listOf(navArgument("savingGoalId") {
@@ -306,6 +306,7 @@ private fun InnerNavHost(
                 categoryViewModel = categoryViewModel,
                 walletViewModel = walletViewModel,
                 savingGoalId = savingGoalId,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
 

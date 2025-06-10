@@ -10,6 +10,6 @@ data class CreateSavingGoal(
     @SerializedName("startDate") val startDate: String,
     @SerializedName("targetAmount") val targetAmount: BigDecimal,
     @SerializedName("description") val description: String,
-    @SerializedName("categoryID") val categoryID: String, // Match server
-    @SerializedName("walletID") val walletID: String     // Match server
+    @SerializedName("categoryId") val categoryId: String, // Match server
+    @SerializedName("walletId") val walletId: String     // Match server
 )
