@@ -83,15 +83,14 @@ class TransactionRepository @Inject constructor(private val apiService: ApiServi
             Log.e("TransactionRepository", "Error getting transactions by date range", e)
             throw e
         }
-    }
-
-    suspend fun searchTransactions(request: TransactionSearchRequest): Response<List<TransactionDetail>> {
+    }    suspend fun searchTransactions(request: TransactionSearchRequest): Response<List<TransactionDetail>> {
         return try {
             apiService.searchTransactions(
                 startDate = request.startDate,
                 endDate = request.endDate,
                 type = request.type,
-                category = request.category,
+                categoryName = request.categoryName,
+                walletName = request.walletName,
                 amountRange = request.amountRange,
                 keywords = request.keywords,
                 timeRange = request.timeRange,

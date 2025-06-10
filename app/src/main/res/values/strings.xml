@@ -150,8 +150,9 @@
     <string name="transaction_deleted_failed">Failed to delete transaction ✗</string>
     <string name="transaction_id">Transaction ID</string>
     <string name="created_on">Created On</string>
-    <string name="transaction_info">Transaction Information</string>    <string name="no_description_provided">No description provided</string>
-    <string name="deleting">Deleting...</string>
+    <string name="transaction_info">Transaction Information</string>
+    <string name="no_description_provided">No description provided</string>
+    <string name="deleting">Deleting…</string>
     <string name="transaction_type_unchangeable">Transaction Type (Unchangeable)</string>
       <!-- Transaction Form Fields -->
     <string name="title">Title</string>
@@ -490,6 +491,21 @@
     <string name="add_transactions_desc">Add Transactions</string>
     <string name="loading_transactions">Loading transactions…</string>
     <string name="error">Error</string>
-
+    <string name="search_transactions">Search Transactions</string>
+    <string name="search_transactions_placeholder">Search by description, amount, category…</string>
+    <string name="amount_range">Amount Range</string>
+    <string name="transactions_found">%1$d transactions found</string>
+    <string name="no_results_found">No results found</string>
+    <string name="try_different_filters">Try adjusting your search filters</string>
+    <string name="late_night">Late night (00:00 – 06:00)</string>
+    <string name="morning">Morning (06:00 – 12:00)</string>
+    <string name="afternoon">Afternoon (12:00 – 18:00)</string>
+    <string name="evening">Evening (18:00 – 24:00)</string>
+    <string name="amount_0_to_50">$0 - $50</string>
+    <string name="amount_50_to_100">$50 - $100</string>
+    <string name="amount_100_to_500">$100 - $500</string>
+    <string name="amount_500_plus">$500+</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="clear_filters">Clear Filters</string>
 
 </resources>

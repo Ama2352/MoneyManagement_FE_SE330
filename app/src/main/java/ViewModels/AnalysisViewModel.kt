@@ -96,6 +96,7 @@ class AnalysisViewModel @Inject constructor(
 
     fun getDailySummary(date: String) {
         viewModelScope.launch {
+            Log.d("DailySummaryFetching", "Fetching daily summary for date: $date")
             val result = analysisRepository.getDailySummary(date)
             result.onSuccess { dailySummary ->
                 val periodData = PeriodData(
@@ -135,8 +136,8 @@ class AnalysisViewModel @Inject constructor(
 
         return when {
             currentLocale.language == "vi" -> {
-                // Vietnamese: "T1", "T2", etc.
-                "T$weekNumber"
+                // Vietnamese: "Tu.1", "Tu.2", etc.
+                "Tu.$weekNumber"
             }
 
             else -> {
@@ -154,6 +155,7 @@ class AnalysisViewModel @Inject constructor(
 
     fun getWeeklySummary(startDate: String) {
         viewModelScope.launch {
+            Log.d("WeeklySummaryFetching", "Fetching weekly summary starting from: $startDate")
             val result = analysisRepository.getWeeklySummary(startDate)
             result.onSuccess { weeklySummary ->
                 val periodData = PeriodData(
@@ -190,6 +192,7 @@ class AnalysisViewModel @Inject constructor(
 
     fun getMonthlySummary(year: String, month: String) {
         viewModelScope.launch {
+            Log.d("MonthlySummaryFetching", "Fetching monthly summary for year: $year, month: $month")
             val result = analysisRepository.getMonthlySummary(year, month)
             result.onSuccess { monthlySummary ->
                 val periodData = PeriodData(
@@ -226,6 +229,7 @@ class AnalysisViewModel @Inject constructor(
 
     fun getYearlySummary(year: String) {
         viewModelScope.launch {
+            Log.d("YearlySummaryFetching", "Fetching yearly summary for year: $year")
             val result = analysisRepository.getYearlySummary(year)
             result.onSuccess { yearlySummary ->
                 val periodData = PeriodData(

@@ -25,8 +25,10 @@ class AnalysisRepository @Inject constructor(private val apiService: ApiService)
     suspend fun getWeeklySummary(startDate: String): Result<WeeklySummary> {
         return try {
             val response = apiService.getWeeklySummary(startDate)
+            Log.d("WeeklySummaryResponse", response.toString())
             Result.success(response)
         } catch (e: Exception) {
+            Log.d("WeeklySummaryError", e.toString())
             Result.failure(e)
         }
     }
@@ -34,8 +36,10 @@ class AnalysisRepository @Inject constructor(private val apiService: ApiService)
     suspend fun getMonthlySummary(year: String, month: String): Result<MonthlySummary> {
         return try {
             val response = apiService.getMonthlySummary(year, month)
+            Log.d("MonthlySummaryResponse", response.toString())
             Result.success(response)
         } catch (e: Exception) {
+            Log.d("MonthlySummaryError", e.toString())
             Result.failure(e)
         }
     }

@@ -127,7 +127,8 @@ interface ApiService {
         @Query("startDate") startDate: String? = null,
         @Query("endDate") endDate: String? = null,
         @Query("type") type: String? = null,
-        @Query("category") category: String? = null,
+        @Query("categoryName") categoryName: String? = null,
+        @Query("walletName") walletName: String? = null,
         @Query("amountRange") amountRange: String? = null,
         @Query("keywords") keywords: String? = null,
         @Query("timeRange") timeRange: String? = null,
@@ -199,6 +200,8 @@ interface ApiService {
     suspend fun getWeeklySummary(@Query("startDate") startDate: String): WeeklySummary
 
     @GET("Calendar/monthly")
-    suspend fun getMonthlySummary(@Query("year") year: String, @Query("month") month: String): MonthlySummary    @GET("Calendar/yearly")
+    suspend fun getMonthlySummary(@Query("year") year: String, @Query("month") month: String): MonthlySummary
+
+    @GET("Calendar/yearly")
     suspend fun getYearlySummary(@Query("year") year: String): YearlySummary
 }

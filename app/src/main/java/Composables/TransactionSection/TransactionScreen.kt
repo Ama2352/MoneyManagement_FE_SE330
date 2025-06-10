@@ -92,7 +92,7 @@ fun MainTransactionsScreen(
         }
     }
     // Pagination state
-    var displayedItemCount by remember { mutableStateOf(8) }
+    var displayedItemCount by remember { mutableIntStateOf(8) }
     val itemsPerPage = 8
 
     // Filter state
@@ -657,8 +657,8 @@ fun TransactionCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = getCategoryIcon(transaction.category),
-                        contentDescription = transaction.category,
+                        imageVector = getCategoryIcon(transaction.categoryName),
+                        contentDescription = transaction.categoryName,
                         tint = TransactionUtils.getTransactionColor(transaction.type),
                         modifier = Modifier.size(24.dp)
                     )
@@ -781,11 +781,13 @@ fun convertTransactionToDetail(transaction: Transaction, categoryMap: Map<String
         Log.e("TransactionScreen", "Error parsing date: ${transaction.transactionDate}", e)
         Date()
     }
-    
+      
     // Use user's locale for display formatting (will show in English or Vietnamese based on app language)
     val dayFormatter = SimpleDateFormat("EEEE", Locale.getDefault())
     val monthFormatter = SimpleDateFormat("MMMM", Locale.getDefault())
-    val dateDisplayFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+    
+    // More readable date format: "15 December 2024" (EN) or "15 tháng 12, 2024" (VI)
+    val dateDisplayFormatter = SimpleDateFormat("d MMMM yyyy", Locale.getDefault())
     val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
     
     val formattedDate = dateDisplayFormatter.format(date)
@@ -804,7 +806,7 @@ fun convertTransactionToDetail(transaction: Transaction, categoryMap: Map<String
         month = month,
         amount = transaction.amount,
         type = transaction.type,
-        category = category?.name ?: unknownText,
+        categoryName = category?.name ?: unknownText,
         categoryID = transaction.categoryID,
         description = transaction.description,
         walletID = transaction.walletID,

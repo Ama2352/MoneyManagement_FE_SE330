@@ -131,7 +131,7 @@
     <string name="transaction_id">Mã giao dịch</string>
     <string name="created_on">Được tạo vào</string>
     <string name="transaction_info">Thông tin giao dịch</string>    <string name="no_description_provided">Không có mô tả</string>
-    <string name="deleting">Đang xóa...</string>
+    <string name="deleting">Đang xóa…</string>
     <string name="transaction_type_unchangeable">Loại giao dịch (Không thể thay đổi)</string>
 
     <!-- Transaction Form Fields -->
@@ -489,8 +489,22 @@
     <string name="recent_transactions_count">Giao dịch gần đây (%1$d trong %2$d)</string>
     <string name="search_transactions_desc">Tìm kiếm giao dịch</string>
     <string name="add_transactions_desc">Thêm giao dịch</string>
-    <string name="loading_transactions">Đang tải giao dịch...</string>
-    <string name="error">Lỗi</string>
-
+    <string name="loading_transactions">Đang tải giao dịch…</string>
+    <string name="error">Lỗi</string>    <string name="search_transactions">Tìm kiếm giao dịch</string>
+    <string name="search_transactions_placeholder">Tìm theo mô tả, số tiền, danh mục…</string>
+    <string name="amount_range">Khoảng số tiền</string>
+    <string name="transactions_found">Tìm thấy %1$d giao dịch</string>
+    <string name="no_results_found">Không tìm thấy kết quả</string>
+    <string name="try_different_filters">Thử điều chỉnh bộ lọc tìm kiếm</string>
+    <string name="late_night">Đêm khuya (00:00 – 06:00)</string>
+    <string name="morning">Buổi sáng (06:00 – 12:00)</string>
+    <string name="afternoon">Buổi chiều (12:00 – 18:00)</string>
+    <string name="evening">Buổi tối (18:00 – 24:00)</string>
+    <string name="amount_0_to_50">0đ - 50,000đ</string>
+    <string name="amount_50_to_100">50,000đ - 100,000đ</string>
+    <string name="amount_100_to_500">100,000đ - 500,000đ</string>
+    <string name="amount_500_plus">500,000đ+</string>
+    <string name="apply_filters">Áp dụng bộ lọc</string>
+    <string name="clear_filters">Xóa bộ lọc</string>
 
 </resources>

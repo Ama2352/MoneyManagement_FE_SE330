@@ -9,7 +9,7 @@ data class TransactionDetail(
     val month: String = "",
     val amount: Double,
     val type: String = "",
-    val category: String = "",
+    val categoryName: String = "",
     val categoryID: String,
     val description: String,
     val walletID: String,

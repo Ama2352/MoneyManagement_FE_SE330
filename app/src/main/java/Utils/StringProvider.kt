@@ -74,16 +74,32 @@ fun rememberAppStrings(): AppStrings {
         // General UI
         all = stringResource(R.string.all),
         clear = stringResource(R.string.clear),
-        
-        // Search specific strings (need to check if these exist in strings.xml)
+          
+        // Search specific strings
+        searchTransactions = stringResource(R.string.search_transactions),
+        searchTransactionsPlaceholder = stringResource(R.string.search_transactions_placeholder),
         type = stringResource(R.string.type),
+        amountRange = stringResource(R.string.amount_range),
         timeRange = stringResource(R.string.time_range),
         dayOfWeek = stringResource(R.string.day_of_week),
         startDate = stringResource(R.string.start_date),
         endDate = stringResource(R.string.end_date),
+        transactionsFound = stringResource(R.string.transactions_found),
+        
+        // Amount ranges
+        amount0To50 = stringResource(R.string.amount_0_to_50),
+        amount50To100 = stringResource(R.string.amount_50_to_100),
+        amount100To500 = stringResource(R.string.amount_100_to_500),
+        amount500Plus = stringResource(R.string.amount_500_plus),
+        
+        // Time ranges
+        lateNight = stringResource(R.string.late_night),
+        morning = stringResource(R.string.morning),
+        afternoon = stringResource(R.string.afternoon),
+        evening = stringResource(R.string.evening),
         
 
-          // Days of week
+        // Days of week
         monday = stringResource(R.string.monday),
         tuesday = stringResource(R.string.tuesday),
         wednesday = stringResource(R.string.wednesday),
@@ -123,6 +139,13 @@ fun rememberAppStrings(): AppStrings {
         creatingTransaction = stringResource(R.string.creating_transaction),
         transactionCreatedSuccessfully = stringResource(R.string.transaction_created_successfully),
         fillRequiredFields = stringResource(R.string.fill_required_fields),
+
+        // Additional search strings
+        noResultsFound = stringResource(R.string.no_results_found),
+        tryDifferentFilters = stringResource(R.string.try_different_filters),
+        applyFilters = stringResource(R.string.apply_filters),
+        clearFilters = stringResource(R.string.clear_filters),
+        dateRange = stringResource(R.string.date_range),
 
         // Edit Transaction Screen
         transactionTypeUnchangeable = stringResource(R.string.transaction_type_cannot_change),
@@ -211,7 +234,6 @@ data class AppStrings(
     val analytics: String = "",
     val search: String = "",
     val refresh: String = "",
-    val searchTransactions: String = "",
 
     // Message String = ""s
     val noTransactionsYet: String = "",
@@ -223,8 +245,9 @@ data class AppStrings(
     // General UI
     val all: String = "",
     val clear: String = "",
-    
-    // Search specific String = ""s
+      
+    // Search specific strings
+    val searchTransactions: String = "",
     val searchTransactionsPlaceholder: String = "",
     val type: String = "",
     val amountRange: String = "",
@@ -241,6 +264,7 @@ data class AppStrings(
     val amount500Plus: String = "",
     
     // Time ranges
+    val lateNight: String = "",
     val morning: String = "",
     val afternoon: String = "",
     val evening: String = "",
@@ -298,7 +322,14 @@ data class AppStrings(
     val saveTransaction: String = "",
     val creatingTransaction: String = "",
     val transactionCreatedSuccessfully: String = "",
-    val fillRequiredFields: String = "",
+    val fillRequiredFields: String = "",    
+    
+    // Additional search strings
+    val noResultsFound: String = "",
+    val tryDifferentFilters: String = "",
+    val applyFilters: String = "",
+    val clearFilters: String = "",
+    val dateRange: String = "",
 
     // Edit Transaction Screen
     val transactionTypeUnchangeable: String = "",

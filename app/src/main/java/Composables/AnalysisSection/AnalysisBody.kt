@@ -90,6 +90,7 @@ fun AnalysisBody(
             analysisViewModel.getYearlySummary(today.year.toString())
         }
     }
+
     val periodGraphResult = analysisViewModel.periodGraph.collectAsState()
 
     // Keep English strings for API calls
@@ -203,24 +204,7 @@ fun AnalysisBody(
                         ModernCalendarButton(onClick = { navController.navigate(Routes.Calendar) })
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Chart legend
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(24.dp)
-                    ) {
-                        LegendItem(
-                            color = Color(0xFF4CAF50),
-                            label = stringResource(R.string.income)
-                        )
-                        LegendItem(
-                            color = Color(0xFF2196F3),
-                            label = stringResource(R.string.expenses)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     // Chart container
                     Box(
@@ -385,27 +369,6 @@ fun ModernCalendarButton(onClick: () -> Unit) {
             contentDescription = stringResource(R.string.calendar),
             tint = Color.White,
             modifier = Modifier.size(24.dp)
-        )
-    }
-}
-
-@Composable
-fun LegendItem(color: Color, label: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(12.dp)
-                .clip(CircleShape)
-                .background(color)
-        )
-        Text(
-            text = label,
-            fontSize = 14.sp,
-            color = Color(0xFF2E3A59),
-            fontWeight = FontWeight.Medium
         )
     }
 }
@@ -629,7 +592,7 @@ fun IncomeExpensesBarChart(
             ),
             count = IndicatorCount.CountBased(count = 5),
             position = IndicatorPosition.Horizontal.Start,
-            padding = 36.dp, // Increased from 12dp to 24dp for better spacing
+            padding = 25.dp,
             contentBuilder = { value -> formatLargeNumber(value) },
             indicators = indicatorValues
         )
