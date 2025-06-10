@@ -17,6 +17,6 @@ sealed class BottomNavItem(val route: String, val icon: Int, val title: String) 
 
 
     companion object {
-        val allRoutes = listOf(Transaction, Category, Wallet, Analysis, SavingGoal, Profile, Friend, Chat, Report, Budget)
+        val allRoutes = listOf(Transaction, Category, Wallet, Analysis, Profile, Friend, Chat, Report, Budget, SavingGoal)
     }
 }

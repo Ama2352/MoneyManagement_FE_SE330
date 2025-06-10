@@ -13,10 +13,15 @@ import DI.Composables.ChatSection.ChatMessageScreen
 import DI.Composables.ChatSection.ChatScreen
 import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
+import DI.Composables.ReportSection.ReportScreen
+import DI.Composables.SavingGoalSection.CreateEditSavingGoalScreen
+import DI.Composables.SavingGoalSection.SavingGoalScreen
 import DI.Composables.TransactionSection.MainTransactionsScreen
 import DI.Composables.WalletSection.WalletScreen
-import DI.Models.NavBar.BottomNavItem
+import DI.Models.BottomNavItem
+import DI.Screens.BudgetScreen
 import DI.ViewModels.AnalysisViewModel
+import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.ChatViewModel
 import DI.ViewModels.FriendViewModel
 import DI.ViewModels.ProfileViewModel
@@ -24,6 +29,8 @@ import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.OcrViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.CurrencyConverterViewModel
+import DI.ViewModels.ReportViewModel
+import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.WalletViewModel
 import ModernCategoriesScreen
 import ProfileScreen
@@ -105,6 +112,9 @@ private fun InnerNavHost(
     val currencyConverterViewModel = hiltViewModel<CurrencyConverterViewModel>(parentEntry)
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
     val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
+    val savingGoalViewModel = hiltViewModel<SavingGoalViewModel>(parentEntry)
+    val budgetViewModel = hiltViewModel<BudgetViewModel>(parentEntry)
+    val reportViewModel = hiltViewModel<ReportViewModel>(parentEntry)
 
     NavHost(
         navController    = navController,
@@ -162,7 +172,7 @@ private fun InnerNavHost(
         ) { backStackEntry ->
             val friendId = backStackEntry.arguments?.getString("friendId") ?: ""
             ChatMessageScreen(
-                navController = navController ,
+                navController = navController,
                 friendId = friendId,
                 chatViewModel = chatViewModel,
                 profileViewModel = profileViewModel,
@@ -197,7 +207,7 @@ private fun InnerNavHost(
                 profileViewModel = profileViewModel
             )
         }
-        
+
         composable(Routes.CurrencyTest) {
             Composables.ProfileSection.CurrencyTestScreen(
                 navController = navController,
@@ -273,6 +283,45 @@ private fun InnerNavHost(
             )
         }
 
+        composable(BottomNavItem.SavingGoal.route) {
+            SavingGoalScreen(
+                navController = navController,
+                savingGoalViewModel = savingGoalViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel
+            )
+        }
+
+        composable(
+            route = Routes.CreateEditSavingGoal,
+            arguments = listOf(navArgument("savingGoalId") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) { backStackEntry ->
+            val savingGoalId = backStackEntry.arguments?.getString("savingGoalId")
+            CreateEditSavingGoalScreen(
+                navController = navController,
+                savingGoalViewModel = savingGoalViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel,
+                savingGoalId = savingGoalId,
+            )
+        }
+
+        composable(BottomNavItem.Budget.route) {
+            BudgetScreen(
+                viewModel = budgetViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel
+            )
+        }
+
+        composable(BottomNavItem.Report.route) {
+            ReportScreen(
+                reportViewModel = reportViewModel,
+            )
+        }
 
     }
 }
