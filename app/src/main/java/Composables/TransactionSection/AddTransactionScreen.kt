@@ -147,14 +147,22 @@ fun AddTransactionScreen(
                 if (transactionType == TransactionType.INCOME) {
                     savingGoalViewModel.getSavingGoalProgressAndAlerts()
                     savingGoals?.getOrNull()?.forEach { goal ->
-                        if (goal.progressStatus == "Warning" && goal.notification != null) {
+                        if (goal.progressStatus == "At Risk" &&
+                            goal.notification != null &&
+                            goal.walletID == selectedWallet?.walletID &&
+                            goal.categoryID == selectedCategory?.categoryID
+                        ) {
                             Toast.makeText(context, goal.notification, Toast.LENGTH_LONG).show()
                         }
                     }
                 } else if (transactionType == TransactionType.EXPENSE) {
                     budgetViewModel.getBudgetProgressAndAlerts()
                     budgets?.getOrNull()?.forEach { budget ->
-                        if (budget.progressStatus == "Warning" && budget.notification != null) {
+                        if ((budget.progressStatus == "Warning" || budget.progressStatus == "Critical") &&
+                            budget.notification != null &&
+                            budget.walletId == selectedWallet?.walletID &&
+                            budget.categoryId == selectedCategory?.categoryID
+                        ) {
                             Toast.makeText(context, budget.notification, Toast.LENGTH_LONG).show()
                         }
                     }
