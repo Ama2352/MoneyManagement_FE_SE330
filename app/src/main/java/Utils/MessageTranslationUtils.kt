@@ -131,8 +131,8 @@ class MessageTranslationUtils @Inject constructor(
         
         // Define currency symbols and their placeholders
         val currencyReplacements = mapOf(
-            "₫" to "VNDCURRENCY",
-            "$" to "USDCURRENCY"
+            "₫" to "vnđ",
+            "$" to "$"
         )
         
         currencyReplacements.forEach { (symbol, placeholder) ->

@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Savings
 import androidx.compose.material3.*
@@ -28,12 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
+import android.widget.Toast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,11 +47,10 @@ fun SavingGoalScreen(
     walletViewModel: WalletViewModel,
     currencyConverterViewModel: CurrencyConverterViewModel,
     authViewModel: AuthViewModel
-) {
-    val goals by savingGoalViewModel.savingGoalProgress.collectAsState()
+) {    val goals by savingGoalViewModel.savingGoalProgress.collectAsState()
     val categories by categoryViewModel.categories.collectAsState()
     val wallets by walletViewModel.wallets.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     // Refresh goals when screen is resumed
     LaunchedEffect(Unit) {
@@ -75,11 +77,12 @@ fun SavingGoalScreen(
             Log.d("SavingGoalDebug", "Wallets: ${walletList.map { "${it.walletName} (ID: ${it.walletID})" }}")
         }
     }
-      LaunchedEffect(Unit) {
+
+    LaunchedEffect(Unit) {
         savingGoalViewModel.deleteSavingGoalEvent.collectLatest { event ->
             when (event) {
                 is DI.Models.UiEvent.UiEvent.ShowMessage -> {
-                    snackbarHostState.showSnackbar(event.message)
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                     // Refresh data after successful delete
                     if (event.message.contains("thành công")) {
                         savingGoalViewModel.getSavingGoalProgressAndAlerts()
@@ -102,136 +105,151 @@ fun SavingGoalScreen(
             }
         }
     }
-      Scaffold(
-        topBar = {
-            SavingGoalTopBar()
-        },
-        snackbarHost = { 
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { snackbarData ->
-                    Snackbar(
-                        snackbarData = snackbarData,
-                        containerColor = SavingGoalTheme.PrimaryGreen,
-                        contentColor = SavingGoalTheme.White,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                }
-            )
-        },
-        containerColor = SavingGoalTheme.BackgroundGreen,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("create_edit_saving_goal") },
-                containerColor = SavingGoalTheme.PrimaryGreenLight,
-                contentColor = SavingGoalTheme.White,
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Thêm mục tiêu",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
-    ) { paddingValues ->
-        val goalsList = goals?.getOrNull() ?: emptyList()
-        
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+    // Main UI Layout without Scaffold - Edge to edge
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SavingGoalTheme.BackgroundGreen)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Header Section
-            item {
-                SavingGoalHeader(
-                    totalGoals = goalsList.size,
-                    completedGoals = goalsList.count { goal ->
-                        goal.savedAmount >= goal.targetAmount
-                    }
-                )
-            }
+            // Top Bar
+            SavingGoalTopBar(
+                onBackClick = { navController.popBackStack() }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
             
-            // Goals List
-            if (goalsList.isEmpty()) {
+            // Content
+            val goalsList = goals?.getOrNull() ?: emptyList()
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 88.dp // Add bottom padding for FAB
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Header Section
                 item {
-                    EmptyStateCard(
-                        onAddClick = { navController.navigate("create_edit_saving_goal") }
+                    SavingGoalHeader(
+                        totalGoals = goalsList.size,
+                        completedGoals = goalsList.count { goal ->
+                            goal.savedAmount >= goal.targetAmount
+                        }
                     )
                 }
-            } else {
-                items(
-                    items = goalsList,
-                    key = { it.savingGoalID }
-                ) { goal ->
-                    AnimatedVisibility(
-                        visible = true,
-                        enter = slideInVertically() + fadeIn(),
-                        exit = slideOutVertically() + fadeOut()
-                    ) {
-                        val category = categories?.getOrNull()?.find { it.categoryID == goal.categoryID }
-                        val wallet = wallets?.getOrNull()?.find { it.walletID == goal.walletID }
-                          SavingGoalCard(
-                            savingGoal = goal,
-                            categoryName = category?.name ?: "Không xác định",
-                            walletName = wallet?.walletName ?: "Không xác định",
-                            onEdit = { 
-                                navController.navigate("create_edit_saving_goal?savingGoalId=${goal.savingGoalID}") 
-                            },
-                            onDelete = { 
-                                savingGoalViewModel.deleteSavingGoal(goal.savingGoalID) 
-                            },
-                            currencyConverterViewModel = currencyConverterViewModel
+                
+                // Goals List
+                if (goalsList.isEmpty()) {
+                    item {
+                        EmptyStateCard(
+                            onAddClick = { navController.navigate("create_edit_saving_goal") }
                         )
                     }
+                } else {
+                    items(
+                        items = goalsList,
+                        key = { it.savingGoalID }
+                    ) { goal ->
+                        AnimatedVisibility(
+                            visible = true,
+                            enter = slideInVertically() + fadeIn(),
+                            exit = slideOutVertically() + fadeOut()
+                        ) {
+                            val category = categories?.getOrNull()?.find { it.categoryID == goal.categoryID }
+                            val wallet = wallets?.getOrNull()?.find { it.walletID == goal.walletID }
+                            
+                            SavingGoalCard(
+                                savingGoal = goal,
+                                categoryName = category?.name ?: "Không xác định",
+                                walletName = wallet?.walletName ?: "Không xác định",
+                                onEdit = { 
+                                    navController.navigate("create_edit_saving_goal?savingGoalId=${goal.savingGoalID}") 
+                                },
+                                onDelete = { 
+                                    savingGoalViewModel.deleteSavingGoal(goal.savingGoalID) 
+                                },
+                                currencyConverterViewModel = currencyConverterViewModel
+                            )
+                        }
+                    }
                 }
             }
-            
-            // Bottom Spacing
-            item {
-                Spacer(modifier = Modifier.height(80.dp))
-            }
+        }
+        
+        // Floating Action Button
+        FloatingActionButton(
+            onClick = { navController.navigate("create_edit_saving_goal") },
+            containerColor = SavingGoalTheme.PrimaryGreenLight,
+            contentColor = SavingGoalTheme.White,
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Thêm mục tiêu",
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SavingGoalTopBar() {
-    CenterAlignedTopAppBar(
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Savings,
-                    contentDescription = null,
-                    tint = SavingGoalTheme.White,
-                    modifier = Modifier.size(24.dp)
-                )
-                Text(
-                    text = "Mục tiêu tiết kiệm",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = SavingGoalTheme.White,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = SavingGoalTheme.PrimaryGreen
-        ),
-        modifier = Modifier.background(
-            brush = Brush.verticalGradient(
-                colors = listOf(
-                    SavingGoalTheme.PrimaryGreen,
-                    SavingGoalTheme.PrimaryGreenLight
+private fun SavingGoalTopBar(
+    onBackClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        SavingGoalTheme.PrimaryGreen,
+                        SavingGoalTheme.PrimaryGreenLight
+                    )
                 )
             )
-        )
-    )
+            .padding(vertical = 16.dp, horizontal = 16.dp)
+    ) {
+        // Back button on the left
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Quay lại",
+                tint = SavingGoalTheme.White,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        
+        // Title in the center
+        Row(
+            modifier = Modifier.align(Alignment.Center),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Savings,
+                contentDescription = null,
+                tint = SavingGoalTheme.White,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = "Mục tiêu tiết kiệm",
+                style = MaterialTheme.typography.headlineSmall,
+                color = SavingGoalTheme.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
 }
 
 @Composable

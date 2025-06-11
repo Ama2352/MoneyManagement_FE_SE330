@@ -87,11 +87,8 @@ fun SavingGoalForm(
     }
     
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
+      Column(
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         // Description Field

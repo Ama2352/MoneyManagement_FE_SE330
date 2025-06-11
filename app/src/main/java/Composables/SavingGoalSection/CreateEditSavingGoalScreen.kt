@@ -14,7 +14,9 @@ import DI.ViewModels.WalletViewModel
 import DI.ViewModels.CurrencyConverterViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -29,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
 import android.widget.Toast
+import androidx.compose.ui.Alignment
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -173,140 +176,153 @@ fun CreateEditSavingGoalScreen(
             }
         }    }
     
-    Scaffold(
-        topBar = {
+    // Main UI Layout without Scaffold - Edge to edge
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SavingGoalTheme.BackgroundGreen)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Top Bar
             CreateEditTopBar(
                 isEditMode = isEditMode,
                 onBackClick = { navController.popBackStack() }
             )
-        },
-        containerColor = SavingGoalTheme.BackgroundGreen
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            // Form Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = SavingGoalTheme.CardBackground
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            
+            // Scrollable Content
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
+                // Form Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = SavingGoalTheme.CardBackground
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
-                    // Title
-                    Text(
-                        text = if (isEditMode) "Chỉnh sửa mục tiêu" else "Tạo mục tiêu mới",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = SavingGoalTheme.TextPrimary,
-                        modifier = Modifier.padding(bottom = 20.dp)
-                    )
-                      // Form
-                    SavingGoalForm(
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp)
+                    ) {
+                        // Title
+                        Text(
+                            text = if (isEditMode) "Chỉnh sửa mục tiêu" else "Tạo mục tiêu mới",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = SavingGoalTheme.TextPrimary,
+                            modifier = Modifier.padding(bottom = 20.dp)
+                        )
+                          // Form
+                        SavingGoalForm(
+                            description = description,
+                            onDescriptionChange = { 
+                                description = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            targetAmount = targetAmount,
+                            onTargetAmountChange = { 
+                                targetAmount = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            selectedCategory = selectedCategory,
+                            onCategorySelected = { 
+                                selectedCategory = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            categories = categories?.getOrNull() ?: emptyList(),
+                            selectedWallet = selectedWallet,
+                            onWalletSelected = { 
+                                selectedWallet = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            wallets = wallets?.getOrNull() ?: emptyList(),
+                            startDate = startDate,
+                            onStartDateChange = { 
+                                startDate = it
+                                if (endDate.isBefore(it) || endDate.isEqual(it)) {
+                                    endDate = it.plusDays(1)
+                                }
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            endDate = endDate,
+                            onEndDateChange = { 
+                                endDate = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },                            isLoading = isLoading,
+                            currencyConverterViewModel = currencyConverterViewModel,
+                            onSave = ::saveGoal,
+                            isFormValid = isFormValid,
+                            saveButtonText = if (isEditMode) "Cập nhật mục tiêu" else "Tạo mục tiêu"
+                        )
+                    }
+                }
+                  // Validation Errors
+                if (showValidationErrors) {
+                    ValidationErrorCard(
                         description = description,
-                        onDescriptionChange = { 
-                            description = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
                         targetAmount = targetAmount,
-                        onTargetAmountChange = { 
-                            targetAmount = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
                         selectedCategory = selectedCategory,
-                        onCategorySelected = { 
-                            selectedCategory = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
-                        categories = categories?.getOrNull() ?: emptyList(),
                         selectedWallet = selectedWallet,
-                        onWalletSelected = { 
-                            selectedWallet = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
-                        wallets = wallets?.getOrNull() ?: emptyList(),
                         startDate = startDate,
-                        onStartDateChange = { 
-                            startDate = it
-                            if (endDate.isBefore(it) || endDate.isEqual(it)) {
-                                endDate = it.plusDays(1)
-                            }
-                            if (showValidationErrors) showValidationErrors = false
-                        },
-                        endDate = endDate,
-                        onEndDateChange = { 
-                            endDate = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },                        isLoading = isLoading,
-                        currencyConverterViewModel = currencyConverterViewModel,
-                        onSave = ::saveGoal,
-                        isFormValid = isFormValid,
-                        saveButtonText = if (isEditMode) "Cập nhật mục tiêu" else "Tạo mục tiêu"
+                        endDate = endDate
                     )
                 }
-            }
-              // Validation Errors
-            if (showValidationErrors) {
-                ValidationErrorCard(
-                    description = description,
-                    targetAmount = targetAmount,
-                    selectedCategory = selectedCategory,
-                    selectedWallet = selectedWallet,
-                    startDate = startDate,
-                    endDate = endDate
-                )
             }
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateEditTopBar(
     isEditMode: Boolean,
     onBackClick: () -> Unit
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                text = if (isEditMode) "Chỉnh sửa mục tiêu" else "Tạo mục tiêu mới",
-                style = MaterialTheme.typography.titleLarge,
-                color = SavingGoalTheme.White,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Quay lại",
-                    tint = SavingGoalTheme.White
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = SavingGoalTheme.PrimaryGreen
-        ),
-        modifier = Modifier.background(
-            brush = Brush.verticalGradient(
-                colors = listOf(
-                    SavingGoalTheme.PrimaryGreen,
-                    SavingGoalTheme.PrimaryGreenLight
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        SavingGoalTheme.PrimaryGreen,
+                        SavingGoalTheme.PrimaryGreenLight
+                    )
                 )
             )
+            .padding(vertical = 16.dp, horizontal = 16.dp)
+    ) {
+        // Back button on the left
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Quay lại",
+                tint = SavingGoalTheme.White,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        
+        // Title in the center
+        Text(
+            text = if (isEditMode) "Chỉnh sửa mục tiêu" else "Tạo mục tiêu mới",
+            style = MaterialTheme.typography.titleLarge,
+            color = SavingGoalTheme.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Center)
         )
-    )
+    }
 }
 
 @Composable
