@@ -1,6 +1,7 @@
 package DI.Composables.BudgetUI.components
 
 import DI.Composables.BudgetUI.theme.BudgetTheme
+import DI.Utils.rememberAppStrings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +24,8 @@ fun BudgetDeleteDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val strings = rememberAppStrings()
+    
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
@@ -57,10 +60,9 @@ fun BudgetDeleteDialog(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-                
-                // Title
+                  // Title
                 Text(
-                    text = "Xác nhận xóa",
+                    text = strings.confirmDelete,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = BudgetTheme.TextPrimary,
@@ -73,7 +75,7 @@ fun BudgetDeleteDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Bạn có chắc chắn muốn xóa ngân sách này không?",
+                        text = strings.budgetDeleteDescription,
                         style = MaterialTheme.typography.bodyMedium,
                         color = BudgetTheme.TextSecondary,
                         textAlign = TextAlign.Center,
@@ -89,7 +91,7 @@ fun BudgetDeleteDialog(
                     )
                     
                     Text(
-                        text = "Hành động này không thể hoàn tác.",
+                        text = strings.budgetCannotUndo,
                         style = MaterialTheme.typography.bodySmall,
                         color = BudgetTheme.DangerRed,
                         textAlign = TextAlign.Center,
@@ -109,10 +111,9 @@ fun BudgetDeleteDialog(
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = BudgetTheme.TextSecondary
-                        )
-                    ) {
+                        )                    ) {
                         Text(
-                            text = "Hủy",
+                            text = strings.cancel,
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -128,7 +129,7 @@ fun BudgetDeleteDialog(
                         )
                     ) {
                         Text(
-                            text = "Xóa",
+                            text = strings.delete,
                             fontWeight = FontWeight.Bold
                         )
                     }

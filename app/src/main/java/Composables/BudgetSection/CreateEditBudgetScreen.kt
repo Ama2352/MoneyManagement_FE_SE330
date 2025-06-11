@@ -3,10 +3,12 @@ package DI.Composables.BudgetUI
 import DI.Composables.BudgetUI.components.BudgetForm
 import DI.Composables.BudgetUI.theme.BudgetTheme
 import DI.Utils.DateUtils
+import DI.Utils.rememberAppStrings
 import DI.Models.Category.Category
 import DI.Models.Budget.CreateBudgetRequest
 import DI.Models.Budget.UpdateBudgetRequest
 import DI.Models.Wallet.Wallet
+import DI.Utils.AppStrings
 import DI.Utils.CurrencyUtils
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.BudgetViewModel
@@ -42,6 +44,7 @@ fun CreateEditBudgetScreen(
     budgetId: String? = null,
     currencyConverterViewModel: CurrencyConverterViewModel = hiltViewModel()
 ) {
+    val strings = rememberAppStrings()
     val isEditMode = budgetId != null
     val selectedBudget by budgetViewModel.selectedBudget.collectAsState()
     val categories by categoryViewModel.categories.collectAsState()
@@ -108,9 +111,10 @@ fun CreateEditBudgetScreen(
         budgetViewModel.budgetEvent.collectLatest { event ->
             when (event) {
                 is DI.Models.UiEvent.UiEvent.ShowMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
-                    // Navigate back after successful creation or update
-                    if (event.message.contains("thành công")) {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()                    // Navigate back after successful creation or update
+                    if (event.message.contains(strings.successMessage) ||
+                        event.message.contains("thành công") || 
+                        event.message.contains("successfully")) {
                         navController.popBackStack()
                     }
                 }
@@ -176,11 +180,11 @@ fun CreateEditBudgetScreen(
         }
     }
     
-    Scaffold(
-        topBar = {
+    Scaffold(        topBar = {
             CreateEditTopBar(
                 isEditMode = isEditMode,
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                strings = strings
             )
         },
         containerColor = BudgetTheme.BackgroundGreen
@@ -205,10 +209,9 @@ fun CreateEditBudgetScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp)
-                ) {
-                    // Title
+                ) {                    // Title
                     Text(
-                        text = if (isEditMode) "Chỉnh sửa ngân sách" else "Tạo ngân sách mới",
+                        text = if (isEditMode) strings.budgetEdit else strings.budgetCreateNew,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = BudgetTheme.TextPrimary,
@@ -254,14 +257,13 @@ fun CreateEditBudgetScreen(
                         },
                         isLoading = isLoading,
                         currencyConverterViewModel = currencyConverterViewModel,
-                        onSave = ::saveBudget,
-                        isFormValid = isFormValid,
-                        saveButtonText = if (isEditMode) "Cập nhật ngân sách" else "Tạo ngân sách"
+                        onSave = ::saveBudget,                        isFormValid = isFormValid,
+                        saveButtonText = if (isEditMode) strings.budgetUpdate else strings.budgetCreate,
+                        strings = strings
                     )
                 }
             }
-            
-            // Validation Errors
+              // Validation Errors
             if (showValidationErrors) {
                 ValidationErrorCard(
                     description = description,
@@ -269,7 +271,8 @@ fun CreateEditBudgetScreen(
                     selectedCategory = selectedCategory,
                     selectedWallet = selectedWallet,
                     startDate = startDate,
-                    endDate = endDate
+                    endDate = endDate,
+                    strings = strings
                 )
             }
         }
@@ -280,12 +283,13 @@ fun CreateEditBudgetScreen(
 @Composable
 private fun CreateEditTopBar(
     isEditMode: Boolean,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    strings: AppStrings
 ) {
     TopAppBar(
         title = {
             Text(
-                text = if (isEditMode) "Chỉnh sửa ngân sách" else "Tạo ngân sách mới",
+                text = if (isEditMode) strings.budgetEdit else strings.budgetCreateNew,
                 style = MaterialTheme.typography.titleLarge,
                 color = BudgetTheme.White,
                 fontWeight = FontWeight.Bold
@@ -295,7 +299,7 @@ private fun CreateEditTopBar(
             IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Quay lại",
+                    contentDescription = strings.backButton,
                     tint = BudgetTheme.White
                 )
             }
@@ -321,21 +325,21 @@ private fun ValidationErrorCard(
     selectedCategory: Category?,
     selectedWallet: Wallet?,
     startDate: LocalDate,
-    endDate: LocalDate
+    endDate: LocalDate,
+    strings: AppStrings
 ) {
     val errors = mutableListOf<String>()
-    
-    if (description.isBlank()) errors.add("Vui lòng nhập mô tả ngân sách")
-    if (limitAmount.isBlank()) errors.add("Vui lòng nhập số tiền giới hạn")
+    if (description.isBlank()) errors.add(strings.budgetDescriptionRequired)
+    if (limitAmount.isBlank()) errors.add(strings.budgetLimitRequired)
     else {
         val parsedAmount = CurrencyUtils.parseAmount(limitAmount)
         if (parsedAmount == null || parsedAmount <= 0.0) {
-            errors.add("Số tiền giới hạn phải là số dương hợp lệ")
+            errors.add(strings.budgetAmountInvalid)
         }
     }
-    if (selectedCategory == null) errors.add("Vui lòng chọn danh mục")
-    if (selectedWallet == null) errors.add("Vui lòng chọn ví")
-    if (!endDate.isAfter(startDate)) errors.add("Ngày kết thúc phải sau ngày bắt đầu")
+    if (selectedCategory == null) errors.add(strings.budgetCategoryRequired)
+    if (selectedWallet == null) errors.add(strings.budgetWalletRequired)
+    if (!endDate.isAfter(startDate)) errors.add(strings.budgetEndDateInvalid)
     
     if (errors.isNotEmpty()) {
         Card(
@@ -350,9 +354,8 @@ private fun ValidationErrorCard(
                     .fillMaxWidth()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "Vui lòng kiểm tra lại thông tin:",
+            ) {                Text(
+                    text = strings.budgetValidationTitle,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = BudgetTheme.DangerRed

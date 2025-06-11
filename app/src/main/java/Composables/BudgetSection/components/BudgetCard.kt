@@ -3,8 +3,11 @@ package DI.Composables.BudgetUI.components
 import DI.ViewModels.CurrencyConverterViewModel
 import DI.Composables.BudgetUI.theme.BudgetTheme
 import DI.Utils.DateUtils
+import DI.Utils.rememberAppStrings
+import DI.Utils.AppStrings
 import DI.Models.Budget.Budget
 import DI.Utils.CurrencyUtils
+import DI.Utils.BudgetNotificationTranslator
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
@@ -45,6 +48,7 @@ fun BudgetCard(
     currencyConverterViewModel: CurrencyConverterViewModel
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val strings = rememberAppStrings()
     
     // Currency states
     val isVND by currencyConverterViewModel.isVND.collectAsState()
@@ -68,8 +72,8 @@ fun BudgetCard(
             CurrencyUtils.vndToUsd(budget.limitAmount, rate)
         }
     }
-    
-    val progress = (budget.currentSpending / budget.limitAmount).toFloat().coerceIn(0f, 1f)
+      val progress = (budget.currentSpending / budget.limitAmount).toFloat().coerceIn(0f, 1f)
+    // Keep using legacy function for internal logic (days remaining calculation for colors)
     val daysRemaining = DateUtils.getDaysRemaining(parseDateTime(budget.endDate))
     val isOverdue = DateUtils.isOverdue(parseDateTime(budget.endDate))
     
@@ -133,13 +137,13 @@ fun BudgetCard(
                 // Action Buttons
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    IconButton(
+                ) {                    IconButton(
                         onClick = onEdit,
                         modifier = Modifier.size(32.dp)
-                    ) {                        Icon(
+                    ) {
+                        Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Chỉnh sửa",
+                            contentDescription = strings.edit,
                             tint = BudgetTheme.PrimaryGreenLight,
                             modifier = Modifier.size(18.dp)
                         )
@@ -151,7 +155,7 @@ fun BudgetCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Xóa",
+                            contentDescription = strings.delete,
                             tint = BudgetTheme.DangerRed,
                             modifier = Modifier.size(18.dp)
                         )
@@ -177,12 +181,11 @@ fun BudgetCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
+                ) {                    Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "Đã chi tiêu",
+                            text = strings.currentSpending,
                             style = MaterialTheme.typography.bodySmall,
                             color = BudgetTheme.TextSecondary,
                             fontSize = 12.sp
@@ -205,7 +208,7 @@ fun BudgetCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "Giới hạn",
+                            text = strings.budgetLimit,
                             style = MaterialTheme.typography.bodySmall,
                             color = BudgetTheme.TextSecondary,
                             fontSize = 12.sp
@@ -233,20 +236,19 @@ fun BudgetCard(
             ) {
                 InfoRow(
                     icon = Icons.Outlined.Category,
-                    label = "Danh mục",
+                    label = strings.budgetCategory,
                     value = categoryName
                 )
                 
                 InfoRow(
                     icon = Icons.Outlined.Wallet,
-                    label = "Ví",
+                    label = strings.budgetWallet,
                     value = walletName
                 )
-                
-                InfoRow(
+                  InfoRow(
                     icon = Icons.Outlined.CalendarToday,
-                    label = "Thời hạn",
-                    value = DateUtils.getDaysRemainingText(parseDateTime(budget.endDate)),
+                    label = strings.budgetDeadline,
+                    value = DateUtils.getDaysRemainingText(parseDateTime(budget.endDate), strings),
                     valueColor = if (isOverdue) BudgetTheme.DangerRed 
                                else if (daysRemaining <= 7) BudgetTheme.WarningOrange
                                else BudgetTheme.TextSecondary
@@ -271,16 +273,19 @@ fun BudgetCard(
 @Composable
 private fun StatusBadge(
     progressStatus: String
-) {    val (statusText, statusColor, backgroundColor) = when (progressStatus.lowercase()) {
-        "not started" -> Triple("Chưa bắt đầu", BudgetTheme.White, BudgetTheme.SecondaryGreen)
-        "on track" -> Triple("Theo kế hoạch", BudgetTheme.White, BudgetTheme.SuccessGreen)
-        "under budget" -> Triple("Dưới ngân sách", BudgetTheme.White, BudgetTheme.PrimaryGreenLight)
-        "minimal spending" -> Triple("Chi tiêu ít", BudgetTheme.White, BudgetTheme.AccentGreen)
-        "warning" -> Triple("Cảnh báo", BudgetTheme.White, BudgetTheme.WarningOrange)
-        "critical" -> Triple("Nguy hiểm", BudgetTheme.White, BudgetTheme.DangerRed)
-        "over budget" -> Triple("Vượt ngân sách", BudgetTheme.White, BudgetTheme.DangerRed)
-        "nearly maxed" -> Triple("Gần hết", BudgetTheme.White, BudgetTheme.WarningOrange)
-        else -> Triple("Không xác định", BudgetTheme.White, BudgetTheme.TextTertiary)
+) {
+    val strings = rememberAppStrings()
+    
+    val (statusText, statusColor, backgroundColor) = when (progressStatus.lowercase()) {
+        "not started" -> Triple(strings.budgetNotStarted, BudgetTheme.White, BudgetTheme.SecondaryGreen)
+        "on track" -> Triple(strings.budgetOnTrack, BudgetTheme.White, BudgetTheme.SuccessGreen)
+        "under budget" -> Triple(strings.budgetUnderBudget, BudgetTheme.White, BudgetTheme.PrimaryGreenLight)
+        "minimal spending" -> Triple(strings.budgetMinimalSpending, BudgetTheme.White, BudgetTheme.AccentGreen)
+        "warning" -> Triple(strings.budgetWarning, BudgetTheme.White, BudgetTheme.WarningOrange)
+        "critical" -> Triple(strings.budgetCritical, BudgetTheme.White, BudgetTheme.DangerRed)
+        "over budget" -> Triple(strings.budgetOverBudget, BudgetTheme.White, BudgetTheme.DangerRed)
+        "nearly maxed" -> Triple(strings.budgetNearlyMaxed, BudgetTheme.White, BudgetTheme.WarningOrange)
+        else -> Triple(strings.budgetUnknownStatus, BudgetTheme.White, BudgetTheme.TextTertiary)
     }
     
     Box(
@@ -345,14 +350,11 @@ private fun NotificationAlert(
     modifier: Modifier = Modifier,
     currencyConverterViewModel: CurrencyConverterViewModel
 ) {
+    val strings = rememberAppStrings()
     // Currency states
     val isVND by currencyConverterViewModel.isVND.collectAsState()
-    val exchangeRates by currencyConverterViewModel.exchangeRates.collectAsState()
-    
-    // Format message with correct currency
-    val formattedMessage = remember(message, isVND, exchangeRates) {
-        formatNotificationMessage(message, isVND, exchangeRates)
-    }
+    val exchangeRates by currencyConverterViewModel.exchangeRates.collectAsState()    // Format message with correct currency and language using the new translator
+    val formattedMessage = BudgetNotificationTranslator.translate(message, isVND, exchangeRates)
       // Determine notification style based on backend status
     val (backgroundColor, iconColor, textColor, icon) = when (progressStatus.lowercase()) {
         "not started" -> Tuple4(
@@ -430,13 +432,13 @@ private fun NotificationAlert(
                 tint = iconColor,
                 modifier = Modifier.size(20.dp)
             )
-            
             Text(
                 text = formattedMessage,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    lineHeight = 16.sp,
+                    fontSize = 12.sp
+                ),
                 color = textColor,
-                lineHeight = 16.sp,
-                fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -450,29 +452,6 @@ private data class Tuple4<A, B, C, D>(
     val third: C,
     val fourth: D
 )
-
-// Helper function to format currency amounts in notification messages
-private fun formatNotificationMessage(
-    message: String,
-    isVND: Boolean,
-    exchangeRates: DI.Models.Currency.CurrencyRates?
-): String {
-    val dollarRegex = Regex("""\$([0-9,]+\.?[0-9]*)""")
-    return dollarRegex.replace(message) { matchResult ->
-        val amountStr = matchResult.groupValues[1].replace(",", "")
-        val amount = amountStr.toDoubleOrNull() ?: 0.0
-        
-        if (isVND) {
-            // Convert USD to VND for display
-            val rate = exchangeRates?.usdToVnd ?: 24000.0
-            val vndAmount = CurrencyUtils.usdToVnd(amount, rate)
-            CurrencyUtils.formatAmount(vndAmount, true)
-        } else {
-            // Keep as USD
-            CurrencyUtils.formatAmount(amount, false)
-        }
-    }
-}
 
 // Helper function to parse date string to LocalDateTime
 private fun parseDateTime(dateString: String): LocalDateTime {

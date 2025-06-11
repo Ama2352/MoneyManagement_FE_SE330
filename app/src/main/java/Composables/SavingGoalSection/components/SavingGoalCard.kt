@@ -3,6 +3,7 @@ package DI.Composables.SavingGoalUI.components
 import DI.ViewModels.CurrencyConverterViewModel
 import DI.Composables.SavingGoalUI.theme.SavingGoalTheme
 import DI.Utils.DateUtils
+import DI.Utils.rememberAppStrings
 import DI.Models.SavingGoal.SavingGoal
 import DI.Utils.CurrencyUtils
 import androidx.compose.animation.animateContentSize
@@ -44,6 +45,7 @@ fun SavingGoalCard(
     currencyConverterViewModel: CurrencyConverterViewModel
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val strings = rememberAppStrings()
     
     // Currency states
     val isVND by currencyConverterViewModel.isVND.collectAsState()
@@ -68,6 +70,7 @@ fun SavingGoalCard(
         }
     }
     val progress = CurrencyUtils.calculatePercentage(savingGoal.savedAmount, savingGoal.targetAmount)
+    // Keep using legacy function for internal logic (days remaining calculation for colors)
     val daysRemaining = DateUtils.getDaysRemaining(savingGoal.getEndDateAsLocalDateTime())
     val isOverdue = DateUtils.isOverdue(savingGoal.getEndDateAsLocalDateTime())
     
@@ -234,11 +237,10 @@ fun SavingGoalCard(
                     label = "Ví",
                     value = walletName
                 )
-                
-                InfoRow(
+                  InfoRow(
                     icon = Icons.Outlined.CalendarToday,
                     label = "Thời hạn",
-                    value = DateUtils.getDaysRemainingText(savingGoal.getEndDateAsLocalDateTime()),
+                    value = DateUtils.getDaysRemainingText(savingGoal.getEndDateAsLocalDateTime(), strings),
                     valueColor = if (isOverdue) SavingGoalTheme.DangerRed 
                                else if (daysRemaining <= 7) SavingGoalTheme.WarningOrange
                                else SavingGoalTheme.TextSecondary

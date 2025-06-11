@@ -25,6 +25,28 @@ object DateUtils {
         return ChronoUnit.DAYS.between(now, endDate)
     }
     
+    // Updated function that uses string resources
+    fun getDaysRemainingText(endDate: LocalDateTime, strings: AppStrings): String {
+        val days = getDaysRemaining(endDate)
+        return when {
+            days < 0 -> strings.dateExpired
+            days == 0L -> strings.dateToday
+            days == 1L -> strings.dateOneDayLeft
+            days <= 30 -> strings.dateDaysLeft.format(days)
+            else -> {
+                val months = days / 30
+                val remainingDays = days % 30
+                if (remainingDays == 0L) {
+                    strings.dateMonthsLeft.format(months)
+                } else {
+                    strings.dateMonthsDaysLeft.format(months, remainingDays)
+                }
+            }
+        }
+    }
+    
+    // Legacy function for backward compatibility (deprecated)
+    @Deprecated("Use getDaysRemainingText(endDate, strings) instead")
     fun getDaysRemainingText(endDate: LocalDateTime): String {
         val days = getDaysRemaining(endDate)
         return when {
@@ -48,6 +70,19 @@ object DateUtils {
         return LocalDateTime.now().isAfter(endDate)
     }
     
+    // Updated function that uses string resources
+    fun getProgressStatus(savedPercentage: Float, daysRemaining: Long, strings: AppStrings): String {
+        return when {
+            daysRemaining < 0 -> strings.dateStatusOverdue
+            savedPercentage >= 1.0f -> strings.dateStatusCompleted
+            daysRemaining <= 7 && savedPercentage < 0.8f -> strings.dateStatusUrgent
+            daysRemaining <= 30 && savedPercentage < 0.5f -> strings.dateStatusWarning
+            else -> strings.dateStatusOnTrack
+        }
+    }
+    
+    // Legacy function for backward compatibility (deprecated)
+    @Deprecated("Use getProgressStatus(savedPercentage, daysRemaining, strings) instead")
     fun getProgressStatus(savedPercentage: Float, daysRemaining: Long): String {
         return when {
             daysRemaining < 0 -> "Overdue"

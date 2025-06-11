@@ -34,7 +34,7 @@ annotation class ExchangeRetrofit
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://192.168.1.2:8080/api/"
+    private const val BASE_URL = "http://192.168.0.129:8080/api/"
     
     // Exchange API base URL
     private const val EXCHANGE_API_BASE_URL =

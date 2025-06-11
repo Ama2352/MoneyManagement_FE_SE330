@@ -2,6 +2,7 @@ package DI.Composables.BudgetUI
 
 import DI.Composables.BudgetUI.components.BudgetCard
 import DI.Composables.BudgetUI.theme.BudgetTheme
+import DI.Utils.rememberAppStrings
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.WalletViewModel
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material3.*
@@ -47,6 +49,7 @@ fun BudgetScreen(
     val categories by categoryViewModel.categories.collectAsState()
     val wallets by walletViewModel.wallets.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val strings = rememberAppStrings()
     
     // Refresh budgets when screen is resumed
     LaunchedEffect(Unit) {
@@ -77,10 +80,11 @@ fun BudgetScreen(
             }
         }
     }
-    
-    Scaffold(
+      Scaffold(
         topBar = {
-            BudgetTopBar()
+            BudgetTopBar(
+                onBackClick = { navController.popBackStack() }
+            )
         },
         snackbarHost = { 
             SnackbarHost(
@@ -96,8 +100,7 @@ fun BudgetScreen(
             )
         },
         containerColor = BudgetTheme.BackgroundGreen,
-        floatingActionButton = {
-            FloatingActionButton(
+        floatingActionButton = {            FloatingActionButton(
                 onClick = { navController.navigate("create_edit_budget") },
                 containerColor = BudgetTheme.PrimaryGreenLight,
                 contentColor = BudgetTheme.White,
@@ -105,7 +108,7 @@ fun BudgetScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Thêm ngân sách",
+                    contentDescription = strings.addBudget,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -149,11 +152,10 @@ fun BudgetScreen(
                     ) {
                         val category = categories?.getOrNull()?.find { it.categoryID == budget.categoryId }
                         val wallet = wallets?.getOrNull()?.find { it.walletID == budget.walletId }
-                        
-                        BudgetCard(
+                          BudgetCard(
                             budget = budget,
-                            categoryName = category?.name ?: "Không xác định",
-                            walletName = wallet?.walletName ?: "Không xác định",
+                            categoryName = category?.name ?: strings.unknownCategory,
+                            walletName = wallet?.walletName ?: strings.unknownWallet,
                             onEdit = { 
                                 navController.navigate("create_edit_budget?budgetId=${budget.budgetId}") 
                             },
@@ -176,7 +178,11 @@ fun BudgetScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BudgetTopBar() {
+private fun BudgetTopBar(
+    onBackClick: () -> Unit
+) {
+    val strings = rememberAppStrings()
+    
     CenterAlignedTopAppBar(
         title = {
             Row(
@@ -190,13 +196,22 @@ private fun BudgetTopBar() {
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
-                    text = "Ngân sách",
+                    text = strings.budget,
                     style = MaterialTheme.typography.headlineSmall,
                     color = BudgetTheme.White,
                     fontWeight = FontWeight.Bold
                 )
             }
-        },        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        },
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = strings.back,
+                    tint = BudgetTheme.White
+                )
+            }
+        },colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = BudgetTheme.PrimaryGreen
         ),
         modifier = Modifier.background(
@@ -214,6 +229,8 @@ private fun BudgetHeader(
     totalBudgets: Int,
     activeBudgets: Int
 ) {
+    val strings = rememberAppStrings()
+    
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -225,7 +242,8 @@ private fun BudgetHeader(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(                    brush = Brush.horizontalGradient(
+                .background(
+                    brush = Brush.horizontalGradient(
                         colors = listOf(
                             BudgetTheme.PrimaryGreen.copy(alpha = 0.05f),
                             BudgetTheme.PrimaryGreenLight.copy(alpha = 0.1f)
@@ -236,7 +254,7 @@ private fun BudgetHeader(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Tổng quan",
+                text = strings.budgetOverview,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = BudgetTheme.TextPrimary
@@ -247,19 +265,19 @@ private fun BudgetHeader(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 StatisticItem(
-                    title = "Tổng ngân sách",
+                    title = strings.totalBudgets,
                     value = totalBudgets.toString(),
                     color = BudgetTheme.PrimaryGreen
                 )
                 
                 StatisticItem(
-                    title = "Đang hoạt động",
+                    title = strings.activeBudgets,
                     value = activeBudgets.toString(),
                     color = BudgetTheme.SuccessGreen
                 )
                 
                 StatisticItem(
-                    title = "Đã kết thúc",
+                    title = strings.completedBudgets,
                     value = (totalBudgets - activeBudgets).toString(),
                     color = BudgetTheme.TextTertiary
                 )
@@ -299,6 +317,8 @@ private fun StatisticItem(
 private fun EmptyStateCard(
     onAddClick: () -> Unit
 ) {
+    val strings = rememberAppStrings()
+    
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -338,7 +358,7 @@ private fun EmptyStateCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Chưa có ngân sách",
+                    text = strings.noBudgetsYet,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = BudgetTheme.TextPrimary,
@@ -346,7 +366,7 @@ private fun EmptyStateCard(
                 )
                 
                 Text(
-                    text = "Tạo ngân sách đầu tiên để quản lý chi tiêu của bạn một cách hiệu quả!",
+                    text = strings.createFirstBudget,
                     style = MaterialTheme.typography.bodyMedium,
                     color = BudgetTheme.TextSecondary,
                     textAlign = TextAlign.Center,
@@ -371,7 +391,7 @@ private fun EmptyStateCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Tạo ngân sách",
+                    text = strings.createBudget,
                     fontWeight = FontWeight.SemiBold
                 )
             }

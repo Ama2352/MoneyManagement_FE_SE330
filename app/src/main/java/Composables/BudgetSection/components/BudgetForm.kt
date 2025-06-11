@@ -3,6 +3,7 @@ package DI.Composables.BudgetUI.components
 import DI.Composables.BudgetUI.theme.BudgetTheme
 import DI.Models.Category.Category
 import DI.Models.Wallet.Wallet
+import DI.Utils.AppStrings
 import DI.Utils.CurrencyInputTextField
 import DI.Utils.CurrencyUtils
 import DI.Utils.USDInputPreview
@@ -65,7 +66,8 @@ fun BudgetForm(
     // Add Save button parameters
     onSave: () -> Unit,
     isFormValid: Boolean,
-    saveButtonText: String = "Lưu ngân sách"
+    saveButtonText: String = "Lưu ngân sách",
+    strings: AppStrings
 ) {
     var showCategoryDropdown by remember { mutableStateOf(false) }
     var showWalletDropdown by remember { mutableStateOf(false) }
@@ -92,13 +94,12 @@ fun BudgetForm(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        // Description Field
+    ) {        // Description Field
         CustomTextField(
             value = description,
             onValueChange = onDescriptionChange,
-            label = "Mô tả ngân sách",
-            placeholder = "Ví dụ: Chi tiêu ăn uống tháng này",
+            label = strings.budgetDescription,
+            placeholder = strings.budgetDescriptionPlaceholder,
             icon = Icons.Outlined.Description,
             enabled = !isLoading
         )
@@ -127,7 +128,7 @@ fun BudgetForm(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Giới hạn ngân sách",
+                        text = strings.budgetLimitLabel,
                         style = MaterialTheme.typography.labelMedium,
                         color = BudgetTheme.TextPrimary,
                         fontWeight = FontWeight.Medium
@@ -182,13 +183,12 @@ fun BudgetForm(
                 }
             }
         }
-        
-        // Category Dropdown
+          // Category Dropdown
         CustomDropdownField(
             value = selectedCategory?.name ?: "",
             onValueChange = { },
-            label = "Danh mục",
-            placeholder = "Chọn danh mục",
+            label = strings.budgetCategory,
+            placeholder = strings.selectCategory,
             icon = Icons.Outlined.Category,
             expanded = showCategoryDropdown,
             onExpandedChange = { showCategoryDropdown = it },
@@ -204,13 +204,12 @@ fun BudgetForm(
                 )
             }
         }
-        
-        // Wallet Dropdown
+          // Wallet Dropdown
         CustomDropdownField(
             value = selectedWallet?.walletName ?: "",
             onValueChange = { },
-            label = "Ví",
-            placeholder = "Chọn ví",
+            label = strings.budgetWallet,
+            placeholder = strings.selectWallet,
             icon = Icons.Outlined.AccountBalanceWallet,
             expanded = showWalletDropdown,
             onExpandedChange = { showWalletDropdown = it },
@@ -231,12 +230,11 @@ fun BudgetForm(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Start Date
+        ) {            // Start Date
             CustomDateField(
                 value = startDate.format(dateFormatter),
                 onValueChange = { },
-                label = "Ngày bắt đầu",
+                label = strings.startDate,
                 placeholder = "dd/mm/yyyy",
                 modifier = Modifier.weight(1f),
                 onClick = { showStartDatePicker = true },
@@ -247,15 +245,14 @@ fun BudgetForm(
             CustomDateField(
                 value = endDate.format(dateFormatter),
                 onValueChange = { },
-                label = "Ngày kết thúc",
+                label = strings.endDate,
                 placeholder = "dd/mm/yyyy",
                 modifier = Modifier.weight(1f),
                 onClick = { showEndDatePicker = true },
                 enabled = !isLoading
             )
         }
-        
-        // Date Pickers
+          // Date Pickers
         if (showStartDatePicker) {
             CustomDatePickerDialog(
                 onDateSelected = { selectedDate ->
@@ -263,7 +260,8 @@ fun BudgetForm(
                     showStartDatePicker = false
                 },
                 onDismiss = { showStartDatePicker = false },
-                initialDate = startDate
+                initialDate = startDate,
+                strings = strings
             )
         }
         
@@ -274,7 +272,8 @@ fun BudgetForm(
                     showEndDatePicker = false
                 },
                 onDismiss = { showEndDatePicker = false },
-                initialDate = endDate
+                initialDate = endDate,
+                strings = strings
             )
         }
         
@@ -304,7 +303,7 @@ fun BudgetForm(
                         strokeWidth = 2.dp
                     )
                     Text(
-                        text = "Đang xử lý...",
+                        text = strings.processing,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -543,7 +542,8 @@ private fun CustomDateField(
 private fun CustomDatePickerDialog(
     onDateSelected: (LocalDate) -> Unit,
     onDismiss: () -> Unit,
-    initialDate: LocalDate
+    initialDate: LocalDate,
+    strings: AppStrings
 ) {
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialDate.toEpochDay() * 24 * 60 * 60 * 1000
@@ -561,9 +561,8 @@ private fun CustomDatePickerDialog(
                 },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = BudgetTheme.PrimaryGreen
-                )
-            ) {
-                Text("OK")
+                )            ) {
+                Text(strings.ok)
             }
         },
         dismissButton = {
@@ -571,9 +570,8 @@ private fun CustomDatePickerDialog(
                 onClick = onDismiss,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = BudgetTheme.TextSecondary
-                )
-            ) {
-                Text("Hủy")
+                )            ) {
+                Text(strings.cancel)
             }
         }
     ) {

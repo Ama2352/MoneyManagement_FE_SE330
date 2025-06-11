@@ -517,8 +517,7 @@
     
     <!-- ================== SETTINGS SCREEN ================== -->
     <string name="settings_screen_title">Settings</string>
-    <string name="financial_settings">Financial Settings</string>
-    <string name="savings_goals">Savings Goals</string>
+    <string name="financial_settings">Financial Settings</string>    <string name="savings_goals">Savings Goals</string>
     <string name="set_track_financial_goals">Set and track your financial goals</string>
     <string name="budget_categories">Budget Categories</string>
     <string name="customize_spending_categories">Customize your spending categories</string>
@@ -526,5 +525,76 @@
     <string name="view_detailed_reports">View detailed financial reports</string>
     <string name="support_info">Support &amp; Info</string>
     <string name="log_out">Log Out</string>
+
+    <!-- ================== BUDGET MANAGEMENT ================== -->
+    <string name="my_budgets">My Budgets</string>
+    <string name="add_budget">Add Budget</string>
+    <string name="create_budget">Create Budget</string>
+    <string name="edit_budget">Edit Budget</string>
+    <string name="budget_overview">Overview</string>
+    <string name="total_budgets">Total Budgets</string>
+    <string name="active_budgets">Active</string>
+    <string name="completed_budgets">Completed</string>
+    <string name="no_budgets_yet">No budgets yet</string>
+    <string name="create_first_budget">Create your first budget to manage your spending effectively!</string>
+    <string name="current_spending">Current Spending</string>
+    <string name="budget_limit">Limit</string>
+    <string name="budget_category">Category</string>
+    <string name="budget_wallet">Wallet</string>
+    <string name="budget_deadline">Deadline</string>
+    <string name="unknown_wallet">Unknown Wallet</string>    <string name="budget_description">Budget Description</string>
+    <string name="budget_description_placeholder">Example: Monthly food expenses</string>
+    <string name="budget_limit_label">Budget Limit</string>
+    <string name="limit_amount">Limit Amount</string>
+    <string name="save_budget">Save Budget</string>
+    <string name="delete_budget">Delete Budget</string>
+    <string name="delete_budget_confirm">Are you sure you want to delete this budget?</string>
+    <string name="delete_budget_confirm_message">This action cannot be undone.</string>
+    <string name="budget_delete_description">Are you sure you want to delete this budget?</string>
+    <string name="budget_cannot_undo">This action cannot be undone.</string>
+    <string name="confirm_delete">Confirm Delete</string>
+
+    <!-- Budget Status -->
+    <string name="budget_not_started">Not Started</string>
+    <string name="budget_on_track">On Track</string>
+    <string name="budget_under_budget">Under Budget</string>
+    <string name="budget_minimal_spending">Minimal Spending</string>
+    <string name="budget_warning">Warning</string>
+    <string name="budget_critical">Critical</string>
+    <string name="budget_over_budget">Over Budget</string>
+    <string name="budget_nearly_maxed">Nearly Maxed</string>
+    <string name="budget_unknown_status">Unknown Status</string>    <!-- Budget Form Validation -->
+    <string name="budget_description_required">Please enter budget description</string>
+    <string name="budget_limit_required">Please enter limit amount</string>
+    <string name="budget_category_required">Please select a category</string>
+    <string name="budget_wallet_required">Please select a wallet</string>    <string name="budget_end_date_invalid">End date must be after start date</string>
+    <string name="budget_amount_invalid">Please enter a valid amount</string>
+      <!-- Budget Actions -->
+    <string name="budget_update">Update Budget</string>
+    <string name="budget_create_new">Create New Budget</string>
+    <string name="processing">Processing...</string>
+    <string name="success_message">Success</string>
+    <string name="budget_validation_title">Please check the information again:</string>
+
+    <!-- Budget Success/Error Messages -->
+    <string name="budget_created_success">Budget created successfully!</string>
+    <string name="budget_updated_success">Budget updated successfully!</string>
+    <string name="budget_deleted_success">Budget deleted successfully!</string>
+    <string name="budget_operation_error">Error: %1$s</string>
+
+    <!-- ================== DATE UTILS ================== -->
+    <string name="date_expired">Expired</string>
+    <string name="date_today">Today</string>
+    <string name="date_one_day_left">1 day left</string>
+    <string name="date_days_left">%d days left</string>
+    <string name="date_months_left">%d months left</string>
+    <string name="date_months_days_left">%d months %d days left</string>
+    
+    <!-- Date Status -->
+    <string name="date_status_overdue">Overdue</string>
+    <string name="date_status_completed">Completed</string>
+    <string name="date_status_urgent">Urgent</string>
+    <string name="date_status_warning">Warning</string>
+    <string name="date_status_on_track">On Track</string>
 
 </resources>

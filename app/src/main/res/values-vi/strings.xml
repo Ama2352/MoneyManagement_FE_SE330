@@ -517,11 +517,81 @@
     <string name="financial_settings">Cài đặt tài chính</string>
     <string name="savings_goals">Mục tiêu tiết kiệm</string>
     <string name="set_track_financial_goals">Đặt và theo dõi mục tiêu tài chính của bạn</string>
-    <string name="budget_categories">Danh mục ngân sách</string>
-    <string name="customize_spending_categories">Tùy chỉnh danh mục chi tiêu của bạn</string>
+    <string name="budget_categories">Danh mục ngân sách</string>    <string name="customize_spending_categories">Tùy chỉnh danh mục chi tiêu của bạn</string>
     <string name="reports_analytics">Báo cáo &amp; Phân tích</string>
     <string name="view_detailed_reports">Xem báo cáo tài chính chi tiết</string>
     <string name="support_info">Hỗ trợ &amp; Thông tin</string>
     <string name="log_out">Đăng xuất</string>
+
+    <!-- ================== BUDGET MANAGEMENT ================== -->
+    <string name="my_budgets">Ngân sách của tôi</string>
+    <string name="add_budget">Thêm ngân sách</string>
+    <string name="create_budget">Tạo ngân sách</string>
+    <string name="edit_budget">Chỉnh sửa ngân sách</string>
+    <string name="budget_overview">Tổng quan</string>
+    <string name="total_budgets">Tổng ngân sách</string>
+    <string name="active_budgets">Đang hoạt động</string>
+    <string name="completed_budgets">Đã kết thúc</string>
+    <string name="no_budgets_yet">Chưa có ngân sách</string>
+    <string name="create_first_budget">Tạo ngân sách đầu tiên để quản lý chi tiêu của bạn một cách hiệu quả!</string>
+    <string name="current_spending">Đã chi tiêu</string>
+    <string name="budget_limit">Giới hạn</string>
+    <string name="budget_category">Danh mục</string>
+    <string name="budget_wallet">Ví</string>
+    <string name="budget_deadline">Thời hạn</string>
+    <string name="unknown_wallet">Không xác định</string>    <string name="budget_description">Mô tả ngân sách</string>
+    <string name="budget_description_placeholder">Ví dụ: Chi tiêu ăn uống tháng này</string>
+    <string name="budget_limit_label">Giới hạn ngân sách</string>
+    <string name="limit_amount">Số tiền giới hạn</string>
+    <string name="save_budget">Lưu ngân sách</string>
+    <string name="delete_budget">Xóa ngân sách</string>
+    <string name="delete_budget_confirm">Bạn có chắc chắn muốn xóa ngân sách này không?</string>
+    <string name="delete_budget_confirm_message">Hành động này không thể hoàn tác.</string>
+    <string name="budget_delete_description">Bạn có chắc chắn muốn xóa ngân sách này không?</string>
+    <string name="budget_cannot_undo">Hành động này không thể hoàn tác.</string>
+    <string name="confirm_delete">Xác nhận xóa</string>
+
+    <!-- Budget Status -->
+    <string name="budget_not_started">Chưa bắt đầu</string>
+    <string name="budget_on_track">Theo kế hoạch</string>
+    <string name="budget_under_budget">Dưới ngân sách</string>
+    <string name="budget_minimal_spending">Chi tiêu ít</string>
+    <string name="budget_warning">Cảnh báo</string>
+    <string name="budget_critical">Nguy hiểm</string>
+    <string name="budget_over_budget">Vượt ngân sách</string>
+    <string name="budget_nearly_maxed">Gần hết</string>
+    <string name="budget_unknown_status">Không xác định</string>    <!-- Budget Form Validation -->
+    <string name="budget_description_required">Vui lòng nhập mô tả ngân sách</string>
+    <string name="budget_limit_required">Vui lòng nhập số tiền giới hạn</string>
+    <string name="budget_category_required">Vui lòng chọn danh mục</string>
+    <string name="budget_wallet_required">Vui lòng chọn ví</string>    <string name="budget_end_date_invalid">Ngày kết thúc phải sau ngày bắt đầu</string>
+    <string name="budget_amount_invalid">Vui lòng nhập số tiền hợp lệ</string>
+      <!-- Budget Actions -->
+    <string name="budget_update">Cập nhật ngân sách</string>
+    <string name="budget_create_new">Tạo ngân sách mới</string>
+    <string name="processing">Đang xử lý...</string>
+    <string name="success_message">Thành công</string>
+    <string name="budget_validation_title">Vui lòng kiểm tra lại thông tin:</string>
+
+    <!-- Budget Success/Error Messages -->
+    <string name="budget_created_success">Ngân sách được tạo thành công!</string>
+    <string name="budget_updated_success">Ngân sách được cập nhật thành công!</string>
+    <string name="budget_deleted_success">Ngân sách đã được xóa!</string>
+    <string name="budget_operation_error">Lỗi: %1$s</string>
+
+    <!-- ================== DATE UTILS ================== -->
+    <string name="date_expired">Đã hết hạn</string>
+    <string name="date_today">Hôm nay</string>
+    <string name="date_one_day_left">Còn 1 ngày</string>
+    <string name="date_days_left">Còn %d ngày</string>
+    <string name="date_months_left">Còn %d tháng</string>
+    <string name="date_months_days_left">Còn %d tháng %d ngày</string>
+    
+    <!-- Date Status -->
+    <string name="date_status_overdue">Quá hạn</string>
+    <string name="date_status_completed">Hoàn thành</string>
+    <string name="date_status_urgent">Khẩn cấp</string>
+    <string name="date_status_warning">Cảnh báo</string>
+    <string name="date_status_on_track">Đúng kế hoạch</string>
 
 </resources>
