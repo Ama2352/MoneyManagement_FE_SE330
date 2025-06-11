@@ -5,6 +5,7 @@ import Composables.TransactionSection.EditTransactionScreen
 import Composables.TransactionSection.TransactionDetailScreen
 import Composables.TransactionSection.TransactionSearchScreen
 import DI.API.TokenHandler.TokenExpirationHandler
+import DI.Navigation.LocalMainNavBackStackEntry
 import DI.Composables.AnalysisSection.AnalysisBody
 import DI.Composables.AnalysisSection.CalendarScreen
 import DI.Composables.AuthSection.LoginScreen
@@ -14,23 +15,23 @@ import DI.Composables.ChatSection.ChatScreen
 import DI.Composables.FriendSection.FriendProfileScreen
 import DI.Composables.ProfileSection.EditProfileScreen
 import DI.Composables.ReportSection.ReportScreen
-import DI.Composables.SavingGoalSection.CreateEditSavingGoalScreen
-import DI.Composables.SavingGoalSection.SavingGoalScreen
+import DI.Composables.SavingGoalUI.CreateEditSavingGoalScreen
+import DI.Composables.SavingGoalUI.SavingGoalScreen
+import DI.Composables.BudgetUI.BudgetScreen
+import DI.Composables.BudgetUI.CreateEditBudgetScreen
 import DI.Composables.TransactionSection.MainTransactionsScreen
 import DI.Composables.WalletSection.WalletScreen
 import DI.Models.BottomNavItem
-import DI.Screens.BudgetScreen
 import DI.ViewModels.AnalysisViewModel
 import DI.ViewModels.BudgetViewModel
-import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.ChatViewModel
-import DI.ViewModels.CurrencyConverterViewModel
 import DI.ViewModels.FriendViewModel
-import DI.ViewModels.OcrViewModel
 import DI.ViewModels.ProfileViewModel
+import DI.ViewModels.CategoryViewModel
+import DI.ViewModels.TransactionViewModel
+import DI.ViewModels.CurrencyConverterViewModel
 import DI.ViewModels.ReportViewModel
 import DI.ViewModels.SavingGoalViewModel
-import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
 import ModernCategoriesScreen
 import ProfileScreen
@@ -85,13 +86,7 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             LocalMainNavBackStackEntry provides parentEntry
         ) {
             MainLayout { innerNavController, modifier ->
-                InnerNavHost(
-                    navController,
-                    innerNavController,
-                    modifier,
-                    parentEntry,
-                    authViewModel
-                )
+                InnerNavHost(navController, innerNavController, modifier, parentEntry, authViewModel)
             }
             TokenExpirationHandler(navController)
         }
@@ -102,14 +97,12 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun InnerNavHost(
-    appNavController: NavController,
+    appNavController : NavController,
     navController: NavHostController,
     modifier: Modifier,
     parentEntry: NavBackStackEntry,
     authViewModel: AuthViewModel
-) {
-
-    val friendViewModel = hiltViewModel<FriendViewModel>(parentEntry)
+) {    val friendViewModel = hiltViewModel<FriendViewModel>(parentEntry)
     val chatViewModel = hiltViewModel<ChatViewModel>(parentEntry)
     val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
     val analysisViewModel = hiltViewModel<AnalysisViewModel>(parentEntry)
@@ -117,15 +110,14 @@ private fun InnerNavHost(
     val transactionViewModel = hiltViewModel<TransactionViewModel>(parentEntry)
     val currencyConverterViewModel = hiltViewModel<CurrencyConverterViewModel>(parentEntry)
     val walletViewModel = hiltViewModel<WalletViewModel>(parentEntry)
-    val ocrViewModel = hiltViewModel<OcrViewModel>(parentEntry)
     val savingGoalViewModel = hiltViewModel<SavingGoalViewModel>(parentEntry)
     val budgetViewModel = hiltViewModel<BudgetViewModel>(parentEntry)
     val reportViewModel = hiltViewModel<ReportViewModel>(parentEntry)
 
     NavHost(
-        navController = navController,
+        navController    = navController,
         startDestination = BottomNavItem.Profile.route,
-        modifier = modifier
+        modifier         = modifier
     ) {
         composable(BottomNavItem.Home.route) {
 
@@ -290,16 +282,15 @@ private fun InnerNavHost(
                 authViewModel = authViewModel,
             )
         }
-
         composable(BottomNavItem.SavingGoal.route) {
             SavingGoalScreen(
                 navController = navController,
                 savingGoalViewModel = savingGoalViewModel,
                 categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
-
         composable(
             route = Routes.CreateEditSavingGoal,
             arguments = listOf(navArgument("savingGoalId") {
@@ -314,14 +305,34 @@ private fun InnerNavHost(
                 categoryViewModel = categoryViewModel,
                 walletViewModel = walletViewModel,
                 savingGoalId = savingGoalId,
+                currencyConverterViewModel = currencyConverterViewModel
+            )
+        }
+        composable(BottomNavItem.Budget.route) {
+            BudgetScreen(
+                navController = navController,
+                budgetViewModel = budgetViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
 
-        composable(BottomNavItem.Budget.route) {
-            BudgetScreen(
-                viewModel = budgetViewModel,
+        composable(
+            route = Routes.CreateEditBudget,
+            arguments = listOf(navArgument("budgetId") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) { backStackEntry ->
+            val budgetId = backStackEntry.arguments?.getString("budgetId")
+            CreateEditBudgetScreen(
+                navController = navController,
+                budgetViewModel = budgetViewModel,
                 categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel
+                walletViewModel = walletViewModel,
+                budgetId = budgetId,
+                currencyConverterViewModel = currencyConverterViewModel
             )
         }
 
