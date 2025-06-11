@@ -57,8 +57,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.security.crypto.ktx)
-    implementation (libs.androidx.security.crypto)
-    implementation (libs.androidx.security.crypto.ktx.v110alpha06)
+    implementation(libs.androidx.security.crypto)
+    implementation(libs.androidx.security.crypto.ktx.v110alpha06)
     implementation(libs.support.annotations)
 
 
@@ -70,6 +70,7 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 
     // Dùng BOM để đồng bộ các thư viện Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -113,49 +114,50 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
 
-    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
 
-    implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
 
     // Compose Charts
     implementation(libs.compose.charts.v012)
-
-    // The compose calendar library for Android
-    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.1.5")
+// The compose calendar library for Android
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     implementation("com.kizitonwose.calendar:compose:2.6.2")
 
     // Ocr
-    implementation (libs.text.recognition)
+    implementation(libs.text.recognition)
     implementation(libs.jetbrains.kotlinx.coroutines.android)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.jetbrains.kotlinx.coroutines.play.services)
 
     // Chat
-    implementation (libs.microsoft.signalr)
+    implementation(libs.microsoft.signalr)
     implementation(libs.java.jwt)
 
     // Display Avatar
-    implementation (libs.glide)
-    annotationProcessor (libs.compiler)
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
 
     // Data Store Across Restart
-    implementation (libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences)
 
     // For showing customizable material-style dialogs in Jetpack Compose
     implementation(libs.core)
 
     // Adds support for date and time pickers in the dialogs
     implementation(libs.compose.material.dialogs.datetime)
+    implementation("androidx.compose.material3:material3:1.3.0")
+    implementation("androidx.navigation:navigation-compose:2.7.0")
 
     // Compose testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    implementation (libs.sheets.compose.dialogs.core)
-    implementation (libs.calendar)
-    implementation (libs.clock)
+    implementation(libs.sheets.compose.dialogs.core)
+    implementation(libs.calendar)
+    implementation(libs.clock)
 
 }

@@ -9,6 +9,9 @@ import DI.Models.Auth.RefreshTokenRequest
 import DI.Models.Auth.RefreshTokenResponse
 import DI.Models.Auth.SignInRequest
 import DI.Models.Auth.SignUpRequest
+import DI.Models.Budget.Budget
+import DI.Models.Budget.CreateBudgetRequest
+import DI.Models.Budget.UpdateBudgetRequest
 import DI.Models.Category.AddCategoryRequest
 import DI.Models.Category.Category
 import DI.Models.Transaction.Transaction
@@ -17,6 +20,10 @@ import DI.Models.Transaction.CreateTransactionRequest
 import DI.Models.Transaction.UpdateTransactionRequest
 import DI.Models.Category.UpdateCategoryRequest
 import DI.Models.Ocr.OcrData
+import DI.Models.Report.ReportRequest
+import DI.Models.SavingGoal.CreateSavingGoal
+import DI.Models.SavingGoal.SavingGoal
+import DI.Models.SavingGoal.UpdateSavingGoal
 import DI.Models.UserInfo.AvatarUploadResponse
 import DI.Models.UserInfo.Profile
 import DI.Models.UserInfo.UpdatedProfile
@@ -34,6 +41,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.UUID
 
 interface ApiService {
 
@@ -156,4 +164,47 @@ interface ApiService {
 
     @GET("Calendar/yearly")
     suspend fun getYearlySummary(@Query("year") year: String): YearlySummary
+
+    // Saving goal
+
+    @POST("SavingGoals")
+    suspend fun createSavingGoal(@Body request: CreateSavingGoal): Response<SavingGoal>
+
+    @GET("SavingGoals")
+    suspend fun getAllSavingGoals(): Response<List<SavingGoal>>
+
+    @GET("SavingGoals/{savingGoalId}")
+    suspend fun getSavingGoalById(@Path("savingGoalId") savingGoalId: String): Response<SavingGoal>
+
+    @PUT("SavingGoals/{savingGoalId}")
+    suspend fun updateSavingGoal(@Body request: UpdateSavingGoal): Response<SavingGoal>
+
+    @DELETE("SavingGoals/{savingGoalId}")
+    suspend fun deleteSavingGoal(@Path("savingGoalId") savingGoalId: String): Response<ResponseBody>
+
+    @GET("SavingGoals/progress")
+    suspend fun getSavingGoalProgressAndAlerts(): Response<List<SavingGoal>>
+
+    // Report
+    @POST("Reports/generate")
+    suspend fun generateReport(@Body request: ReportRequest): Response<ResponseBody>
+
+    // Budget
+    @POST("Budgets")
+    suspend fun createBudget(@Body request: CreateBudgetRequest): Budget
+
+    @GET("Budgets")
+    suspend fun getAllBudgets(): List<Budget>
+
+    @GET("Budgets/{budgetId}")
+    suspend fun getBudgetById(@Path("budgetId") budgetId: String): Budget
+
+    @PUT("Budgets/{budgetId}")
+    suspend fun updateBudget(@Path("budgetId") budgetId: String, @Body request: UpdateBudgetRequest): Budget
+
+    @DELETE("Budgets/{budgetId}")
+    suspend fun deleteBudget(@Path("budgetId") budgetId: String): UUID
+
+    @GET("Budgets/progress")
+    suspend fun getBudgetProgressAndAlerts(): List<Budget>
 }

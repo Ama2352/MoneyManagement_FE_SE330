@@ -9,13 +9,28 @@ import DI.Utils.CurrencyUtils
 import DI.Utils.TransactionType
 import DI.Utils.USDInputPreview
 import DI.Utils.rememberAppStrings
+import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.CurrencyConverterViewModel
+import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -27,8 +42,28 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -43,7 +78,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import android.util.Log
 import com.example.moneymanagement_frontend.R
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -65,9 +99,14 @@ fun EditTransactionScreen(
     transactionViewModel: TransactionViewModel,
     categoryViewModel: CategoryViewModel,
     walletViewModel: WalletViewModel,
-    currencyConverterViewModel: CurrencyConverterViewModel
+    currencyConverterViewModel: CurrencyConverterViewModel,
+    savingGoalViewModel: SavingGoalViewModel,
+    budgetViewModel: BudgetViewModel
 ) {
     val strings = rememberAppStrings()
+    val context = LocalContext.current
+    val savingGoals by savingGoalViewModel.savingGoalProgress.collectAsState()
+    val budgets by budgetViewModel.budgets.collectAsState()
 
     // Collect states from ViewModels
     val transaction by transactionViewModel.selectedTransaction.collectAsStateWithLifecycle()
@@ -149,7 +188,10 @@ fun EditTransactionScreen(
                 var parsedDateTime: LocalDateTime? = null
                 for (formatPattern in possibleFormats) {
                     try {
-                        parsedDateTime = LocalDateTime.parse(txn.transactionDate, DateTimeFormatter.ofPattern(formatPattern))
+                        parsedDateTime = LocalDateTime.parse(
+                            txn.transactionDate,
+                            DateTimeFormatter.ofPattern(formatPattern)
+                        )
                         break
                     } catch (e: Exception) {
                         continue
@@ -172,13 +214,40 @@ fun EditTransactionScreen(
             isUpdating -> {
                 localErrorMessage = null
             }
+
             successMessage != null -> {
                 if (successMessage!!.contains("updated successfully", ignoreCase = true)) {
                     // Clear the success message before navigating
                     transactionViewModel.clearMessages()
+
+                    if (transactionType == TransactionType.INCOME) {
+                        savingGoalViewModel.getSavingGoalProgressAndAlerts()
+                        savingGoals?.getOrNull()?.forEach { goal ->
+                            if (goal.progressStatus == "At Risk" &&
+                                goal.notification != null &&
+                                goal.walletID == selectedWallet?.walletID &&
+                                goal.categoryID == selectedCategory?.categoryID
+                            ) {
+                                Toast.makeText(context, goal.notification, Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } else if (transactionType == TransactionType.EXPENSE) {
+                        budgetViewModel.getBudgetProgressAndAlerts()
+                        budgets?.getOrNull()?.forEach { budget ->
+                            if ((budget.progressStatus == "Warning" || budget.progressStatus == "Critical") &&
+                                budget.notification != null &&
+                                budget.walletId == selectedWallet?.walletID &&
+                                budget.categoryId == selectedCategory?.categoryID
+                            ) {
+                                Toast.makeText(context, budget.notification, Toast.LENGTH_LONG)
+                                    .show()
+                            }
+                        }
+                    }
                     navController.popBackStack()
                 }
             }
+
             errorMessage != null -> {
                 localErrorMessage = errorMessage
             }
@@ -282,7 +351,9 @@ fun EditTransactionScreen(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(
                                 containerColor = if (transactionType == TransactionType.INCOME)
-                                    Color(0xFF4CAF50).copy(alpha = 0.1f) else Color(0xFFF44336).copy(alpha = 0.1f)
+                                    Color(0xFF4CAF50).copy(alpha = 0.1f) else Color(0xFFF44336).copy(
+                                    alpha = 0.1f
+                                )
                             ),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -420,15 +491,15 @@ fun EditTransactionScreen(
                                 Icon(Icons.Default.KeyboardArrowDown, contentDescription = null)
                             },
                             leadingIcon =
-                                if (selectedCategory != null) {
-                                    {
-                                        Icon(
-                                            imageVector = getCategoryIcon(selectedCategory!!.name),
-                                            contentDescription = selectedCategory!!.name,
-                                            modifier = Modifier.size(20.dp)
-                                        )
-                                    }
-                                } else null,
+                            if (selectedCategory != null) {
+                                {
+                                    Icon(
+                                        imageVector = getCategoryIcon(selectedCategory!!.name),
+                                        contentDescription = selectedCategory!!.name,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            } else null,
                             colors = OutlinedTextFieldDefaults.colors(
                                 disabledTextColor = MaterialTheme.colorScheme.onSurface,
                                 disabledTrailingIconColor = MaterialTheme.colorScheme.onSurface,

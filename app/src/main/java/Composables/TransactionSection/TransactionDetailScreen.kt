@@ -7,14 +7,27 @@ import DI.Models.Transaction.Transaction
 import DI.Models.Wallet.Wallet
 import DI.Utils.AppStrings
 import DI.Utils.CurrencyUtils
+import DI.Utils.TransactionType
 import DI.Utils.TransactionUtils
 import DI.Utils.rememberAppStrings
+import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.CurrencyConverterViewModel
+import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,11 +36,31 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,7 +71,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.moneymanagement_frontend.R
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 // Transaction detail screen colors using the same scheme as TransactionScreen
 object TransactionDetailColors {
@@ -62,42 +96,76 @@ fun TransactionDetailScreen(
     transactionViewModel: TransactionViewModel = hiltViewModel(),
     categoryViewModel: CategoryViewModel = hiltViewModel(),
     walletViewModel: WalletViewModel = hiltViewModel(),
-    currencyConverterViewModel: CurrencyConverterViewModel = hiltViewModel()
+    currencyConverterViewModel: CurrencyConverterViewModel = hiltViewModel(),
+    savingGoalViewModel: SavingGoalViewModel = hiltViewModel(),
+    budgetViewModel: BudgetViewModel = hiltViewModel()
 ) {
     val strings = rememberAppStrings()
-    
+    val context = LocalContext.current
+    val savingGoals by savingGoalViewModel.savingGoalProgress.collectAsState()
+    val budgets by budgetViewModel.budgets.collectAsState()
+
+    val selectedCategory by remember { mutableStateOf<Category?>(null) }
+    val selectedWallet by remember { mutableStateOf<Wallet?>(null) }
+    val transactionType by remember { mutableStateOf(TransactionType.EXPENSE) }
+
     // Collect states
     val transaction by transactionViewModel.selectedTransaction.collectAsStateWithLifecycle()
     val isLoading by transactionViewModel.isLoading.collectAsStateWithLifecycle()
     val isDeleting by transactionViewModel.isDeleting.collectAsStateWithLifecycle()
     val errorMessage by transactionViewModel.errorMessage.collectAsStateWithLifecycle()
-    val successMessage by transactionViewModel.successMessage.collectAsStateWithLifecycle()    
-    val categories = categoryViewModel.categories.collectAsStateWithLifecycle().value?.getOrNull() ?: emptyList()
-    val wallets = walletViewModel.wallets.collectAsStateWithLifecycle().value?.getOrNull() ?: emptyList()
+    val successMessage by transactionViewModel.successMessage.collectAsStateWithLifecycle()
+    val categories =
+        categoryViewModel.categories.collectAsStateWithLifecycle().value?.getOrNull() ?: emptyList()
+    val wallets =
+        walletViewModel.wallets.collectAsStateWithLifecycle().value?.getOrNull() ?: emptyList()
     val isVND by currencyConverterViewModel.isVND.collectAsStateWithLifecycle()
     val exchangeRates by currencyConverterViewModel.exchangeRates.collectAsStateWithLifecycle()
-    
+
     // Dialog states
     var showDeleteDialog by remember { mutableStateOf(false) }
-    
+
     // Load transaction data when screen opens
     LaunchedEffect(transactionId) {
         transactionViewModel.loadTransactionById(transactionId)
     }
-    
+
     // Handle success/error messages
     LaunchedEffect(successMessage) {
         successMessage?.let {
             if (it.contains("deleted", ignoreCase = true)) {
+                if (transactionType == TransactionType.INCOME) {
+                    savingGoalViewModel.getSavingGoalProgressAndAlerts()
+                    savingGoals?.getOrNull()?.forEach { goal ->
+                        if (goal.progressStatus == "At Risk" &&
+                            goal.notification != null &&
+                            goal.walletID == selectedWallet?.walletID &&
+                            goal.categoryID == selectedCategory?.categoryID
+                        ) {
+                            Toast.makeText(context, goal.notification, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } else if (transactionType == TransactionType.EXPENSE) {
+                    budgetViewModel.getBudgetProgressAndAlerts()
+                    budgets?.getOrNull()?.forEach { budget ->
+                        if ((budget.progressStatus == "Warning" || budget.progressStatus == "Critical") &&
+                            budget.notification != null &&
+                            budget.walletId == selectedWallet?.walletID &&
+                            budget.categoryId == selectedCategory?.categoryID
+                        ) {
+                            Toast.makeText(context, budget.notification, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
                 navController.popBackStack()
             }
         }
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         text = strings.transactionDetails,
                         fontWeight = FontWeight.SemiBold
@@ -114,7 +182,7 @@ fun TransactionDetailScreen(
                 actions = {
                     // Edit button
                     IconButton(
-                        onClick = { 
+                        onClick = {
                             navController.navigate("transaction_edit/$transactionId")
                         }
                     ) {
@@ -143,7 +211,7 @@ fun TransactionDetailScreen(
         },
         containerColor = TransactionDetailColors.Background
     ) { paddingValues ->
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -152,7 +220,7 @@ fun TransactionDetailScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            
+
             when {
                 isLoading -> {
                     Box(
@@ -173,7 +241,7 @@ fun TransactionDetailScreen(
                         }
                     }
                 }
-                
+
                 errorMessage != null -> {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -210,7 +278,8 @@ fun TransactionDetailScreen(
                         }
                     }
                 }
-                  transaction != null -> {
+
+                transaction != null -> {
                     TransactionDetailContent(
                         transaction = transaction!!,
                         categories = categories,
@@ -220,7 +289,7 @@ fun TransactionDetailScreen(
                         strings = strings
                     )
                 }
-                
+
                 else -> {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -254,7 +323,7 @@ fun TransactionDetailScreen(
             }
         }
     }
-    
+
     // Delete confirmation dialog
     if (showDeleteDialog) {
         TransactionDeleteDialog(
@@ -281,7 +350,7 @@ private fun TransactionDetailContent(
     // Find category and wallet details
     val category = categories.find { it.categoryID == transaction.categoryID }
     val wallet = wallets.find { it.walletID == transaction.walletID }
-    
+
     // Parse and format the transaction date
     val formattedDate = remember(transaction.transactionDate) {
         try {
@@ -293,7 +362,7 @@ private fun TransactionDetailContent(
                 "yyyy-MM-dd HH:mm:ss",
                 "yyyy-MM-dd"
             )
-            
+
             var parsedDate: Date? = null
             for (formatPattern in possibleFormats) {
                 try {
@@ -305,9 +374,10 @@ private fun TransactionDetailContent(
                     continue
                 }
             }
-            
+
             if (parsedDate != null) {
-                val displayFormatter = SimpleDateFormat("MMM d, yyyy 'at' h:mm a", Locale.getDefault())
+                val displayFormatter =
+                    SimpleDateFormat("MMM d, yyyy 'at' h:mm a", Locale.getDefault())
                 displayFormatter.format(parsedDate)
             } else {
                 transaction.transactionDate
@@ -316,7 +386,7 @@ private fun TransactionDetailContent(
             transaction.transactionDate
         }
     }
-    
+
     // Transaction header with icon and amount
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -327,7 +397,9 @@ private fun TransactionDetailContent(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Transaction icon
@@ -335,7 +407,8 @@ private fun TransactionDetailContent(
                 modifier = Modifier
                     .size(80.dp)
                     .background(
-                        color = TransactionUtils.getTransactionColor(transaction.type).copy(alpha = 0.1f),
+                        color = TransactionUtils.getTransactionColor(transaction.type)
+                            .copy(alpha = 0.1f),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -347,7 +420,7 @@ private fun TransactionDetailContent(
                     modifier = Modifier.size(40.dp)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // Amount
@@ -369,7 +442,7 @@ private fun TransactionDetailContent(
                 fontWeight = FontWeight.Bold,
                 color = TransactionUtils.getTransactionColor(transaction.type)
             )
-            
+
             // Transaction type
             Text(
                 text = transaction.type,
@@ -379,7 +452,7 @@ private fun TransactionDetailContent(
             )
         }
     }
-    
+
     // Transaction information
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -399,25 +472,25 @@ private fun TransactionDetailContent(
                 color = TransactionDetailColors.OnSurface,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             // Description
             DetailRow(
                 label = strings.description,
                 value = transaction.description.ifEmpty { strings.noDescriptionProvided },
             )
-            
+
             // Category
             DetailRow(
                 label = strings.category,
                 value = category?.name ?: strings.unknown,
             )
-            
+
             // Wallet
             DetailRow(
                 label = strings.wallet,
                 value = wallet?.walletName ?: strings.unknown,
             )
-            
+
             // Date
             DetailRow(
                 label = strings.createdOn,

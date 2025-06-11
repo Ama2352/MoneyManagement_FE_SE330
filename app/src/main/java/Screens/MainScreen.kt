@@ -1,7 +1,7 @@
 package Screens
 
-import DI.Models.NavBar.BottomNavItem
 import DI.Composables.NavbarSection.BottomNavigationBar
+import DI.Models.BottomNavItem
 import android.os.Build
 import android.app.Activity
 import androidx.annotation.RequiresApi
