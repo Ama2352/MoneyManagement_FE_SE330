@@ -6,6 +6,7 @@ import DI.Composables.ProfileSection.CurrencySettingsItem
 import DI.Composables.ProfileSection.MainColor
 import DI.Composables.ProfileSection.TextPrimaryColor
 import DI.Composables.ProfileSection.TextSecondaryColor
+import DI.Models.BottomNavItem
 import DI.Models.UserInfo.Profile
 import DI.Navigation.Routes
 import DI.ViewModels.ProfileViewModel
@@ -13,8 +14,10 @@ import DI.ViewModels.CurrencyConverterViewModel
 import ViewModels.AuthViewModel
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -31,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -47,7 +49,7 @@ import androidx.navigation.NavController
 import com.example.moneymanagement_frontend.R
 
 @Composable
-fun ProfileScreen(
+fun SettingsScreen(
     appNavController: NavController,
     navController: NavController,
     authViewModel: AuthViewModel,
@@ -89,15 +91,24 @@ fun ProfileScreen(
 
                 // Financial Settings
                 SectionTitle(stringResource(R.string.financial_settings))
+
                 SettingsItem(
                     icon = Icons.Default.Savings,
                     title = stringResource(R.string.savings_goals),
-                    subtitle = stringResource(R.string.set_track_financial_goals)
+                    subtitle = stringResource(R.string.set_track_financial_goals),
+                    onClick = { navController.navigate(Routes.SavingGoal) }
                 )
                 SettingsItem(
                     icon = Icons.Default.BarChart,
                     title = stringResource(R.string.budget_categories),
-                    subtitle = stringResource(R.string.customize_spending_categories)
+                    subtitle = stringResource(R.string.customize_spending_categories),
+                    onClick = { navController.navigate(Routes.Budget) }
+                )
+                SettingsItem(
+                    icon = Icons.Default.Assessment,
+                    title = stringResource(R.string.reports_analytics),
+                    subtitle = stringResource(R.string.view_detailed_reports),
+                    onClick = { navController.navigate(Routes.Report) }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -147,9 +158,8 @@ fun TopAppBar() {
             .padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween    
-        ) {
-        Text(
-            text = stringResource(R.string.profile_screen_title),
+        ) {        Text(
+            text = stringResource(R.string.settings_screen_title),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = TextPrimaryColor
@@ -313,9 +323,7 @@ fun ProfileHeaderCard(
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = MainColor
                 ),
-                border = ButtonDefaults.outlinedButtonBorder.copy(
-                    brush = SolidColor(MainColor)
-                )
+                border = BorderStroke(1.dp, MainColor)
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -345,12 +353,14 @@ fun SectionTitle(title: String) {
 fun SettingsItem(
     icon: ImageVector,
     title: String,
-    subtitle: String
+    subtitle: String,
+    onClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(containerColor = CardColor)

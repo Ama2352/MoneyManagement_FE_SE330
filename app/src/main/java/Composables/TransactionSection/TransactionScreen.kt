@@ -345,7 +345,8 @@ fun MainTransactionsScreen(
                         color = TransactionColors.OnSurface
                     )
                 }
-            }            // Transaction Items
+            }
+            // Transaction Items
             items(finalTransactions.take(displayedItemCount)) { transaction ->
                 TransactionCard(
                     transaction = transaction,

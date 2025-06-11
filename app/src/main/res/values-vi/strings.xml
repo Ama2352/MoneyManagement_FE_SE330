@@ -24,8 +24,7 @@
     <string name="home">Trang chủ</string>
     <string name="friend">Bạn bè</string>
     <string name="chat">Trò chuyện</string>
-    <string name="wallet">Ví</string>
-    <string name="profile">Hồ sơ</string>
+    <string name="wallet">Ví</string>    <string name="profile">Hồ sơ</string>
     <string name="analysis">Phân tích</string>
 
     <!-- ================== WALLET MANAGEMENT ================== -->
@@ -126,11 +125,13 @@
     <string name="edit_transaction">Chỉnh sửa giao dịch</string>
     <string name="delete_transaction">Xóa giao dịch</string>
     <string name="delete_transaction_confirm_title">Xóa giao dịch</string>
-    <string name="delete_transaction_confirm_message">Bạn có chắc muốn xóa giao dịch này? Hành động này không thể hoàn tác.</string>    <string name="transaction_deleted_success">Xóa giao dịch thành công ✓</string>
+    <string name="delete_transaction_confirm_message">Bạn có chắc muốn xóa giao dịch này? Hành động này không thể hoàn tác.</string>
+    <string name="transaction_deleted_success">Xóa giao dịch thành công ✓</string>
     <string name="transaction_deleted_failed">Xóa giao dịch thất bại ✗</string>
     <string name="transaction_id">Mã giao dịch</string>
     <string name="created_on">Được tạo vào</string>
-    <string name="transaction_info">Thông tin giao dịch</string>    <string name="no_description_provided">Không có mô tả</string>
+    <string name="transaction_info">Thông tin giao dịch</string>
+    <string name="no_description_provided">Không có mô tả</string>
     <string name="deleting">Đang xóa…</string>
     <string name="transaction_type_unchangeable">Loại giao dịch (Không thể thay đổi)</string>
 
@@ -203,7 +204,9 @@
     <string name="transaction_form_unknown_title">Tiêu đề không xác định</string>
     <string name="transaction_form_unknown_description">Mô tả không xác định</string>
     <string name="transaction_form_unknown_id">ID không xác định</string>
-    <string name="transaction_form_unknown_error">Lỗi không xác định</string>    <!-- ================== DATE & TIME ================== -->
+    <string name="transaction_form_unknown_error">Lỗi không xác định</string>
+
+    <!-- ================== DATE & TIME ================== -->
     <string name="date">Ngày</string>
     <string name="calendar">Lịch</string>
     <string name="select_a_date">Chọn ngày</string>
@@ -314,8 +317,6 @@
     <!-- ================== PROFILE & USER MANAGEMENT ================== -->
     <string name="profile_screen_title">Hồ sơ</string>
     <string name="account_settings">Cài đặt tài khoản</string>
-    <string name="financial_settings">Cài đặt tài chính</string>
-    <string name="support_info">Hỗ trợ &amp; Thông tin</string>
     <string name="personal_information">Thông tin cá nhân</string>
     <string name="update_personal_details">Cập nhật thông tin cá nhân</string>
     <string name="security">Bảo mật</string>
@@ -324,15 +325,10 @@
     <string name="manage_alerts_notifications">Quản lý cảnh báo và thông báo</string>
     <string name="payment_methods">Phương thức thanh toán</string>
     <string name="manage_cards_bank_accounts">Quản lý thẻ và tài khoản ngân hàng</string>
-    <string name="savings_goals">Mục tiêu tiết kiệm</string>
-    <string name="set_track_financial_goals">Đặt và theo dõi mục tiêu tài chính</string>
-    <string name="budget_categories">Danh mục ngân sách</string>
-    <string name="customize_spending_categories">Tùy chỉnh danh mục chi tiêu</string>
     <string name="help_support">Hỗ trợ &amp; Trợ giúp</string>
     <string name="faqs_contact_info">Câu hỏi thường gặp và thông tin liên hệ</string>
     <string name="about">Giới thiệu</string>
     <string name="app_version_legal_info">Phiên bản ứng dụng và thông tin pháp lý</string>
-    <string name="log_out">Đăng xuất</string>
     <string name="settings">Cài đặt</string>
     <string name="edit_profile">Chỉnh sửa hồ sơ</string>
     <string name="go_back">Quay lại</string>
@@ -484,7 +480,7 @@
     <string name="transaction_type_expense">Chi tiêu</string>
     <string name="required_field">Trường này bắt buộc</string>
     <string name="invalid_amount">Vui lòng nhập số tiền hợp lệ</string>
-    <string name="creating_transaction">Đang tạo giao dịch...</string>
+    <string name="creating_transaction">Đang tạo giao dịch…</string>
     <string name="transaction_created_successfully">Tạo giao dịch thành công</string>
     <string name="fill_required_fields">Vui lòng điền tất cả các trường bắt buộc</string>
     <string name="transaction_type_cannot_change">Không thể thay đổi loại giao dịch để tránh không nhất quán dữ liệu</string>
@@ -512,7 +508,20 @@
     <string name="amount_50_to_100">50,000đ - 100,000đ</string>
     <string name="amount_100_to_500">100,000đ - 500,000đ</string>
     <string name="amount_500_plus">500,000đ+</string>
-    <string name="apply_filters">Áp dụng bộ lọc</string>    <string name="clear_filters">Xóa bộ lọc</string>
+    <string name="apply_filters">Áp dụng bộ lọc</string>
+    <string name="clear_filters">Xóa bộ lọc</string>
     <string name="find_your_transactions">Tìm giao dịch của bạn một cách dễ dàng</string>
+    
+    <!-- ================== SETTINGS SCREEN ================== -->
+    <string name="settings_screen_title">Cài đặt</string>
+    <string name="financial_settings">Cài đặt tài chính</string>
+    <string name="savings_goals">Mục tiêu tiết kiệm</string>
+    <string name="set_track_financial_goals">Đặt và theo dõi mục tiêu tài chính của bạn</string>
+    <string name="budget_categories">Danh mục ngân sách</string>
+    <string name="customize_spending_categories">Tùy chỉnh danh mục chi tiêu của bạn</string>
+    <string name="reports_analytics">Báo cáo &amp; Phân tích</string>
+    <string name="view_detailed_reports">Xem báo cáo tài chính chi tiết</string>
+    <string name="support_info">Hỗ trợ &amp; Thông tin</string>
+    <string name="log_out">Đăng xuất</string>
 
 </resources>

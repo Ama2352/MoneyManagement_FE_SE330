@@ -28,8 +28,8 @@ import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
 import ModernCategoriesScreen
-import ProfileScreen
 import Screens.MainLayout
+import SettingsScreen
 import ViewModels.AuthViewModel
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -69,7 +69,6 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-
 fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Routes.Main) {
         val parentEntry = navController.rememberParentEntry(Routes.Main) ?: it
@@ -113,7 +112,7 @@ private fun InnerNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = BottomNavItem.Profile.route,
+        startDestination = BottomNavItem.Transaction.route,
         modifier = modifier
     ) {
 
@@ -138,8 +137,8 @@ private fun InnerNavHost(
             )
         }
 
-        composable(BottomNavItem.Profile.route) {
-            ProfileScreen(
+        composable(BottomNavItem.Settings.route) {
+            SettingsScreen(
                 appNavController = appNavController,
                 navController = navController,
                 authViewModel = authViewModel,
@@ -229,7 +228,7 @@ private fun InnerNavHost(
                 authViewModel = authViewModel,
             )
         }
-        composable(BottomNavItem.SavingGoal.route) {
+        composable(Routes.SavingGoal) {
             SavingGoalScreen(
                 navController = navController,
                 savingGoalViewModel = savingGoalViewModel,
@@ -255,7 +254,7 @@ private fun InnerNavHost(
                 currencyConverterViewModel = currencyConverterViewModel
             )
         }
-        composable(BottomNavItem.Budget.route) {
+        composable(Routes.Budget) {
             BudgetScreen(
                 navController = navController,
                 budgetViewModel = budgetViewModel,
@@ -283,7 +282,7 @@ private fun InnerNavHost(
             )
         }
 
-        composable(BottomNavItem.Report.route) {
+        composable(Routes.Report) {
             ReportScreen(
                 reportViewModel = reportViewModel,
             )
