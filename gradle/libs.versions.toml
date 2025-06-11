@@ -43,6 +43,7 @@ securityCryptoVersion = "1.0.0"
 supportAnnotations = "28.0.0"
 signalrVersion = "6.0.1"
 textRecognition = "16.0.1"
+translate = "17.0.3"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -96,6 +97,7 @@ androidx-security-crypto-ktx = { group = "androidx.security", name = "security-c
 sheets-compose-dialogs-core = { module = "com.maxkeppeler.sheets-compose-dialogs:core", version.ref = "maxkeppelerCore" }
 support-annotations = { group = "com.android.support", name = "support-annotations", version.ref = "supportAnnotations" }
 text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
+translate = { module = "com.google.mlkit:translate", version.ref = "translate" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

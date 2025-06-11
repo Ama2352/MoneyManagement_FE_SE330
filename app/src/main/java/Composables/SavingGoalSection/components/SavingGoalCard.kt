@@ -27,10 +27,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import Utils.TranslationManager
+import Utils.MessageTranslationUtils
+import Utils.useTranslatedMessage
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+
+// Entry point for accessing TranslationManager and MessageTranslationUtils
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface TranslationEntryPoint {
+    fun translationManager(): TranslationManager
+    fun messageTranslationUtils(): MessageTranslationUtils
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,7 +171,8 @@ fun SavingGoalCard(
                         )
                     }
                 }
-            }            // Notification Alert (NEW FEATURE)
+            }            
+            // Notification Alert (NEW FEATURE)
             savingGoal.notification?.let { notification ->
                 NotificationAlert(
                     message = notification,
@@ -340,14 +357,18 @@ private fun NotificationAlert(
     modifier: Modifier = Modifier,
     currencyConverterViewModel: CurrencyConverterViewModel
 ) {
+    val context = LocalContext.current
+
     // Currency states
     val isVND by currencyConverterViewModel.isVND.collectAsState()
     val exchangeRates by currencyConverterViewModel.exchangeRates.collectAsState()
     
-    // Format message with correct currency
-    val formattedMessage = remember(message, isVND, exchangeRates) {
-        formatNotificationMessage(message, isVND, exchangeRates)
-    }
+    // Use the reusable composable hook for message translation and formatting
+    val formattedMessage = useTranslatedMessage(
+        message = message,
+        isVND = isVND,
+        exchangeRates = exchangeRates
+    )
     // Determine notification style based on backend status
     val (backgroundColor, iconColor, textColor, icon) = when (progressStatus.lowercase()) {
         "not started" -> Tuple4(
@@ -440,29 +461,3 @@ private data class Tuple4<A, B, C, D>(
     val third: C,
     val fourth: D
 )
-
-// Helper function to format currency amounts in notification messages
-private fun formatNotificationMessage(
-    message: String,
-    isVND: Boolean,
-    exchangeRates: DI.Models.Currency.CurrencyRates?
-): String {
-    // Regex to find currency amounts like $1000.00, $1,000.00, etc.
-    val currencyRegex = """\$([0-9,]+\.?\d*)""".toRegex()
-    
-    return currencyRegex.replace(message) { matchResult ->
-        val amountStr = matchResult.groupValues[1].replace(",", "")
-        val amount = amountStr.toDoubleOrNull() ?: 0.0
-        
-        // Convert and format the amount based on user preference
-        val convertedAmount = if (isVND) {
-            amount // Amount is already in VND from backend
-        } else {
-            // Convert VND to USD
-            val rate = exchangeRates?.usdToVnd ?: 24000.0
-            CurrencyUtils.vndToUsd(amount, rate)
-        }
-        
-        CurrencyUtils.formatAmount(convertedAmount, isVND)
-    }
-}

@@ -122,7 +122,8 @@ dependencies {
 
     // Compose Charts
     implementation(libs.compose.charts.v012)
-// The compose calendar library for Android
+
+    // The compose calendar library for Android
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     implementation("com.kizitonwose.calendar:compose:2.6.2")
 
@@ -131,6 +132,9 @@ dependencies {
     implementation(libs.jetbrains.kotlinx.coroutines.android)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.jetbrains.kotlinx.coroutines.play.services)
+
+    // ML Kit Translation
+    implementation(libs.translate)
 
     // Chat
     implementation(libs.microsoft.signalr)
