@@ -22,15 +22,15 @@ import DI.Models.BottomNavItem
 import DI.Screens.BudgetScreen
 import DI.ViewModels.AnalysisViewModel
 import DI.ViewModels.BudgetViewModel
-import DI.ViewModels.ChatViewModel
-import DI.ViewModels.FriendViewModel
-import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.CategoryViewModel
-import DI.ViewModels.OcrViewModel
-import DI.ViewModels.TransactionViewModel
+import DI.ViewModels.ChatViewModel
 import DI.ViewModels.CurrencyConverterViewModel
+import DI.ViewModels.FriendViewModel
+import DI.ViewModels.OcrViewModel
+import DI.ViewModels.ProfileViewModel
 import DI.ViewModels.ReportViewModel
 import DI.ViewModels.SavingGoalViewModel
+import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
 import ModernCategoriesScreen
 import ProfileScreen
@@ -85,7 +85,13 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             LocalMainNavBackStackEntry provides parentEntry
         ) {
             MainLayout { innerNavController, modifier ->
-                InnerNavHost(navController, innerNavController, modifier, parentEntry, authViewModel)
+                InnerNavHost(
+                    navController,
+                    innerNavController,
+                    modifier,
+                    parentEntry,
+                    authViewModel
+                )
             }
             TokenExpirationHandler(navController)
         }
@@ -96,7 +102,7 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun InnerNavHost(
-    appNavController : NavController,
+    appNavController: NavController,
     navController: NavHostController,
     modifier: Modifier,
     parentEntry: NavBackStackEntry,
@@ -117,9 +123,9 @@ private fun InnerNavHost(
     val reportViewModel = hiltViewModel<ReportViewModel>(parentEntry)
 
     NavHost(
-        navController    = navController,
+        navController = navController,
         startDestination = BottomNavItem.Profile.route,
-        modifier         = modifier
+        modifier = modifier
     ) {
         composable(BottomNavItem.Home.route) {
 
@@ -233,7 +239,9 @@ private fun InnerNavHost(
                 transactionViewModel = transactionViewModel,
                 categoryViewModel = categoryViewModel,
                 walletViewModel = walletViewModel,
-                currencyConverterViewModel = currencyConverterViewModel
+                currencyConverterViewModel = currencyConverterViewModel,
+                savingGoalViewModel = savingGoalViewModel,
+                budgetViewModel = budgetViewModel
             )
         }
 

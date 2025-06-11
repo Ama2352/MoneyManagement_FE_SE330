@@ -5,6 +5,6 @@ data class CreateBudgetRequest(
     val startDate: String,
     val limitAmount: Double,
     val description: String,
-    val categoryID: String,
-    val walletID: String
+    val categoryId: String,
+    val walletId: String
 )

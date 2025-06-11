@@ -753,8 +753,8 @@ fun AddBudgetDialog(
                                 limitAmount = limitAmount.toDouble(),
                                 startDate = startDateTime,
                                 endDate = endDateTime,
-                                categoryID = selectedCategoryId!!,
-                                walletID = selectedWalletId!!
+                                categoryId = selectedCategoryId!!,
+                                walletId = selectedWalletId!!
                             )
                         )
                     } else {
@@ -936,8 +936,8 @@ fun UpdateBudgetDialog(
                                 limitAmount = limitAmount.toDouble(),
                                 startDate = startDateTime,
                                 endDate = endDateTime,
-                                categoryID = selectedCategoryId!!,
-                                walletID = selectedWalletId!!
+                                categoryId = selectedCategoryId!!,
+                                walletId = selectedWalletId!!
                             )
                         )
                     } else {

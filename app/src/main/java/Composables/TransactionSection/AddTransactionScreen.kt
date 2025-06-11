@@ -9,14 +9,27 @@ import DI.Utils.CurrencyUtils
 import DI.Utils.TransactionType
 import DI.Utils.USDInputPreview
 import DI.Utils.rememberAppStrings
+import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.CurrencyConverterViewModel
+import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -26,8 +39,28 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -35,15 +68,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.example.moneymanagement_frontend.R
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import com.example.moneymanagement_frontend.R
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -63,9 +95,14 @@ fun AddTransactionScreen(
     transactionViewModel: TransactionViewModel,
     categoryViewModel: CategoryViewModel,
     walletViewModel: WalletViewModel,
-    currencyConverterViewModel: CurrencyConverterViewModel
+    currencyConverterViewModel: CurrencyConverterViewModel,
+    savingGoalViewModel: SavingGoalViewModel,
+    budgetViewModel: BudgetViewModel
 ) {
     val strings = rememberAppStrings()
+    val context = LocalContext.current // NEW: Lấy context để hiển thị Toast
+    val savingGoals by savingGoalViewModel.savingGoalProgress.collectAsState()
+    val budgets by budgetViewModel.budgets.collectAsState()
 
     var amountTextFieldValue by remember { mutableStateOf(TextFieldValue("")) }
     var parsedAmount by remember { mutableDoubleStateOf(0.0) }
@@ -75,11 +112,11 @@ fun AddTransactionScreen(
     var transactionType by remember { mutableStateOf(TransactionType.EXPENSE) }
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedTime by remember { mutableStateOf(LocalTime.now()) }
-    
+
     var showCategoryDialog by remember { mutableStateOf(false) }
     var showWalletDialog by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }    
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     val categories = categoryViewModel.categories.collectAsState().value?.getOrNull() ?: emptyList()
     val wallets = walletViewModel.wallets.collectAsState().value?.getOrNull() ?: emptyList()
     val isVND by currencyConverterViewModel.isVND.collectAsState()
@@ -92,6 +129,8 @@ fun AddTransactionScreen(
     LaunchedEffect(Unit) {
         categoryViewModel.getCategories()
         walletViewModel.getWallets()
+        savingGoalViewModel.getSavingGoalProgressAndAlerts()
+        budgetViewModel.getBudgetProgressAndAlerts()
     }
 
     // Handle transaction creation result
@@ -101,14 +140,42 @@ fun AddTransactionScreen(
                 isLoading = true
                 errorMessage = null
             }
+
             successMessage != null -> {
                 isLoading = false
+                // CHANGED: Kiểm tra nếu là Income, hiển thị Toast cho Warning goals
+                if (transactionType == TransactionType.INCOME) {
+                    savingGoalViewModel.getSavingGoalProgressAndAlerts()
+                    savingGoals?.getOrNull()?.forEach { goal ->
+                        if (goal.progressStatus == "Warning" && goal.notification != null) {
+                            Toast.makeText(context, goal.notification, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } else if (transactionType == TransactionType.EXPENSE) {
+                    budgetViewModel.getBudgetProgressAndAlerts()
+                    budgets?.getOrNull()?.forEach { budget ->
+                        if (budget.progressStatus == "Warning" && budget.notification != null) {
+                            Toast.makeText(context, budget.notification, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
                 navController.popBackStack()
             }
+
             viewModelErrorMessage != null -> {
                 isLoading = false
                 errorMessage = viewModelErrorMessage
             }
+        }
+    }
+
+    // NEW: Xử lý lỗi SavingGoals và Budgets
+    LaunchedEffect(savingGoals, budgets) {
+        savingGoals?.onFailure { error ->
+            errorMessage = "Error loading saving goals: ${error.message}"
+        }
+        budgets?.onFailure { error ->
+            errorMessage = "Error loading budgets: ${error.message}"
         }
     }
 
@@ -122,15 +189,18 @@ fun AddTransactionScreen(
     ) {
         // Top App Bar
         TopAppBar(
-            title = { 
+            title = {
                 Text(
                     stringResource(R.string.add_transaction),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
-                ) 
-            },            navigationIcon = {
+                )
+            }, navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back)
+                    )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -159,7 +229,7 @@ fun AddTransactionScreen(
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -169,23 +239,23 @@ fun AddTransactionScreen(
                             onClick = { transactionType = TransactionType.INCOME },
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (transactionType == TransactionType.INCOME) 
+                                containerColor = if (transactionType == TransactionType.INCOME)
                                     Color(0xFF4CAF50) else Color(0xFFE0E0E0),
-                                contentColor = if (transactionType == TransactionType.INCOME) 
+                                contentColor = if (transactionType == TransactionType.INCOME)
                                     Color.White else Color.Black
                             )
                         ) {
                             Text(stringResource(R.string.income))
                         }
-                        
+
                         // Expense Button
                         Button(
                             onClick = { transactionType = TransactionType.EXPENSE },
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (transactionType == TransactionType.EXPENSE) 
+                                containerColor = if (transactionType == TransactionType.EXPENSE)
                                     Color(0xFFF44336) else Color(0xFFE0E0E0),
-                                contentColor = if (transactionType == TransactionType.EXPENSE) 
+                                contentColor = if (transactionType == TransactionType.EXPENSE)
                                     Color.White else Color.Black
                             )
                         ) {
@@ -200,7 +270,7 @@ fun AddTransactionScreen(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {                
+            ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         stringResource(R.string.amount),
@@ -224,7 +294,7 @@ fun AddTransactionScreen(
                             },
                         placeholder = stringResource(R.string.enter_amount),
                         onFormatted = { _, amount ->
-                            parsedAmount = amount ?: 0.0 
+                            parsedAmount = amount ?: 0.0
                         }
                     )
 
@@ -257,7 +327,7 @@ fun AddTransactionScreen(
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    
+
                     OutlinedTextField(
                         value = description,
                         onValueChange = { description = it },
@@ -316,7 +386,7 @@ fun AddTransactionScreen(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {                
+            ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         strings.wallet,
@@ -324,7 +394,7 @@ fun AddTransactionScreen(
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    
+
                     OutlinedTextField(
                         value = selectedWallet?.walletName ?: "",
                         onValueChange = { },
@@ -362,7 +432,7 @@ fun AddTransactionScreen(
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        
+
                         OutlinedTextField(
                             value = selectedDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                             onValueChange = { },
@@ -380,7 +450,7 @@ fun AddTransactionScreen(
                         )
                     }
                 }
-                
+
                 // Time Selection
                 Card(
                     modifier = Modifier.weight(0.8f),
@@ -394,7 +464,7 @@ fun AddTransactionScreen(
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        
+
                         OutlinedTextField(
                             value = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm")),
                             onValueChange = { },
@@ -435,14 +505,14 @@ fun AddTransactionScreen(
                 onClick = {
                     if (parsedAmount > 0 && selectedCategory != null && selectedWallet != null) {
                         val transactionDateTime = LocalDateTime.of(selectedDate, selectedTime)
-                        
+
                         // Convert amount to VND if currently in USD mode
                         val amountInVND = if (!isVND && exchangeRates != null) {
                             CurrencyUtils.usdToVnd(parsedAmount, exchangeRates!!.usdToVnd)
                         } else {
                             parsedAmount // Already in VND or no exchange rate available
                         }
-                        
+
                         val request = CreateTransactionRequest(
                             categoryID = selectedCategory!!.categoryID,
                             amount = amountInVND,
@@ -466,7 +536,7 @@ fun AddTransactionScreen(
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         color = Color.White
-                    )                
+                    )
                 } else {
                     Text(
                         strings.saveTransaction,
@@ -494,7 +564,7 @@ fun AddTransactionScreen(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-                    
+
                     LazyColumn {
                         items(categories) { category ->
                             Row(
@@ -542,7 +612,7 @@ fun AddTransactionScreen(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-                    
+
                     LazyColumn {
                         items(wallets) { wallet ->
                             Row(

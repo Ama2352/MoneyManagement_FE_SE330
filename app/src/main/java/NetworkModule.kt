@@ -2,8 +2,8 @@ package DI
 
 import API.ApiService
 import API.TokenHandler.LanguageInterceptor
-import DI.API.TokenHandler.AuthInterceptor
 import DI.API.ExchangeApiService
+import DI.API.TokenHandler.AuthInterceptor
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -16,8 +16,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import javax.inject.Singleton
 import javax.inject.Qualifier
+import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -35,10 +35,12 @@ annotation class ExchangeRetrofit
 object NetworkModule {
 
     // private const val BASE_URL = "http://10.0.2.2:5215/api/" // Emulator localhost
-    private const val BASE_URL = "http://192.168.0.129:8080/api/"
-//     private const val BASE_URL = "http://143.198.208.227:5000/api/"
+    private const val BASE_URL = "http://192.168.7.131:8080/api/"
+
+    //     private const val BASE_URL = "http://143.198.208.227:5000/api/"
     // Exchange API base URL
-    private const val EXCHANGE_API_BASE_URL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/"
+    private const val EXCHANGE_API_BASE_URL =
+        "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/"
 
     @Provides
     @Singleton
@@ -82,7 +84,9 @@ object NetworkModule {
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-    }    @Provides
+    }
+
+    @Provides
     @Singleton
     @MainRetrofit
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {

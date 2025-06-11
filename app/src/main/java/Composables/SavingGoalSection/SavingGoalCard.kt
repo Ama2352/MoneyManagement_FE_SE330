@@ -3,12 +3,25 @@ package DI.Composables.SavingGoalSection
 import DI.Composables.WalletSection.SavingGoalTheme
 import DI.Models.SavingGoal.SavingGoal
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +45,11 @@ fun SavingGoalCard(
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val endDate = LocalDateTime.parse(savingGoal.endDate, dateFormatter)
-    val progress = savingGoal.savedPercentage.divide(BigDecimal(100), 4, java.math.RoundingMode.HALF_UP) // Convert percentage to decimal
+    val progress = savingGoal.savedPercentage.divide(
+        BigDecimal(100),
+        4,
+        java.math.RoundingMode.HALF_UP
+    ) // Convert percentage to decimal
     val daysLeft = ChronoUnit.DAYS.between(LocalDateTime.now(), endDate)
 
     Card(
@@ -80,7 +97,11 @@ fun SavingGoalCard(
                             )
                         }
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = SavingGoalTheme.LightGreen.copy(alpha = 0.3f))
+                            colors = CardDefaults.cardColors(
+                                containerColor = SavingGoalTheme.LightGreen.copy(
+                                    alpha = 0.3f
+                                )
+                            )
                         ) {
                             Text(
                                 text = walletName,

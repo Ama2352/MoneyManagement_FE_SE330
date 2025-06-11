@@ -7,6 +7,6 @@
 
     <!-- Still allow local host (real device) -->
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">192.168.0.129</domain>
+        <domain includeSubdomains="true">192.168.7.131</domain>
     </domain-config>
 </network-security-config>
