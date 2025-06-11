@@ -48,9 +48,10 @@ fun BudgetProgressIndicator(
                     .fillMaxSize()
                     .clip(RoundedCornerShape(4.dp)),
                 contentAlignment = Alignment.Center
-            ) {                Canvas(modifier = Modifier.fillMaxSize()) {
+            ) {                
+                Canvas(modifier = Modifier.fillMaxSize()) {
                     drawLine(
-                        color = Color(0xFFE0E0E0), // Light gray background
+                        color = BudgetTheme.ProgressBackground, // Light gray background
                         start = Offset(0f, size.height / 2),
                         end = Offset(size.width, size.height / 2),
                         strokeWidth = size.height,
@@ -67,9 +68,9 @@ fun BudgetProgressIndicator(
                     .clip(RoundedCornerShape(4.dp))
             ) {                Canvas(modifier = Modifier.fillMaxSize()) {
                     val progressColor = when {
-                        animatedProgress < 0.7f -> Color(0xFF4CAF50) // Green like SavingGoal
-                        animatedProgress < 0.9f -> Color(0xFFFF9800) // Orange for warning
-                        else -> Color(0xFFF44336) // Red for danger
+                        animatedProgress < 0.7f -> BudgetTheme.SuccessGreen
+                        animatedProgress < 0.9f -> BudgetTheme.WarningOrange
+                        else -> BudgetTheme.DangerRed
                     }
                     drawLine(
                         color = progressColor,
@@ -82,10 +83,10 @@ fun BudgetProgressIndicator(
             }
         }
           // Percentage Text - moved to left like SavingGoal
-        if (showPercentage) {            Text(
+        if (showPercentage) {              Text(
                 text = "${(animatedProgress * 100).toInt()}%",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF1B5E20), // Dark green like SavingGoal
+                color = BudgetTheme.TextPrimary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp
             )
@@ -113,18 +114,17 @@ fun CircularBudgetProgressIndicator(
     ) {        androidx.compose.material3.CircularProgressIndicator(
             progress = { 1f },
             modifier = Modifier.fillMaxSize(),
-            color = Color(0xFFE0E0E0), // Light gray background
+            color = BudgetTheme.ProgressBackground, // Light gray background
             strokeWidth = strokeWidth,
             strokeCap = StrokeCap.Round
         )
-        
-        androidx.compose.material3.CircularProgressIndicator(
+          androidx.compose.material3.CircularProgressIndicator(
             progress = { animatedProgress.coerceIn(0f, 1f) },
             modifier = Modifier.fillMaxSize(),
             color = when {
-                animatedProgress < 0.7f -> Color(0xFF4CAF50) // Green like SavingGoal
-                animatedProgress < 0.9f -> Color(0xFFFF9800) // Orange for warning
-                else -> Color(0xFFF44336) // Red for danger
+                animatedProgress < 0.7f -> BudgetTheme.SuccessGreen
+                animatedProgress < 0.9f -> BudgetTheme.WarningOrange
+                else -> BudgetTheme.DangerRed
             },
             strokeWidth = strokeWidth,
             strokeCap = StrokeCap.Round
@@ -134,7 +134,7 @@ fun CircularBudgetProgressIndicator(
                 text = "${(animatedProgress * 100).toInt()}%",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF1B5E20), // Dark green like SavingGoal
+                color = BudgetTheme.TextPrimary,
                 fontSize = 14.sp
             )
         }

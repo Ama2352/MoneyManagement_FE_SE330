@@ -15,6 +15,7 @@ import DI.ViewModels.CurrencyConverterViewModel
 import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.TransactionViewModel
 import DI.ViewModels.WalletViewModel
+import Utils.MessageTranslationUtils
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -64,6 +65,7 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -78,6 +80,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.EntryPointAccessors
 import com.example.moneymanagement_frontend.R
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -86,10 +91,18 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
 import com.maxkeppeler.sheets.clock.models.ClockSelection
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+
+@EntryPoint
+@InstallIn(ActivityComponent::class)
+interface EditTransactionScreenEntryPoint {
+    fun messageTranslationUtils(): MessageTranslationUtils
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,8 +118,18 @@ fun EditTransactionScreen(
 ) {
     val strings = rememberAppStrings()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val savingGoals by savingGoalViewModel.savingGoalProgress.collectAsState()
     val budgets by budgetViewModel.budgets.collectAsState()
+    
+    // Get MessageTranslationUtils through EntryPoint
+    val messageTranslationUtils = remember {
+        val entryPoint = EntryPointAccessors.fromActivity(
+            context as androidx.activity.ComponentActivity,
+            EditTransactionScreenEntryPoint::class.java
+        )
+        entryPoint.messageTranslationUtils()
+    }
 
     // Collect states from ViewModels
     val transaction by transactionViewModel.selectedTransaction.collectAsStateWithLifecycle()
@@ -220,7 +243,6 @@ fun EditTransactionScreen(
                     
                     // Clear the success message before navigating
                     transactionViewModel.clearMessages()
-
                     if (transactionType == TransactionType.INCOME) {
                         savingGoalViewModel.getSavingGoalProgressAndAlerts()
                         savingGoals?.getOrNull()?.forEach { goal ->
@@ -229,7 +251,16 @@ fun EditTransactionScreen(
                                 goal.walletID == selectedWallet?.walletID &&
                                 goal.categoryID == selectedCategory?.categoryID
                             ) {
-                                Toast.makeText(context, goal.notification, Toast.LENGTH_LONG).show()
+                                // Format and translate the notification message
+                                coroutineScope.launch {
+                                    val formattedMessage = messageTranslationUtils.formatAndTranslateMessage(
+                                        context = context,
+                                        message = goal.notification!!,
+                                        isVND = isVND,
+                                        exchangeRates = exchangeRates
+                                    )
+                                    Toast.makeText(context, formattedMessage, Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
                     } else if (transactionType == TransactionType.EXPENSE) {
@@ -240,8 +271,16 @@ fun EditTransactionScreen(
                                 budget.walletId == selectedWallet?.walletID &&
                                 budget.categoryId == selectedCategory?.categoryID
                             ) {
-                                Toast.makeText(context, budget.notification, Toast.LENGTH_LONG)
-                                    .show()
+                                // Format and translate the notification message
+                                coroutineScope.launch {
+                                    val formattedMessage = messageTranslationUtils.formatAndTranslateMessage(
+                                        context = context,
+                                        message = budget.notification!!,
+                                        isVND = isVND,
+                                        exchangeRates = exchangeRates
+                                    )
+                                    Toast.makeText(context, formattedMessage, Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
                     }

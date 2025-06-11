@@ -95,7 +95,9 @@ fun MainTransactionsScreen(
     
     // Pagination state
     var displayedItemCount by remember { mutableIntStateOf(8) }
-    val itemsPerPage = 8    // Filter state
+    val itemsPerPage = 8
+
+    // Filter state
     var selectedFilter by remember { mutableStateOf(strings.filterAllValue) }
 
     // Transaction Screen should always use its own transactions, not search results

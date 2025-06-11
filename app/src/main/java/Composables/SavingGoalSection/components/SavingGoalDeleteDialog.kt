@@ -112,7 +112,7 @@ fun SavingGoalDeleteDialog(
                     // Cancel Button
                     OutlinedButton(
                         onClick = onDismiss,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(0.8f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = SavingGoalTheme.TextSecondary

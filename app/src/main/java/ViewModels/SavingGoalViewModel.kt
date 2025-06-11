@@ -6,9 +6,11 @@ import DI.Models.SavingGoal.UpdateSavingGoal
 import DI.Models.UiEvent.UiEvent
 import DI.Repositories.SavingGoalRepository
 import DI.Utils.EventBus
+import Utils.StringResourceProvider
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moneymanagement_frontend.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SavingGoalViewModel @Inject constructor(
     private val repository: SavingGoalRepository,
-    private val eventBus: EventBus
+    private val eventBus: EventBus,
+    private val stringResourceProvider: StringResourceProvider
 ) : ViewModel() {
     private val _savingGoals = MutableStateFlow<Result<List<SavingGoal>>?>(null)
     val savingGoals: StateFlow<Result<List<SavingGoal>>?> = _savingGoals.asStateFlow()
@@ -59,9 +62,7 @@ class SavingGoalViewModel @Inject constructor(
             val result = repository.getAllSavingGoals()
             _savingGoals.value = result
         }
-    }
-
-    fun addSavingGoal(newSavingGoal: CreateSavingGoal, onResult: (Boolean) -> Unit) {
+    }    fun addSavingGoal(newSavingGoal: CreateSavingGoal, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             Log.d("SavingGoalDebug", "Sending CreateSavingGoal: $newSavingGoal")
             val result = repository.createSavingGoal(newSavingGoal)
@@ -69,9 +70,15 @@ class SavingGoalViewModel @Inject constructor(
             onResult(result.isSuccess)
             if (result.isSuccess) {
                 getSavingGoalProgressAndAlerts() // Refresh progress list
-                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Mục tiêu tiết kiệm đã được tạo thành công!"))
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage(
+                    stringResourceProvider.getString(R.string.saving_goal_created_success)
+                ))
             } else {
-                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Lỗi: ${result.exceptionOrNull()?.message ?: "Không thể tạo mục tiêu"}"))
+                val errorMessage = result.exceptionOrNull()?.message 
+                    ?: stringResourceProvider.getString(R.string.saving_goal_unable_create)
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage(
+                    stringResourceProvider.getString(R.string.saving_goal_create_error, errorMessage)
+                ))
             }
         }
     }
@@ -86,21 +93,31 @@ class SavingGoalViewModel @Inject constructor(
             val result = repository.updateSavingGoal(updatedSavingGoal)
             if (result.isSuccess) {
                 getSavingGoalProgressAndAlerts() // Refresh progress list
-                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Mục tiêu tiết kiệm đã được cập nhật thành công!"))
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage(
+                    stringResourceProvider.getString(R.string.saving_goal_updated_success)
+                ))
             } else {
-                _updateSavingGoalEvent.emit(UiEvent.ShowMessage("Lỗi: ${result.exceptionOrNull()?.message ?: "Không thể cập nhật mục tiêu"}"))
+                val errorMessage = result.exceptionOrNull()?.message 
+                    ?: stringResourceProvider.getString(R.string.saving_goal_unable_update)
+                _updateSavingGoalEvent.emit(UiEvent.ShowMessage(
+                    stringResourceProvider.getString(R.string.saving_goal_update_error, errorMessage)
+                ))
             }
         }
-    }
-
-    fun deleteSavingGoal(savingGoalId: String) {
+    }    fun deleteSavingGoal(savingGoalId: String) {
         viewModelScope.launch {
             val result = repository.deleteSavingGoal(savingGoalId)
             if (result.isSuccess) {
                 getSavingGoalProgressAndAlerts() // Refresh progress list
-                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage("Mục tiêu tiết kiệm đã được xóa thành công!"))
+                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage(
+                    stringResourceProvider.getString(R.string.saving_goal_deleted_success)
+                ))
             } else {
-                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage("Lỗi: ${result.exceptionOrNull()?.message ?: "Không thể xóa mục tiêu"}"))
+                val errorMessage = result.exceptionOrNull()?.message 
+                    ?: stringResourceProvider.getString(R.string.saving_goal_unable_delete)
+                _deleteSavingGoalEvent.emit(UiEvent.ShowMessage(
+                    stringResourceProvider.getString(R.string.saving_goal_delete_error, errorMessage)
+                ))
             }
         }
     }

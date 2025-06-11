@@ -11,11 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.moneymanagement_frontend.R
 
 @Composable
 fun BudgetDeleteDialog(
@@ -57,10 +60,9 @@ fun BudgetDeleteDialog(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-                
-                // Title
+                  // Title
                 Text(
-                    text = "Xác nhận xóa",
+                    text = stringResource(R.string.confirm_delete),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = BudgetTheme.TextPrimary,
@@ -73,7 +75,7 @@ fun BudgetDeleteDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Bạn có chắc chắn muốn xóa ngân sách này không?",
+                        text = stringResource(R.string.delete_budget_confirmation),
                         style = MaterialTheme.typography.bodyMedium,
                         color = BudgetTheme.TextSecondary,
                         textAlign = TextAlign.Center,
@@ -89,7 +91,7 @@ fun BudgetDeleteDialog(
                     )
                     
                     Text(
-                        text = "Hành động này không thể hoàn tác.",
+                        text = stringResource(R.string.action_cannot_be_undone),
                         style = MaterialTheme.typography.bodySmall,
                         color = BudgetTheme.DangerRed,
                         textAlign = TextAlign.Center,
@@ -105,14 +107,14 @@ fun BudgetDeleteDialog(
                     // Cancel Button
                     OutlinedButton(
                         onClick = onDismiss,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(0.8f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = BudgetTheme.TextSecondary
                         )
                     ) {
                         Text(
-                            text = "Hủy",
+                            text = stringResource(R.string.close),
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -128,7 +130,7 @@ fun BudgetDeleteDialog(
                         )
                     ) {
                         Text(
-                            text = "Xóa",
+                            text = stringResource(R.string.delete_budget),
                             fontWeight = FontWeight.Bold
                         )
                     }

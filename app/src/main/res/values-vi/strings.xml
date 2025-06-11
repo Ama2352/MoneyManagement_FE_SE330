@@ -222,8 +222,6 @@
     <string name="select_a_time">Chọn giờ</string>
     <string name="select_date">Chọn ngày</string>
     <string name="date_range">Khoảng ngày</string>
-    <string name="start_date">Ngày bắt đầu</string>
-    <string name="end_date">Ngày kết thúc</string>
     <string name="created">Tạo lúc</string>
     <string name="created_at">Tạo lúc: %1$s</string>
 
@@ -293,7 +291,6 @@
     <string name="unknown">Không xác định</string>
     <string name="aggregate">Tổng hợp</string>
     <string name="pie_charts">Biểu đồ tròn</string>
-    <string name="budget">Ngân sách</string>
     <string name="savings">Tiết kiệm</string>
     <string name="spent">Đã chi</string>
     
@@ -579,8 +576,58 @@
     <string name="error_save_file_details">Lỗi khi lưu file vào Downloads: %1$s</string>
     <string name="error_share_file">Không thể lưu file để chia sẻ</string>
     <string name="error_share_file_details">Lỗi khi chia sẻ file PDF: %1$s</string>
-    <string name="no_app_share">Không tìm thấy ứng dụng để chia sẻ file PDF</string>    <string name="select_date_placeholder">Chọn ngày</string>
+    <string name="no_app_share">Không tìm thấy ứng dụng để chia sẻ file PDF</string>
+    <string name="select_date_placeholder">Chọn ngày</string>
     <string name="share_report_title">Chia sẻ báo cáo</string>
+
+    <!-- ================== BUDGET MANAGEMENT ================== -->
+    <string name="budget">Ngân sách</string>
+    <string name="budget_management">Quản lý ngân sách</string>
+    <string name="add_budget">Thêm ngân sách</string>
+    <string name="create_budget">Tạo ngân sách</string>
+    <string name="edit_budget">Chỉnh sửa ngân sách</string>
+    <string name="delete_budget">Xóa ngân sách</string>
+    <string name="budget_description">Mô tả ngân sách</string>
+    <string name="budget_description_placeholder">Ví dụ: Chi tiêu ăn uống tháng này</string>
+    <string name="budget_limit_amount">Giới hạn ngân sách</string>
+    <string name="limit_amount">Giới hạn</string>
+    <string name="current_spending">Đã chi tiêu</string>
+    <string name="limit_label">Giới hạn</string>
+    <string name="spent_label">Đã chi</string>
+    <string name="delete_budget_confirmation">Bạn có chắc chắn muốn xóa ngân sách này không?</string>
+    <string name="start_date">Ngày bắt đầu</string>
+    <string name="end_date">Ngày kết thúc</string>
+    <string name="save_budget">Lưu ngân sách</string>
+    <string name="add_budget_fab">Thêm ngân sách</string>
+    <string name="budget_overview">Tổng quan</string>
+    <string name="total_budgets">Tổng ngân sách</string>
+    <string name="active_budgets">Đang hoạt động</string>
+    <string name="expired_budgets">Đã kết thúc</string>
+    <string name="no_budgets_yet">Chưa có ngân sách</string>
+    <string name="create_first_budget">Tạo ngân sách đầu tiên để quản lý chi tiêu của bạn một cách hiệu quả!</string>    <string name="create_budget_button">Tạo ngân sách</string>
+    <string name="edit_budget_screen_title">Chỉnh sửa ngân sách</string>
+    <string name="create_budget_screen_title">Tạo ngân sách</string>
+    <string name="create_new_budget">Tạo ngân sách mới</string>
+    <string name="edit_budget_form_title">Chỉnh sửa ngân sách</string>
+    <string name="update_budget">Cập nhật ngân sách</string>
+    <string name="validation_check_info">Vui lòng kiểm tra lại thông tin:</string>
+    <string name="validation_enter_budget_description">Vui lòng nhập mô tả ngân sách</string>
+    <string name="validation_enter_limit_amount">Vui lòng nhập số tiền giới hạn</string>
+    <string name="validation_valid_positive_amount">Số tiền giới hạn phải là số dương hợp lệ</string>
+    <string name="validation_select_category">Vui lòng chọn danh mục</string>
+    <string name="validation_select_wallet">Vui lòng chọn ví</string>
+    <string name="validation_end_date_after_start">Ngày kết thúc phải sau ngày bắt đầu</string>
+    
+    <!-- Budget Status Badges -->
+    <string name="budget_status_not_started">Chưa bắt đầu</string>
+    <string name="budget_status_on_track">Theo kế hoạch</string>
+    <string name="budget_status_under_budget">Dưới ngân sách</string>
+    <string name="budget_status_minimal_spending">Chi tiêu ít</string>
+    <string name="budget_status_warning">Cảnh báo</string>
+    <string name="budget_status_critical">Nguy hiểm</string>
+    <string name="budget_status_over_budget">Vượt ngân sách</string>
+    <string name="budget_status_nearly_maxed">Gần hết</string>
+    <string name="budget_status_unknown">Không xác định</string>
 
     <!-- ================== SAVING GOALS ================== -->
     <string name="saving_goals">Mục tiêu tiết kiệm</string>
@@ -635,12 +682,32 @@
     <string name="date_remaining_days">Còn %1$d ngày</string>
     <string name="date_remaining_months">Còn %1$d tháng</string>
     <string name="date_remaining_months_days">Còn %1$d tháng %2$d ngày</string>
-    
-    <!-- Progress Status -->
+      <!-- Progress Status -->
     <string name="progress_completed">Hoàn thành</string>
     <string name="progress_almost_completed">Gần hoàn thành</string>
     <string name="progress_in_progress">Đang tiến triển</string>
     <string name="progress_need_effort">Cần cố gắng</string>
     <string name="progress_start_saving">Bắt đầu tiết kiệm</string>
+    
+    <!-- ================== SUCCESS/ERROR MESSAGES ================== -->
+    <!-- Budget Success/Error Messages -->
+    <string name="budget_created_success">Ngân sách được tạo thành công!</string>
+    <string name="budget_updated_success">Ngân sách được cập nhật thành công!</string>
+    <string name="budget_deleted_success">Ngân sách đã được xóa!</string>
+    <string name="budget_create_error">Lỗi: %1$s</string>
+    <string name="budget_update_error">Lỗi: %1$s</string>
+    <string name="budget_delete_error">Lỗi: %1$s</string>
+    <string name="budget_unknown_error">Không rõ lỗi</string>
+    
+    <!-- Saving Goal Success/Error Messages -->
+    <string name="saving_goal_created_success">Mục tiêu tiết kiệm đã được tạo thành công!</string>
+    <string name="saving_goal_updated_success">Mục tiêu tiết kiệm đã được cập nhật thành công!</string>
+    <string name="saving_goal_deleted_success">Mục tiêu tiết kiệm đã được xóa thành công!</string>
+    <string name="saving_goal_create_error">Lỗi: %1$s</string>
+    <string name="saving_goal_update_error">Lỗi: %1$s</string>
+    <string name="saving_goal_delete_error">Lỗi: %1$s</string>
+    <string name="saving_goal_unable_create">Không thể tạo mục tiêu</string>
+    <string name="saving_goal_unable_update">Không thể cập nhật mục tiêu</string>
+    <string name="saving_goal_unable_delete">Không thể xóa mục tiêu</string>
 
 </resources>

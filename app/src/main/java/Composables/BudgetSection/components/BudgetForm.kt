@@ -10,10 +10,8 @@ import DI.ViewModels.CurrencyConverterViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarToday
@@ -42,7 +40,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BudgetForm(
     modifier: Modifier = Modifier,
@@ -65,7 +62,7 @@ fun BudgetForm(
     // Add Save button parameters
     onSave: () -> Unit,
     isFormValid: Boolean,
-    saveButtonText: String = "Lưu ngân sách"
+    saveButtonText: String = ""
 ) {
     var showCategoryDropdown by remember { mutableStateOf(false) }
     var showWalletDropdown by remember { mutableStateOf(false) }
@@ -86,19 +83,15 @@ fun BudgetForm(
     }
     
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
+      Column(
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        // Description Field
+    ) {// Description Field
         CustomTextField(
             value = description,
             onValueChange = onDescriptionChange,
-            label = "Mô tả ngân sách",
-            placeholder = "Ví dụ: Chi tiêu ăn uống tháng này",
+            label = stringResource(R.string.budget_description),
+            placeholder = stringResource(R.string.budget_description_placeholder),
             icon = Icons.Outlined.Description,
             enabled = !isLoading
         )
@@ -127,7 +120,7 @@ fun BudgetForm(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Giới hạn ngân sách",
+                        text = stringResource(R.string.budget_limit_amount),
                         style = MaterialTheme.typography.labelMedium,
                         color = BudgetTheme.TextPrimary,
                         fontWeight = FontWeight.Medium
@@ -182,13 +175,12 @@ fun BudgetForm(
                 }
             }
         }
-        
-        // Category Dropdown
+          // Category Dropdown
         CustomDropdownField(
             value = selectedCategory?.name ?: "",
             onValueChange = { },
-            label = "Danh mục",
-            placeholder = "Chọn danh mục",
+            label = stringResource(R.string.category),
+            placeholder = stringResource(R.string.select_category_placeholder),
             icon = Icons.Outlined.Category,
             expanded = showCategoryDropdown,
             onExpandedChange = { showCategoryDropdown = it },
@@ -204,13 +196,12 @@ fun BudgetForm(
                 )
             }
         }
-        
-        // Wallet Dropdown
+          // Wallet Dropdown
         CustomDropdownField(
             value = selectedWallet?.walletName ?: "",
             onValueChange = { },
-            label = "Ví",
-            placeholder = "Chọn ví",
+            label = stringResource(R.string.wallet),
+            placeholder = stringResource(R.string.select_wallet_placeholder),
             icon = Icons.Outlined.AccountBalanceWallet,
             expanded = showWalletDropdown,
             onExpandedChange = { showWalletDropdown = it },
@@ -231,12 +222,11 @@ fun BudgetForm(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Start Date
+        ) {            // Start Date
             CustomDateField(
                 value = startDate.format(dateFormatter),
                 onValueChange = { },
-                label = "Ngày bắt đầu",
+                label = stringResource(R.string.start_date),
                 placeholder = "dd/mm/yyyy",
                 modifier = Modifier.weight(1f),
                 onClick = { showStartDatePicker = true },
@@ -247,7 +237,7 @@ fun BudgetForm(
             CustomDateField(
                 value = endDate.format(dateFormatter),
                 onValueChange = { },
-                label = "Ngày kết thúc",
+                label = stringResource(R.string.end_date),
                 placeholder = "dd/mm/yyyy",
                 modifier = Modifier.weight(1f),
                 onClick = { showEndDatePicker = true },
@@ -304,7 +294,7 @@ fun BudgetForm(
                         strokeWidth = 2.dp
                     )
                     Text(
-                        text = "Đang xử lý...",
+                        text = stringResource(R.string.processing),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -320,7 +310,7 @@ fun BudgetForm(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = saveButtonText,
+                        text = if (saveButtonText.isEmpty()) stringResource(R.string.save_budget) else saveButtonText,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -573,7 +563,7 @@ private fun CustomDatePickerDialog(
                     contentColor = BudgetTheme.TextSecondary
                 )
             ) {
-                Text("Hủy")
+                Text(stringResource(R.string.close))
             }
         }
     ) {

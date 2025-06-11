@@ -33,22 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import Utils.TranslationManager
-import Utils.MessageTranslationUtils
 import Utils.useTranslatedMessage
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import com.example.moneymanagement_frontend.R
-
-// Entry point for accessing TranslationManager and MessageTranslationUtils
-@EntryPoint
-@InstallIn(SingletonComponent::class)
-interface TranslationEntryPoint {
-    fun translationManager(): TranslationManager
-    fun messageTranslationUtils(): MessageTranslationUtils
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

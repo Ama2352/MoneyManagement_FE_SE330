@@ -13,15 +13,19 @@ import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.WalletViewModel
 import DI.ViewModels.CurrencyConverterViewModel
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -31,6 +35,7 @@ import kotlinx.coroutines.flow.collectLatest
 import android.widget.Toast
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import com.example.moneymanagement_frontend.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -174,144 +179,155 @@ fun CreateEditBudgetScreen(
                 isLoading = false
             }
         }
-    }
-    
-    Scaffold(
-        topBar = {
+    }    // Main UI Layout without Scaffold - Edge to edge
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(BudgetTheme.BackgroundGreen)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Top Bar
             CreateEditTopBar(
                 isEditMode = isEditMode,
                 onBackClick = { navController.popBackStack() }
             )
-        },
-        containerColor = BudgetTheme.BackgroundGreen
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            // Form Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = BudgetTheme.CardBackground
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            
+            // Scrollable Content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
+                // Form Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = BudgetTheme.CardBackground
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
-                    // Title
-                    Text(
-                        text = if (isEditMode) "Chỉnh sửa ngân sách" else "Tạo ngân sách mới",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = BudgetTheme.TextPrimary,
-                        modifier = Modifier.padding(bottom = 20.dp)
-                    )
-                    
-                    // Form
-                    BudgetForm(
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp)
+                    ) {
+                        // Title
+                        Text(
+                            text = if (isEditMode) stringResource(R.string.edit_budget_form_title) else stringResource(R.string.create_new_budget),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = BudgetTheme.TextPrimary,
+                            modifier = Modifier.padding(bottom = 20.dp)
+                        )
+                        
+                        // Form
+                        BudgetForm(
+                            modifier = Modifier.fillMaxWidth(),
+                            description = description,
+                            onDescriptionChange = { 
+                                description = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            limitAmount = limitAmount,
+                            onLimitAmountChange = { 
+                                limitAmount = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            selectedCategory = selectedCategory,
+                            onCategorySelected = { 
+                                selectedCategory = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            categories = categories?.getOrNull() ?: emptyList(),
+                            selectedWallet = selectedWallet,
+                            onWalletSelected = { 
+                                selectedWallet = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            wallets = wallets?.getOrNull() ?: emptyList(),
+                            startDate = startDate,
+                            onStartDateChange = { 
+                                startDate = it
+                                if (endDate.isBefore(it) || endDate.isEqual(it)) {
+                                    endDate = it.plusDays(1)
+                                }
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            endDate = endDate,
+                            onEndDateChange = { 
+                                endDate = it
+                                if (showValidationErrors) showValidationErrors = false
+                            },
+                            isLoading = isLoading,
+                            currencyConverterViewModel = currencyConverterViewModel,
+                            onSave = ::saveBudget,
+                            isFormValid = isFormValid,
+                            saveButtonText = if (isEditMode) stringResource(R.string.update_budget) else stringResource(R.string.create_budget_button)
+                        )
+                    }
+                }
+                
+                // Validation Errors
+                if (showValidationErrors) {
+                    ValidationErrorCard(
                         description = description,
-                        onDescriptionChange = { 
-                            description = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
                         limitAmount = limitAmount,
-                        onLimitAmountChange = { 
-                            limitAmount = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
                         selectedCategory = selectedCategory,
-                        onCategorySelected = { 
-                            selectedCategory = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
-                        categories = categories?.getOrNull() ?: emptyList(),
                         selectedWallet = selectedWallet,
-                        onWalletSelected = { 
-                            selectedWallet = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
-                        wallets = wallets?.getOrNull() ?: emptyList(),
                         startDate = startDate,
-                        onStartDateChange = { 
-                            startDate = it
-                            if (endDate.isBefore(it) || endDate.isEqual(it)) {
-                                endDate = it.plusDays(1)
-                            }
-                            if (showValidationErrors) showValidationErrors = false
-                        },
-                        endDate = endDate,
-                        onEndDateChange = { 
-                            endDate = it
-                            if (showValidationErrors) showValidationErrors = false
-                        },
-                        isLoading = isLoading,
-                        currencyConverterViewModel = currencyConverterViewModel,
-                        onSave = ::saveBudget,
-                        isFormValid = isFormValid,
-                        saveButtonText = if (isEditMode) "Cập nhật ngân sách" else "Tạo ngân sách"
+                        endDate = endDate
                     )
                 }
-            }
-            
-            // Validation Errors
-            if (showValidationErrors) {
-                ValidationErrorCard(
-                    description = description,
-                    limitAmount = limitAmount,
-                    selectedCategory = selectedCategory,
-                    selectedWallet = selectedWallet,
-                    startDate = startDate,
-                    endDate = endDate
-                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateEditTopBar(
     isEditMode: Boolean,
     onBackClick: () -> Unit
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                text = if (isEditMode) "Chỉnh sửa ngân sách" else "Tạo ngân sách mới",
-                style = MaterialTheme.typography.titleLarge,
-                color = BudgetTheme.White,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Quay lại",
-                    tint = BudgetTheme.White
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BudgetTheme.PrimaryGreen
-        ),
-        modifier = Modifier.background(
-            brush = Brush.verticalGradient(
-                colors = listOf(
-                    BudgetTheme.PrimaryGreen,
-                    BudgetTheme.PrimaryGreenLight
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        BudgetTheme.PrimaryGreen,
+                        BudgetTheme.PrimaryGreenLight
+                    )
                 )
             )
+            .padding(vertical = 16.dp, horizontal = 16.dp)
+    ) {
+        // Back button on the left
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.back),
+                tint = BudgetTheme.White,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        
+        // Title in the center
+        Text(
+            text = if (isEditMode) stringResource(R.string.edit_budget_screen_title) else stringResource(R.string.create_budget_screen_title),
+            style = MaterialTheme.typography.titleLarge,
+            color = BudgetTheme.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Center)
         )
-    )
+    }
 }
 
 @Composable
@@ -325,17 +341,17 @@ private fun ValidationErrorCard(
 ) {
     val errors = mutableListOf<String>()
     
-    if (description.isBlank()) errors.add("Vui lòng nhập mô tả ngân sách")
-    if (limitAmount.isBlank()) errors.add("Vui lòng nhập số tiền giới hạn")
+    if (description.isBlank()) errors.add(stringResource(R.string.validation_enter_budget_description))
+    if (limitAmount.isBlank()) errors.add(stringResource(R.string.validation_enter_limit_amount))
     else {
         val parsedAmount = CurrencyUtils.parseAmount(limitAmount)
         if (parsedAmount == null || parsedAmount <= 0.0) {
-            errors.add("Số tiền giới hạn phải là số dương hợp lệ")
+            errors.add(stringResource(R.string.validation_valid_positive_amount))
         }
     }
-    if (selectedCategory == null) errors.add("Vui lòng chọn danh mục")
-    if (selectedWallet == null) errors.add("Vui lòng chọn ví")
-    if (!endDate.isAfter(startDate)) errors.add("Ngày kết thúc phải sau ngày bắt đầu")
+    if (selectedCategory == null) errors.add(stringResource(R.string.validation_select_category))
+    if (selectedWallet == null) errors.add(stringResource(R.string.validation_select_wallet))
+    if (!endDate.isAfter(startDate)) errors.add(stringResource(R.string.validation_end_date_after_start))
     
     if (errors.isNotEmpty()) {
         Card(
@@ -352,7 +368,7 @@ private fun ValidationErrorCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Vui lòng kiểm tra lại thông tin:",
+                    text = stringResource(R.string.validation_check_info),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = BudgetTheme.DangerRed

@@ -27,25 +27,6 @@ object DateUtils {
         return ChronoUnit.DAYS.between(now, endDate)
     }
 
-    fun getDaysRemainingText(endDate: LocalDateTime): String {
-        val days = getDaysRemaining(endDate)
-        return when {
-            days < 0 -> "Đã hết hạn"
-            days == 0L -> "Hôm nay"
-            days == 1L -> "Còn 1 ngày"
-            days <= 30 -> "Còn $days ngày"
-            else -> {
-                val months = days / 30
-                val remainingDays = days % 30
-                if (remainingDays == 0L) {
-                    "Còn $months tháng"
-                } else {
-                    "Còn $months tháng $remainingDays ngày"
-                }
-            }
-        }
-    }
-    
     /**
      * Get localized days remaining text using string resources
      */
