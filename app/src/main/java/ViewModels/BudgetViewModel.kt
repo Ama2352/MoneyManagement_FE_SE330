@@ -34,12 +34,12 @@ class BudgetViewModel @Inject constructor(
         getBudgetProgressAndAlerts()
     }
 
-//    fun getBudgets() {
-//        viewModelScope.launch {
-//            val result = repository.getBudgets()
-//            _budgets.value = result
-//        }
-//    }
+    fun getBudgets() {
+        viewModelScope.launch {
+            val result = repository.getBudgets()
+            _budgets.value = result
+        }
+    }
 
     fun getBudgetById(id: String) {
         viewModelScope.launch {

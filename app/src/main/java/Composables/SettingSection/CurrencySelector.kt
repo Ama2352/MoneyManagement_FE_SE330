@@ -48,7 +48,7 @@ fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel)
             .padding(vertical = 4.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = CardColor)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
@@ -60,13 +60,13 @@ fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel)
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(MainColor.copy(alpha = 0.15f)),
+                    .background(Color(0xFF53dba9).copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.AttachMoney,
                     contentDescription = null,
-                    tint = MainColor
+                    tint = Color(0xFF53dba9)
                 )
             }
 
@@ -74,16 +74,16 @@ fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel)
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Currency",
+                    text = stringResource(R.string.currency),
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Medium,
-                        color = TextPrimaryColor
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 Text(
                     text = stringResource(R.string.current_currency, currentCurrency),
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = TextSecondaryColor
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
@@ -91,7 +91,7 @@ fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel)
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = MainColor,
+                    color = Color(0xFF53dba9),
                     strokeWidth = 2.dp
                 )
             } else {
@@ -103,7 +103,7 @@ fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel)
                     Text(
                         text = "VND",
                         fontSize = 12.sp,
-                        color = if (isVND) MainColor else TextSecondaryColor,
+                        color = if (isVND) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = if (isVND) FontWeight.Bold else FontWeight.Normal
                     )
 
@@ -115,7 +115,7 @@ fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel)
                         },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = Color.White,
-                            checkedTrackColor = MainColor,
+                            checkedTrackColor = Color(0xFF53dba9),
                             uncheckedThumbColor = Color.White,
                             uncheckedTrackColor = Color.Gray
                         )
@@ -124,7 +124,7 @@ fun CurrencySettingsItem(currencyConverterViewModel: CurrencyConverterViewModel)
                     Text(
                         text = "USD",
                         fontSize = 12.sp,
-                        color = if (!isVND) MainColor else TextSecondaryColor,
+                        color = if (!isVND) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = if (!isVND) FontWeight.Bold else FontWeight.Normal
                     )
                 }

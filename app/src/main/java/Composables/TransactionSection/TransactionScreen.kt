@@ -11,6 +11,7 @@ import DI.Composables.CategorySection.getCategoryIcon
 import DI.ViewModels.WalletViewModel
 import DI.Utils.rememberAppStrings
 import DI.Utils.TransactionUtils
+import ViewModels.AuthViewModel
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -65,7 +66,8 @@ fun MainTransactionsScreen(
     transactionViewModel: TransactionViewModel,
     currencyViewModel: CurrencyConverterViewModel,
     categoryViewModel: CategoryViewModel,
-    walletViewModel: WalletViewModel
+    walletViewModel: WalletViewModel,
+    authViewModel: AuthViewModel
 ) {
     val strings = rememberAppStrings()
 
@@ -126,6 +128,16 @@ fun MainTransactionsScreen(
         transactionViewModel.loadAllTransactions()
         categoryViewModel.getCategories()
         walletViewModel.getWallets()
+    }
+
+    // Reload init data when token is refreshed
+    val refreshTokenState by authViewModel.refreshTokenState.collectAsState()
+    LaunchedEffect(refreshTokenState) {
+        if (refreshTokenState?.isSuccess == true) {
+            transactionViewModel.loadAllTransactions()
+            categoryViewModel.getCategories()
+            walletViewModel.getWallets()
+        }
     }
 
     // Monitor success message and clear search results when transaction is created
@@ -293,7 +305,7 @@ fun MainTransactionsScreen(
 
                         Button(
                             onClick = onNavigateToAdd,
-                            modifier = Modifier.padding(top = 24.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = TransactionColors.Primary
                             )

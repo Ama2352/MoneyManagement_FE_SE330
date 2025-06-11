@@ -72,6 +72,9 @@
     <string name="wallet_form_unknown_date">Unknown Date</string>
     <string name="wallet_form_unknown_wallet">Unknown Wallet</string>
     
+    <!-- Wallet Types -->
+    <string name="wallet_type_personal">Personal</string>
+    
     <!-- ================== CATEGORY MANAGEMENT ================== -->
     <string name="category">Category</string>
     <string name="my_categories">My Categories</string>
@@ -101,6 +104,7 @@
     <string name="add_transaction">Add Transaction</string>
     <string name="recent_transactions">Recent Transactions</string>
     <string name="no_transactions_found">No transactions found</string>
+    <string name="add_first_transaction">Add Your First Transaction</string>
     
     <!-- Transaction Form -->
     <string name="transaction_type">Transaction Type</string>
@@ -448,9 +452,6 @@
     <string name="error_message">Error: %1$s</string>
     <string name="something_went_wrong">Something went wrong</string>
 
-      <!-- ================== MISCELLANEOUS ================== -->
-    <string name="language">Language</string>
-
       <!-- ================== CURRENCY SETTINGS ================== -->
     <string name="currency_settings">Currency Settings</string>
     <string name="currency">Currency</string>
@@ -526,5 +527,33 @@
     <string name="view_detailed_reports">View detailed financial reports</string>
     <string name="support_info">Support &amp; Info</string>
     <string name="log_out">Log Out</string>
+    
+    <!-- ================== LANGUAGE SETTINGS ================== -->
+    <string name="language">Language</string>
+    <string name="current_language">Current: %1$s</string>
+    <string name="select_language">Select Language</string>
+    <string name="english">English</string>
+    <string name="vietnamese">Tiếng Việt</string>
+
+    <!-- ================== AUTH & VALIDATION ================== -->
+    <string name="auth_login">Login</string>
+    <string name="auth_register">Register</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_confirm_password">Confirm Password</string>
+    <string name="auth_first_name">First Name</string>
+    <string name="auth_last_name">Last Name</string>
+    
+    <!-- Validation Error Messages -->
+    <string name="validation_first_name_required">First name is required</string>
+    <string name="validation_last_name_required">Last name is required</string>
+    <string name="validation_email_required">Email is required</string>
+    <string name="validation_email_invalid">Invalid email format</string>
+    <string name="validation_password_required">Password is required</string>
+    <string name="validation_password_min_length">Password must be at least 6 characters</string>
+    <string name="validation_password_uppercase">Password must contain at least one uppercase letter</string>
+    <string name="validation_password_symbol">Password must contain @ symbol</string>
+    <string name="validation_confirm_password_required">Confirm password is required</string>
+    <string name="validation_passwords_no_match">Password do not match</string>
 
 </resources>

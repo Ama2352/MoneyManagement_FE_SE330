@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,8 +28,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.widget.Toast
 import com.example.moneymanagement_frontend.R
-import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin: () -> Unit) {
@@ -37,7 +38,6 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-
     var firstNameError by remember { mutableStateOf<String?>(null) }
     var lastNameError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
@@ -45,34 +45,44 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
     var confirmPasswordError by remember { mutableStateOf<String?>(null) }
 
     val registerState by viewModel.registerState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // Pre-load string resources in the Composable context
     val successMessage = stringResource(R.string.registration_successful)
     val failureMessageFormat = stringResource(R.string.registration_failed)
-
+    
+    // Pre-load validation strings
+    val validationStrings = ValidationStrings(
+        firstNameRequired = stringResource(R.string.validation_first_name_required),
+        lastNameRequired = stringResource(R.string.validation_last_name_required),
+        emailRequired = stringResource(R.string.validation_email_required),
+        emailInvalid = stringResource(R.string.validation_email_invalid),
+        passwordRequired = stringResource(R.string.validation_password_required),
+        passwordMinLength = stringResource(R.string.validation_password_min_length),
+        passwordUppercase = stringResource(R.string.validation_password_uppercase),
+        passwordSymbol = stringResource(R.string.validation_password_symbol),
+        confirmPasswordRequired = stringResource(R.string.validation_confirm_password_required),
+        passwordsNoMatch = stringResource(R.string.validation_passwords_no_match)
+    )
     LaunchedEffect(registerState) {
         registerState?.let { result ->
-            coroutineScope.launch {
-                if (result.isSuccess) {
-                    snackbarHostState.showSnackbar(successMessage)
-                    onNavigateToLogin()
-                } else {
-                    snackbarHostState.showSnackbar(
-                        String.format(failureMessageFormat, result.exceptionOrNull()?.message ?: "")
-                    )
-                }
+            if (result.isSuccess) {
+                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+                onNavigateToLogin()
+            } else {
+                Toast.makeText(
+                    context,
+                    String.format(failureMessageFormat, result.exceptionOrNull()?.message ?: ""),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             viewModel.resetRegisterState()
         }
     }
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
         Column(
@@ -143,16 +153,15 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-
             Button(
                 onClick = {
                     keyboardController?.hide() // Hide keyboard when button is pressed
 
-                    val firstNameResult = Validator.validateField("firstName", firstName)
-                    val lastNameResult = Validator.validateField("lastName", lastName)
-                    val emailResult = Validator.validateField("email", email)
-                    val passwordResult = Validator.validateField("password", password)
-                    val confirmPasswordResult = Validator.validateField("confirmPassword", password, confirmPassword)
+                    val firstNameResult = Validator.validateField("firstName", firstName, validationStrings = validationStrings)
+                    val lastNameResult = Validator.validateField("lastName", lastName, validationStrings = validationStrings)
+                    val emailResult = Validator.validateField("email", email, validationStrings = validationStrings)
+                    val passwordResult = Validator.validateField("password", password, validationStrings = validationStrings)
+                    val confirmPasswordResult = Validator.validateField("confirmPassword", password, confirmPassword, validationStrings)
 
                     firstNameError = firstNameResult.errorMessage
                     lastNameError = lastNameResult.errorMessage
@@ -192,6 +201,9 @@ fun RegisterScreen(viewModel: AuthViewModel = hiltViewModel(), onNavigateToLogin
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
                 Text(
                     text = stringResource(R.string.login),
                     style = MaterialTheme.typography.bodyMedium,

@@ -213,10 +213,11 @@ fun EditTransactionScreen(
         when {
             isUpdating -> {
                 localErrorMessage = null
-            }
-
-            successMessage != null -> {
+            }            successMessage != null -> {
                 if (successMessage!!.contains("updated successfully", ignoreCase = true)) {
+                    // Show success toast for transaction update using localized string
+                    Toast.makeText(context, strings.updateTransactionSuccess, Toast.LENGTH_SHORT).show()
+                    
                     // Clear the success message before navigating
                     transactionViewModel.clearMessages()
 
@@ -245,11 +246,10 @@ fun EditTransactionScreen(
                         }
                     }
                     navController.popBackStack()
-                }
-            }
-
-            errorMessage != null -> {
+                }            }errorMessage != null -> {
                 localErrorMessage = errorMessage
+                // Show error toast for transaction update using localized string
+                Toast.makeText(context, strings.updateTransactionError, Toast.LENGTH_LONG).show()
             }
         }
     }

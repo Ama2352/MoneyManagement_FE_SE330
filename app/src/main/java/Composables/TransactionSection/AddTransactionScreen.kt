@@ -139,10 +139,11 @@ fun AddTransactionScreen(
             isCreating -> {
                 isLoading = true
                 errorMessage = null
-            }
-
-            successMessage != null -> {
+            }            successMessage != null -> {
                 isLoading = false
+                // Show success toast for transaction creation using localized string
+                Toast.makeText(context, strings.addTransactionSuccess, Toast.LENGTH_SHORT).show()
+                
                 // CHANGED: Kiểm tra nếu là Income, hiển thị Toast cho Warning goals
                 if (transactionType == TransactionType.INCOME) {
                     savingGoalViewModel.getSavingGoalProgressAndAlerts()
@@ -168,11 +169,11 @@ fun AddTransactionScreen(
                     }
                 }
                 navController.popBackStack()
-            }
-
-            viewModelErrorMessage != null -> {
+            }            viewModelErrorMessage != null -> {
                 isLoading = false
                 errorMessage = viewModelErrorMessage
+                // Show error toast for transaction creation using localized string
+                Toast.makeText(context, strings.addTransactionError, Toast.LENGTH_LONG).show()
             }
         }
     }

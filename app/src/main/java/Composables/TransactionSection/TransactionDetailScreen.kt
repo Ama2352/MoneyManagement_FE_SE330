@@ -128,12 +128,13 @@ fun TransactionDetailScreen(
     // Load transaction data when screen opens
     LaunchedEffect(transactionId) {
         transactionViewModel.loadTransactionById(transactionId)
-    }
-
-    // Handle success/error messages
+    }    // Handle success/error messages
     LaunchedEffect(successMessage) {
         successMessage?.let {
             if (it.contains("deleted", ignoreCase = true)) {
+                // Show success toast for transaction deletion using localized string
+                Toast.makeText(context, strings.deleteTransactionSuccess, Toast.LENGTH_SHORT).show()
+                
                 if (transactionType == TransactionType.INCOME) {
                     savingGoalViewModel.getSavingGoalProgressAndAlerts()
                     savingGoals?.getOrNull()?.forEach { goal ->
@@ -158,7 +159,14 @@ fun TransactionDetailScreen(
                     }
                 }
                 navController.popBackStack()
-            }
+            }        }
+    }
+
+    // Handle error messages
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let {
+            // Show error toast for transaction deletion using localized string
+            Toast.makeText(context, strings.deleteTransactionError, Toast.LENGTH_LONG).show()
         }
     }
 

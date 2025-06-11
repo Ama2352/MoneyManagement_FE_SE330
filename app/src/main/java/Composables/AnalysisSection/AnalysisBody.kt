@@ -64,6 +64,7 @@ import ir.ehsannarmani.compose_charts.models.IndicatorPosition
 import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 import java.time.LocalDate
+import java.util.Locale
 
 @Composable
 fun handleSelectedPeriodTitle(selectedPeriod: String): String {
@@ -112,6 +113,7 @@ fun AnalysisBody(
             stringResource(R.string.monthly),
             stringResource(R.string.yearly)
         )
+
     var selectedPeriod by remember { mutableIntStateOf(0) }
     val selectedPeriodTitle = handleSelectedPeriodTitle(periodsApi[selectedPeriod])
     val selectedPeriodLabel = periodsApi[selectedPeriod]
@@ -143,8 +145,8 @@ fun AnalysisBody(
         } else {
             exchangeRates?.let { rates -> CurrencyUtils.vndToUsd(vndAmount, rates.usdToVnd) } ?: vndAmount
         }
-    }
-
+    }    
+    
     val totalIncome = convertedTotalIncome?.let { "+${CurrencyUtils.formatCompactAmount(it, isVND)}" } ?: "--"
     val totalExpenses = convertedTotalExpenses?.let { "-${CurrencyUtils.formatCompactAmount(it, isVND)}" } ?: "--"
 
@@ -600,7 +602,8 @@ fun IncomeExpensesBarChart(
         if (isVND) {
             vndAmount
         } else {
-            exchangeRates?.let { rates -> CurrencyUtils.vndToUsd(vndAmount, rates.usdToVnd) } ?: vndAmount        }
+            exchangeRates?.let { rates -> CurrencyUtils.vndToUsd(vndAmount, rates.usdToVnd) } ?: vndAmount
+        }
     }
 
     val chartData =

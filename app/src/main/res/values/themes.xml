@@ -3,10 +3,6 @@
     <style name="Base.Theme.MoneyManagement_Frontend" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">true</item> <!-- For light status bar icons -->
     </style>
 
     <style name="Theme.MoneyManagement_Frontend" parent="Base.Theme.MoneyManagement_Frontend" />

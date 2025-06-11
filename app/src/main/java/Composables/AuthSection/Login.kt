@@ -1,7 +1,6 @@
 package DI.Composables.AuthSection
 
 import DI.Navigation.Routes
-import Utils.StringResourceProvider
 import ViewModels.AuthViewModel
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -20,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,41 +29,52 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import android.widget.Toast
 import com.example.moneymanagement_frontend.R
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     onNavigateToRegister: () -> Unit,
     navController: NavController,
-) {
-    var email by remember { mutableStateOf("") }
+) {    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
 
     val loginState by viewModel.loginState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
 
     // Pre-load string resources in the Composable context
     val successMessage = stringResource(R.string.login_successful)
     val failureMessageFormat = stringResource(R.string.login_failed)
-
+    
+    // Pre-load validation strings
+    val validationStrings = ValidationStrings(
+        firstNameRequired = stringResource(R.string.validation_first_name_required),
+        lastNameRequired = stringResource(R.string.validation_last_name_required),
+        emailRequired = stringResource(R.string.validation_email_required),
+        emailInvalid = stringResource(R.string.validation_email_invalid),
+        passwordRequired = stringResource(R.string.validation_password_required),
+        passwordMinLength = stringResource(R.string.validation_password_min_length),
+        passwordUppercase = stringResource(R.string.validation_password_uppercase),
+        passwordSymbol = stringResource(R.string.validation_password_symbol),
+        confirmPasswordRequired = stringResource(R.string.validation_confirm_password_required),
+        passwordsNoMatch = stringResource(R.string.validation_passwords_no_match)
+    )
     LaunchedEffect(loginState) {
         loginState?.let { result ->
             if (result.isSuccess) {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar(successMessage)
-                }
+                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
                 navController.navigate(Routes.Main) {
                     popUpTo(Routes.Login) { inclusive = true }
                 }
             } else {
-                snackbarHostState.showSnackbar(
-                    String.format(failureMessageFormat, result.exceptionOrNull()?.message ?: "")
-                )
+                Toast.makeText(
+                    context, 
+                    String.format(failureMessageFormat, result.exceptionOrNull()?.message ?: ""),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             viewModel.resetLoginState()
         }
@@ -71,10 +82,8 @@ fun LoginScreen(
 
     var emailError by remember { mutableStateOf<String?>(null)}
     var passwordError by remember { mutableStateOf<String?>(null)}
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
         Column(
@@ -120,28 +129,13 @@ fun LoginScreen(
                 error = passwordError
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = stringResource(R.string.forgot_password),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                    modifier = Modifier.clickable { }
-                )
-            }
-
             Spacer(modifier = Modifier.height(32.dp))
-
             Button(
                 onClick = {
                     keyboardController?.hide() // Hide keyboard when button is pressed
 
-                    val emailResult = Validator.validateField("email", email)
-                    val passwordResult = Validator.validateField("password", password)
+                    val emailResult = Validator.validateField("email", email, validationStrings = validationStrings)
+                    val passwordResult = Validator.validateField("password", password, validationStrings = validationStrings)
 
                     emailError = emailResult.errorMessage
                     passwordError = passwordResult.errorMessage
@@ -174,6 +168,9 @@ fun LoginScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
                 Text(
                     text = stringResource(R.string.sign_up),
                     style = MaterialTheme.typography.bodyMedium,

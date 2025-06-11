@@ -9,6 +9,7 @@ import DI.ViewModels.CurrencyConverterViewModel
 import DI.Utils.CurrencyInputTextField
 import DI.Utils.CurrencyUtils
 import DI.Utils.USDInputPreview
+import ViewModels.AuthViewModel
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -52,10 +53,11 @@ object WalletColors {
 
 @Composable
 fun WalletScreen(
-    viewModel: WalletViewModel,
-    currencyConverterViewModel: CurrencyConverterViewModel
+    walletViewModel: WalletViewModel,
+    currencyConverterViewModel: CurrencyConverterViewModel,
+    authViewModel: AuthViewModel
 ) {
-    val walletsState by viewModel.wallets.collectAsStateWithLifecycle()
+    val walletsState by walletViewModel.wallets.collectAsStateWithLifecycle()
     val isVND by currencyConverterViewModel.isVND.collectAsState()
     val exchangeRates by currencyConverterViewModel.exchangeRates.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -64,10 +66,18 @@ fun WalletScreen(
     var showEditDialog by remember { mutableStateOf(false) }
     var editingWallet by remember { mutableStateOf<Wallet?>(null) }
 
+    // Reload init data when token is refreshed
+    val refreshTokenState by authViewModel.refreshTokenState.collectAsState()
+    LaunchedEffect(refreshTokenState) {
+        if (refreshTokenState?.isSuccess == true) {
+            walletViewModel.getWallets()
+        }
+    }
+
     LaunchedEffect(Unit) {
         // Collect events for add, update, and delete actions
         launch {
-            viewModel.addWalletEvent.collect { event ->
+            walletViewModel.addWalletEvent.collect { event ->
                 when(event) {
                     is UiEvent.ShowMessage -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
@@ -76,7 +86,7 @@ fun WalletScreen(
             }
         }
         launch {
-            viewModel.updateWalletEvent.collect { event ->
+            walletViewModel.updateWalletEvent.collect { event ->
                 when(event) {
                     is UiEvent.ShowMessage -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
@@ -85,7 +95,7 @@ fun WalletScreen(
             }
         }
         launch {
-            viewModel.deleteWalletEvent.collect { event ->
+            walletViewModel.deleteWalletEvent.collect { event ->
                 when(event) {
                     is UiEvent.ShowMessage -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
@@ -143,14 +153,14 @@ fun WalletScreen(
                             showEditDialog = true
                         },
                         onDeleteWallet = { walletId ->
-                            viewModel.deleteWallet(walletId)
+                            walletViewModel.deleteWallet(walletId)
                         }
                     )
                 }
                 walletsResult.isFailure -> {
                     ErrorMessage(
                         message = walletsResult.exceptionOrNull()?.message ?: stringResource(R.string.unknown_error),
-                        onRetry = { viewModel.getWallets() }
+                        onRetry = { walletViewModel.getWallets() }
                     )
                 }
             }
@@ -163,7 +173,7 @@ fun WalletScreen(
                 exchangeRates = exchangeRates,
                 onDismiss = { showAddDialog = false },
                 onConfirm = { request ->
-                    viewModel.addWallet(request)
+                    walletViewModel.addWallet(request)
                     showAddDialog = false
                 }
             )
@@ -179,7 +189,7 @@ fun WalletScreen(
                     editingWallet = null
                 },
                 onConfirm = { wallet ->
-                    viewModel.updateWallet(wallet)
+                    walletViewModel.updateWallet(wallet)
                     showEditDialog = false
                     editingWallet = null
                 }            )
@@ -189,45 +199,37 @@ fun WalletScreen(
 
 @Composable
 private fun WalletHeader() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Wallet icon
+        Text(
+            text = stringResource(R.string.my_wallets),
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = WalletColors.OnSurface
+        )
+
+        // Simple, minimal wallet icon - no gradient, no shadow
         Box(
             modifier = Modifier
-                .size(64.dp)
+                .size(40.dp)
                 .background(
-                    brush = Brush.radialGradient(
-                        colors = listOf(WalletColors.Primary, WalletColors.PrimaryVariant)
-                    ),
+                    color = WalletColors.Primary.copy(alpha = 0.1f),
                     shape = CircleShape
-                )
-                .shadow(8.dp, CircleShape),
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.AccountBalanceWallet,
                 contentDescription = null,
-                tint = WalletColors.OnPrimary,
-                modifier = Modifier.size(32.dp)
+                tint = WalletColors.Primary,
+                modifier = Modifier.size(20.dp)
             )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.my_wallets),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = WalletColors.OnSurface
-        )
-
-        Text(
-            text = stringResource(R.string.manage_wallets),
-            fontSize = 16.sp,
-            color = WalletColors.OnSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
     }
 }
 
@@ -484,7 +486,8 @@ private fun WalletCard(
                     IconButton(
                         onClick = onEdit,
                         modifier = Modifier.size(32.dp)
-                    ) {                        Icon(
+                    ) {
+                        Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = stringResource(R.string.edit),
                             tint = WalletColors.Primary,
@@ -527,8 +530,8 @@ private fun WalletCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Footer
-            Divider(color = WalletColors.Primary.copy(alpha = 0.1f))
+            // Footer with meaningful information
+            HorizontalDivider(color = WalletColors.Primary.copy(alpha = 0.1f))
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -538,13 +541,14 @@ private fun WalletCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(R.string.available_balance),
+                    text = if (isVND) "VND" else "USD",
                     fontSize = 12.sp,
-                    color = WalletColors.OnSurfaceVariant
+                    color = WalletColors.OnSurfaceVariant,
+                    fontWeight = FontWeight.Medium
                 )
 
                 Text(
-                    text = stringResource(R.string.active),
+                    text = stringResource(R.string.wallet_type_personal),
                     fontSize = 12.sp,
                     color = WalletColors.Success,
                     fontWeight = FontWeight.Medium
@@ -663,7 +667,7 @@ private fun AddWalletDialog(
 
                     OutlinedButton(
                         onClick = onDismiss,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(0.8f),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = WalletColors.OnSurfaceVariant
                         ),

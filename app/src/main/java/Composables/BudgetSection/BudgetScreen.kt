@@ -6,6 +6,7 @@ import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.BudgetViewModel
 import DI.ViewModels.WalletViewModel
 import DI.ViewModels.CurrencyConverterViewModel
+import ViewModels.AuthViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -41,7 +42,8 @@ fun BudgetScreen(
     budgetViewModel: BudgetViewModel,
     categoryViewModel: CategoryViewModel,
     walletViewModel: WalletViewModel,
-    currencyConverterViewModel: CurrencyConverterViewModel = hiltViewModel()
+    currencyConverterViewModel: CurrencyConverterViewModel,
+    authViewModel: AuthViewModel
 ) {
     val budgets by budgetViewModel.budgets.collectAsState()
     val categories by categoryViewModel.categories.collectAsState()
@@ -53,6 +55,16 @@ fun BudgetScreen(
         budgetViewModel.getBudgetProgressAndAlerts()
         categoryViewModel.getCategories()
         walletViewModel.getWallets()
+    }
+
+    // Reload init data when token is refreshed
+    val refreshTokenState by authViewModel.refreshTokenState.collectAsState()
+    LaunchedEffect(refreshTokenState) {
+        if (refreshTokenState?.isSuccess == true) {
+            budgetViewModel.getBudgetProgressAndAlerts()
+            categoryViewModel.getCategories()
+            walletViewModel.getWallets()
+        }
     }
     
     LaunchedEffect(categories, wallets) {

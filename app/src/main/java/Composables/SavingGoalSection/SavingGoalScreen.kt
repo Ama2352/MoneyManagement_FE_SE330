@@ -6,6 +6,7 @@ import DI.ViewModels.CategoryViewModel
 import DI.ViewModels.SavingGoalViewModel
 import DI.ViewModels.WalletViewModel
 import DI.ViewModels.CurrencyConverterViewModel
+import ViewModels.AuthViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -41,18 +42,29 @@ fun SavingGoalScreen(
     savingGoalViewModel: SavingGoalViewModel,
     categoryViewModel: CategoryViewModel,
     walletViewModel: WalletViewModel,
-    currencyConverterViewModel: CurrencyConverterViewModel = hiltViewModel()
+    currencyConverterViewModel: CurrencyConverterViewModel,
+    authViewModel: AuthViewModel
 ) {
     val goals by savingGoalViewModel.savingGoalProgress.collectAsState()
     val categories by categoryViewModel.categories.collectAsState()
     val wallets by walletViewModel.wallets.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-      // Refresh goals when screen is resumed
+
+    // Refresh goals when screen is resumed
     LaunchedEffect(Unit) {
         savingGoalViewModel.getSavingGoalProgressAndAlerts()
-        savingGoalViewModel.getSavingGoals()
         categoryViewModel.getCategories()
         walletViewModel.getWallets()
+    }
+
+    // Reload init data when token is refreshed
+    val refreshTokenState by authViewModel.refreshTokenState.collectAsState()
+    LaunchedEffect(refreshTokenState) {
+        if (refreshTokenState?.isSuccess == true) {
+            savingGoalViewModel.getSavingGoalProgressAndAlerts()
+            categoryViewModel.getCategories()
+            walletViewModel.getWallets()
+        }
     }
     
     LaunchedEffect(categories, wallets) {

@@ -37,10 +37,13 @@ fun LanguageSelector() {
     val scope = rememberCoroutineScope()
     val currentLanguageCode by LanguageManager.getLanguagePreference(context)
         .collectAsState(initial = LanguageManager.DEFAULT_LANGUAGE)
-    
-    // Get current language display name
+      // Get current language display name
     val currentLanguage = LanguageManager.getLanguages().find { it.code == currentLanguageCode }
-    val currentLanguageName = currentLanguage?.name ?: "English"
+    val currentLanguageName = when (currentLanguageCode) {
+        "vi" -> stringResource(R.string.vietnamese)
+        "en" -> stringResource(R.string.english)
+        else -> currentLanguage?.name ?: "English"
+    }
     val isVietnamese = currentLanguageCode == "vi"
 
     Card(
@@ -49,7 +52,7 @@ fun LanguageSelector() {
             .padding(vertical = 4.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = CardColor)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
@@ -61,30 +64,29 @@ fun LanguageSelector() {
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(MainColor.copy(alpha = 0.15f)),
+                    .background(Color(0xFF53dba9).copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Language,
                     contentDescription = null,
-                    tint = MainColor
+                    tint = Color(0xFF53dba9)
                 )
             }
 
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(R.string.language),
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Medium,
-                        color = TextPrimaryColor
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 Text(
-                    text = stringResource(R.string.current_currency, currentLanguageName),
+                    text = stringResource(R.string.current_language, currentLanguageName),
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = TextSecondaryColor
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
@@ -97,11 +99,10 @@ fun LanguageSelector() {
                 Text(
                     text = "EN",
                     fontSize = 12.sp,
-                    color = if (!isVietnamese) MainColor else TextSecondaryColor,
+                    color = if (!isVietnamese) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = if (!isVietnamese) FontWeight.Bold else FontWeight.Normal
                 )
-                
-                Switch(
+                  Switch(
                     checked = isVietnamese, // Switch is checked when Vietnamese is selected
                     onCheckedChange = { checked ->
                         scope.launch {
@@ -111,18 +112,18 @@ fun LanguageSelector() {
                                 // Save preference and update locale
                                 LanguageManager.saveLanguagePreference(context, newLanguageCode)
                                 
-                                // Force configuration update and recreate activity
+                                // Force app restart to apply language changes
                                 if (context is Activity) {
-                                    val config = context.resources.configuration
-                                    val locale = Locale(newLanguageCode)
-                                    Locale.setDefault(locale)
-                                    config.setLocale(locale)
-                                    context.resources.updateConfiguration(config, context.resources.displayMetrics)
-                                    
-                                    val intent = Intent(context, context.javaClass)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    context.startActivity(intent)
-                                    context.finish()
+                                    // Clear all activities and restart the app
+                                    val packageManager = context.packageManager
+                                    val intent = packageManager.getLaunchIntentForPackage(context.packageName)
+                                    intent?.let {
+                                        it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                        context.startActivity(it)
+                                        context.finish()
+                                        // Kill the current process to ensure a complete restart
+                                        android.os.Process.killProcess(android.os.Process.myPid())
+                                    }
                                 }
                             } catch (e: Exception) {
                                 Log.e(TAG, "Error changing language", e)
@@ -131,7 +132,7 @@ fun LanguageSelector() {
                     },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.White,
-                        checkedTrackColor = MainColor,
+                        checkedTrackColor = Color(0xFF53dba9),
                         uncheckedThumbColor = Color.White,
                         uncheckedTrackColor = Color.Gray
                     )
@@ -140,7 +141,7 @@ fun LanguageSelector() {
                 Text(
                     text = "VI",
                     fontSize = 12.sp,
-                    color = if (isVietnamese) MainColor else TextSecondaryColor,
+                    color = if (isVietnamese) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = if (isVietnamese) FontWeight.Bold else FontWeight.Normal
                 )
             }

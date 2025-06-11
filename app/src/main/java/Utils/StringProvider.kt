@@ -139,6 +139,9 @@ fun rememberAppStrings(): AppStrings {
         creatingTransaction = stringResource(R.string.creating_transaction),
         transactionCreatedSuccessfully = stringResource(R.string.transaction_created_successfully),
         fillRequiredFields = stringResource(R.string.fill_required_fields),
+        addTransactionSuccess = stringResource(R.string.transaction_form_success),
+        addTransactionError = stringResource(R.string.transaction_form_error),
+        addFirstTransaction = stringResource(R.string.add_first_transaction),
 
         // Additional search strings
         noResultsFound = stringResource(R.string.no_results_found),
@@ -149,6 +152,8 @@ fun rememberAppStrings(): AppStrings {
 
         // Edit Transaction Screen
         transactionTypeUnchangeable = stringResource(R.string.transaction_type_cannot_change),
+        updateTransactionError = stringResource(R.string.transaction_form_update_error),
+        updateTransactionSuccess = stringResource(R.string.transaction_form_update_success),
 
         // Transaction Detail Screen
         transactionDetails = stringResource(R.string.transaction_details),
@@ -158,7 +163,11 @@ fun rememberAppStrings(): AppStrings {
         createdOn = stringResource(R.string.created_on),
         transactionInfo = stringResource(R.string.transaction_info),
         noDescriptionProvided = stringResource(R.string.no_description_provided),
-        deleting = stringResource(R.string.deleting),        // Transaction Search Screen
+        deleting = stringResource(R.string.deleting),
+        deleteTransactionSuccess = stringResource(R.string.transaction_form_delete_success),
+        deleteTransactionError = stringResource(R.string.transaction_form_delete_error),
+
+        // Transaction Search Screen
         findYourTransactions = stringResource(R.string.find_your_transactions),
         
         // Calendar Analysis
@@ -329,7 +338,9 @@ data class AppStrings(
     val saveTransaction: String = "",
     val creatingTransaction: String = "",
     val transactionCreatedSuccessfully: String = "",
-    val fillRequiredFields: String = "",    
+    val fillRequiredFields: String = "",
+    val addTransactionSuccess: String = "",
+    val addTransactionError: String = "",
     
     // Additional search strings
     val noResultsFound: String = "",
@@ -337,9 +348,15 @@ data class AppStrings(
     val applyFilters: String = "",
     val clearFilters: String = "",
     val dateRange: String = "",
-    val findYourTransactions: String = "",    // Edit Transaction Screen
+    val findYourTransactions: String = "",
+
+    // Update Transaction Screen
     val transactionTypeUnchangeable: String = "",
-    
+    val updateTransactionSuccess: String = "",
+    val updateTransactionError: String = "",
+    val deleteTransactionSuccess: String = "",
+    val deleteTransactionError: String = "",
+
     // Calendar Analysis
     val aggregate: String = "",
     val pieCharts: String = "",

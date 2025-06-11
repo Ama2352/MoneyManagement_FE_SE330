@@ -72,6 +72,9 @@
     <string name="wallet_form_unknown_date">Ngày không xác định</string>
     <string name="wallet_form_unknown_wallet">Ví không xác định</string>
 
+    <!-- Wallet Types -->
+    <string name="wallet_type_personal">Cá nhân</string>
+
     <!-- ================== CATEGORY MANAGEMENT ================== -->
     <string name="category">Danh mục</string>
     <string name="my_categories">Danh mục của tôi</string>
@@ -107,6 +110,7 @@
     <string name="expense_uppercase">CHI TIÊU</string>
     <string name="type_income">Thu nhập</string>
     <string name="type_expense">Chi tiêu</string>
+    <string name="add_first_transaction">Thêm giao dịch đầu tiên của bạn</string>
 
     <!-- Transaction Form -->
     <string name="transaction_type">Loại giao dịch</string>
@@ -427,8 +431,26 @@
     <string name="error_message">Lỗi: %1$s</string>
     <string name="something_went_wrong">Đã có lỗi xảy ra</string>
 
-    <!-- ================== MISCELLANEOUS ================== -->
-    <string name="language">Ngôn ngữ</string>
+    <!-- ================== AUTH & VALIDATION ================== -->
+    <string name="auth_login">Đăng nhập</string>
+    <string name="auth_register">Đăng ký</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Mật khẩu</string>
+    <string name="auth_confirm_password">Xác nhận mật khẩu</string>
+    <string name="auth_first_name">Tên</string>
+    <string name="auth_last_name">Họ</string>
+    
+    <!-- Validation Error Messages -->
+    <string name="validation_first_name_required">Tên là bắt buộc</string>
+    <string name="validation_last_name_required">Họ là bắt buộc</string>
+    <string name="validation_email_required">Email là bắt buộc</string>
+    <string name="validation_email_invalid">Định dạng email không hợp lệ</string>
+    <string name="validation_password_required">Mật khẩu là bắt buộc</string>
+    <string name="validation_password_min_length">Mật khẩu phải có ít nhất 6 ký tự</string>
+    <string name="validation_password_uppercase">Mật khẩu phải chứa ít nhất một chữ cái viết hoa</string>
+    <string name="validation_password_symbol">Mật khẃu phải chứa ký hiệu @</string>
+    <string name="validation_confirm_password_required">Xác nhận mật khẩu là bắt buộc</string>
+    <string name="validation_passwords_no_match">Mật khẩu không khớp</string>
 
     <!-- ================== CURRENCY SETTINGS ================== -->
     <string name="currency_settings">Cài đặt tiền tệ</string>
@@ -523,5 +545,12 @@
     <string name="view_detailed_reports">Xem báo cáo tài chính chi tiết</string>
     <string name="support_info">Hỗ trợ &amp; Thông tin</string>
     <string name="log_out">Đăng xuất</string>
+    
+    <!-- ================== LANGUAGE SETTINGS ================== -->
+    <string name="language">Ngôn ngữ</string>
+    <string name="current_language">Hiện tại: %1$s</string>
+    <string name="select_language">Chọn ngôn ngữ</string>
+    <string name="english">English</string>
+    <string name="vietnamese">Tiếng Việt</string>
 
 </resources>

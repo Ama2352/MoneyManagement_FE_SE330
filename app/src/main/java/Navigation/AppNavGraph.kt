@@ -126,14 +126,16 @@ private fun InnerNavHost(
                 transactionViewModel = transactionViewModel,
                 currencyViewModel = currencyConverterViewModel,
                 categoryViewModel = categoryViewModel,
-                walletViewModel = walletViewModel
+                walletViewModel = walletViewModel,
+                authViewModel = authViewModel
             )
         }
 
         composable(BottomNavItem.Wallet.route) {
             WalletScreen(
-                viewModel = walletViewModel,
-                currencyConverterViewModel = currencyConverterViewModel
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel,
+                authViewModel = authViewModel
             )
         }
 
@@ -234,7 +236,8 @@ private fun InnerNavHost(
                 savingGoalViewModel = savingGoalViewModel,
                 categoryViewModel = categoryViewModel,
                 walletViewModel = walletViewModel,
-                currencyConverterViewModel = currencyConverterViewModel
+                currencyConverterViewModel = currencyConverterViewModel,
+                authViewModel = authViewModel
             )
         }
         composable(
@@ -260,7 +263,8 @@ private fun InnerNavHost(
                 budgetViewModel = budgetViewModel,
                 categoryViewModel = categoryViewModel,
                 walletViewModel = walletViewModel,
-                currencyConverterViewModel = currencyConverterViewModel
+                currencyConverterViewModel = currencyConverterViewModel,
+                authViewModel = authViewModel
             )
         }
 
