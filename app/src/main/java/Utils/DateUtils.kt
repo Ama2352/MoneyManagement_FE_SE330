@@ -1,8 +1,10 @@
 package DI.Utils
 
+import android.content.Context
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import com.example.moneymanagement_frontend.R
 
 object DateUtils {
     private val displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -24,7 +26,7 @@ object DateUtils {
         val now = LocalDateTime.now()
         return ChronoUnit.DAYS.between(now, endDate)
     }
-    
+
     fun getDaysRemainingText(endDate: LocalDateTime): String {
         val days = getDaysRemaining(endDate)
         return when {
@@ -39,6 +41,28 @@ object DateUtils {
                     "Còn $months tháng"
                 } else {
                     "Còn $months tháng $remainingDays ngày"
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get localized days remaining text using string resources
+     */
+    fun getDaysRemainingText(context: Context, endDate: LocalDateTime): String {
+        val days = getDaysRemaining(endDate)
+        return when {
+            days < 0 -> context.getString(R.string.date_expired)
+            days == 0L -> context.getString(R.string.date_today)
+            days == 1L -> context.getString(R.string.date_remaining_1_day)
+            days <= 30 -> context.getString(R.string.date_remaining_days, days)
+            else -> {
+                val months = days / 30
+                val remainingDays = days % 30
+                if (remainingDays == 0L) {
+                    context.getString(R.string.date_remaining_months, months)
+                } else {
+                    context.getString(R.string.date_remaining_months_days, months, remainingDays)
                 }
             }
         }

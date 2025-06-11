@@ -579,8 +579,68 @@
     <string name="error_save_file_details">Lỗi khi lưu file vào Downloads: %1$s</string>
     <string name="error_share_file">Không thể lưu file để chia sẻ</string>
     <string name="error_share_file_details">Lỗi khi chia sẻ file PDF: %1$s</string>
-    <string name="no_app_share">Không tìm thấy ứng dụng để chia sẻ file PDF</string>
-    <string name="select_date_placeholder">Chọn ngày</string>
+    <string name="no_app_share">Không tìm thấy ứng dụng để chia sẻ file PDF</string>    <string name="select_date_placeholder">Chọn ngày</string>
     <string name="share_report_title">Chia sẻ báo cáo</string>
+
+    <!-- ================== SAVING GOALS ================== -->
+    <string name="saving_goals">Mục tiêu tiết kiệm</string>
+    <string name="saving_goal_management">Quản lý mục tiêu tiết kiệm</string>
+    <string name="add_saving_goal">Thêm mục tiêu tiết kiệm</string>
+    <string name="create_saving_goal">Tạo mục tiêu tiết kiệm</string>
+    <string name="edit_saving_goal">Chỉnh sửa mục tiêu tiết kiệm</string>
+    <string name="delete_saving_goal">Xóa mục tiêu tiết kiệm</string>
+    <string name="goal_description">Mô tả mục tiêu</string>
+    <string name="target_amount">Số tiền mục tiêu</string>
+    <string name="saved_amount">Số tiền đã tiết kiệm</string>
+    <string name="save_goal">Lưu mục tiêu</string>
+    <string name="processing">Đang xử lý…</string>
+    <string name="overview">Tổng quan</string>
+    <string name="total_goals">Tổng mục tiêu</string>
+    <string name="completed_goals">Đã hoàn thành</string>
+    <string name="in_progress_goals">Đang thực hiện</string>
+    <string name="no_saving_goals_yet">Chưa có mục tiêu tiết kiệm</string>
+    <string name="create_first_saving_goal">Tạo mục tiêu tiết kiệm đầu tiên để bắt đầu hành trình tích lũy của bạn!</string>
+    <string name="create_goal">Tạo mục tiêu</string>
+    <string name="goal_description_placeholder">Ví dụ: Mua xe máy mới</string>
+    <string name="select_category_placeholder">Chọn danh mục</string>
+    <string name="select_wallet_placeholder">Chọn ví</string>
+    <string name="goal_target_amount">Số tiền mục tiêu</string>
+    <string name="goal_start_date">Ngày bắt đầu</string>
+    <string name="goal_end_date">Ngày kết thúc</string>
+    <string name="saved_amount_label">Đã tiết kiệm</string>
+    <string name="target_label">Mục tiêu</string>
+    <string name="category_label">Danh mục</string>
+    <string name="wallet_label">Ví</string>
+    <string name="deadline_label">Thời hạn</string>
+    <string name="confirm_delete">Xác nhận xóa</string>
+    <string name="delete_saving_goal_confirmation">Bạn có chắc chắn muốn xóa mục tiêu tiết kiệm này không?</string>
+    <string name="action_cannot_be_undone">Hành động này không thể hoàn tác.</string>
+    
+    <!-- Status badges -->
+    <string name="status_not_started">Chưa bắt đầu</string>
+    <string name="status_achieved">Đã đạt được</string>
+    <string name="status_achieved_early">Đạt sớm</string>
+    <string name="status_partially_achieved">Gần đạt</string>
+    <string name="status_missed_target">Lỡ mục tiêu</string>
+    <string name="status_ahead">Vượt tiến độ</string>
+    <string name="status_on_track">Đúng tiến độ</string>    
+    <string name="status_slightly_behind">Hơi chậm</string>
+    <string name="status_at_risk">Rủi ro cao</string>
+    <string name="status_unknown">Không xác định</string>
+
+    <!-- Date Utils -->
+    <string name="date_expired">Đã hết hạn</string>
+    <string name="date_today">Hôm nay</string>
+    <string name="date_remaining_1_day">Còn 1 ngày</string>
+    <string name="date_remaining_days">Còn %1$d ngày</string>
+    <string name="date_remaining_months">Còn %1$d tháng</string>
+    <string name="date_remaining_months_days">Còn %1$d tháng %2$d ngày</string>
+    
+    <!-- Progress Status -->
+    <string name="progress_completed">Hoàn thành</string>
+    <string name="progress_almost_completed">Gần hoàn thành</string>
+    <string name="progress_in_progress">Đang tiến triển</string>
+    <string name="progress_need_effort">Cần cố gắng</string>
+    <string name="progress_start_saving">Bắt đầu tiết kiệm</string>
 
 </resources>

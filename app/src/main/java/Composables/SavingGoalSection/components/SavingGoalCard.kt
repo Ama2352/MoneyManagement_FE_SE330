@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import com.example.moneymanagement_frontend.R
 
 // Entry point for accessing TranslationManager and MessageTranslationUtils
 @EntryPoint
@@ -60,6 +62,7 @@ fun SavingGoalCard(
     currencyConverterViewModel: CurrencyConverterViewModel
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     
     // Currency states
     val isVND by currencyConverterViewModel.isVND.collectAsState()
@@ -153,7 +156,7 @@ fun SavingGoalCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Chỉnh sửa",
+                            contentDescription = stringResource(R.string.edit),
                             tint = SavingGoalTheme.PrimaryGreenLight,
                             modifier = Modifier.size(18.dp)
                         )
@@ -165,7 +168,7 @@ fun SavingGoalCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Xóa",
+                            contentDescription = stringResource(R.string.delete),
                             tint = SavingGoalTheme.DangerRed,
                             modifier = Modifier.size(18.dp)
                         )
@@ -195,7 +198,7 @@ fun SavingGoalCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "Đã tiết kiệm",
+                            text = stringResource(R.string.saved_amount_label),
                             style = MaterialTheme.typography.bodySmall,
                             color = SavingGoalTheme.TextSecondary,
                             fontSize = 12.sp
@@ -214,7 +217,7 @@ fun SavingGoalCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "Mục tiêu",
+                            text = stringResource(R.string.target_label),
                             style = MaterialTheme.typography.bodySmall,
                             color = SavingGoalTheme.TextSecondary,
                             fontSize = 12.sp
@@ -242,20 +245,19 @@ fun SavingGoalCard(
             ) {
                 InfoRow(
                     icon = Icons.Outlined.Category,
-                    label = "Danh mục",
+                    label = stringResource(R.string.category_label),
                     value = categoryName
                 )
                 
                 InfoRow(
                     icon = Icons.Outlined.Wallet,
-                    label = "Ví",
+                    label = stringResource(R.string.wallet_label),
                     value = walletName
                 )
-                
-                InfoRow(
+                  InfoRow(
                     icon = Icons.Outlined.CalendarToday,
-                    label = "Thời hạn",
-                    value = DateUtils.getDaysRemainingText(savingGoal.getEndDateAsLocalDateTime()),
+                    label = stringResource(R.string.deadline_label),
+                    value = DateUtils.getDaysRemainingText(context, savingGoal.getEndDateAsLocalDateTime()),
                     valueColor = if (isOverdue) SavingGoalTheme.DangerRed 
                                else if (daysRemaining <= 7) SavingGoalTheme.WarningOrange
                                else SavingGoalTheme.TextSecondary
@@ -281,17 +283,17 @@ fun SavingGoalCard(
 private fun StatusBadge(
     progressStatus: String
 ) {
-    val (statusText, statusColor, backgroundColor) = when (progressStatus.lowercase()) {
-        "not started" -> Triple("Chưa bắt đầu", SavingGoalTheme.White, SavingGoalTheme.SecondaryGreen)
-        "achieved" -> Triple("Đã đạt được", SavingGoalTheme.White, SavingGoalTheme.SuccessGreen)
-        "achieved early" -> Triple("Đạt sớm", SavingGoalTheme.White, SavingGoalTheme.SuccessGreen)
-        "partially achieved" -> Triple("Gần đạt", SavingGoalTheme.White, SavingGoalTheme.PrimaryGreenLight)
-        "missed target" -> Triple("Lỡ mục tiêu", SavingGoalTheme.White, SavingGoalTheme.DangerRed)
-        "ahead" -> Triple("Vượt tiến độ", SavingGoalTheme.White, SavingGoalTheme.SuccessGreen)
-        "on track" -> Triple("Đúng tiến độ", SavingGoalTheme.White, SavingGoalTheme.PrimaryGreenLight)
-        "slightly behind" -> Triple("Hơi chậm", SavingGoalTheme.White, SavingGoalTheme.WarningOrange)
-        "at risk" -> Triple("Rủi ro cao", SavingGoalTheme.White, SavingGoalTheme.DangerRed)
-        else -> Triple("Không xác định", SavingGoalTheme.PrimaryGreen, SavingGoalTheme.SecondaryGreenLight)
+    val (statusTextRes, statusColor, backgroundColor) = when (progressStatus.lowercase()) {
+        "not started" -> Triple(R.string.status_not_started, SavingGoalTheme.White, SavingGoalTheme.SecondaryGreen)
+        "achieved" -> Triple(R.string.status_achieved, SavingGoalTheme.White, SavingGoalTheme.SuccessGreen)
+        "achieved early" -> Triple(R.string.status_achieved_early, SavingGoalTheme.White, SavingGoalTheme.SuccessGreen)
+        "partially achieved" -> Triple(R.string.status_partially_achieved, SavingGoalTheme.White, SavingGoalTheme.PrimaryGreenLight)
+        "missed target" -> Triple(R.string.status_missed_target, SavingGoalTheme.White, SavingGoalTheme.DangerRed)
+        "ahead" -> Triple(R.string.status_ahead, SavingGoalTheme.White, SavingGoalTheme.SuccessGreen)
+        "on track" -> Triple(R.string.status_on_track, SavingGoalTheme.White, SavingGoalTheme.PrimaryGreenLight)
+        "slightly behind" -> Triple(R.string.status_slightly_behind, SavingGoalTheme.White, SavingGoalTheme.WarningOrange)
+        "at risk" -> Triple(R.string.status_at_risk, SavingGoalTheme.White, SavingGoalTheme.DangerRed)
+        else -> Triple(R.string.status_unknown, SavingGoalTheme.PrimaryGreen, SavingGoalTheme.SecondaryGreenLight)
     }
     
     Box(
@@ -303,7 +305,7 @@ private fun StatusBadge(
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(
-            text = statusText,
+            text = stringResource(statusTextRes),
             style = MaterialTheme.typography.bodySmall,
             color = statusColor,
             fontWeight = FontWeight.Medium,

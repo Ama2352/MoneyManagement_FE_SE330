@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
 import android.widget.Toast
+import com.example.moneymanagement_frontend.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -162,11 +164,10 @@ fun SavingGoalScreen(
                         ) {
                             val category = categories?.getOrNull()?.find { it.categoryID == goal.categoryID }
                             val wallet = wallets?.getOrNull()?.find { it.walletID == goal.walletID }
-                            
-                            SavingGoalCard(
+                              SavingGoalCard(
                                 savingGoal = goal,
-                                categoryName = category?.name ?: "Không xác định",
-                                walletName = wallet?.walletName ?: "Không xác định",
+                                categoryName = category?.name ?: stringResource(R.string.unknown_category),
+                                walletName = wallet?.walletName ?: stringResource(R.string.wallet_form_unknown_wallet),
                                 onEdit = { 
                                     navController.navigate("create_edit_saving_goal?savingGoalId=${goal.savingGoalID}") 
                                 },
@@ -189,11 +190,10 @@ fun SavingGoalScreen(
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
+                .padding(16.dp)        ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Thêm mục tiêu",
+                contentDescription = stringResource(R.string.add_saving_goal),
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -224,7 +224,7 @@ private fun SavingGoalTopBar(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Quay lại",
+                contentDescription = stringResource(R.string.back),
                 tint = SavingGoalTheme.White,
                 modifier = Modifier.size(24.dp)
             )
@@ -243,7 +243,7 @@ private fun SavingGoalTopBar(
                 modifier = Modifier.size(24.dp)
             )
             Text(
-                text = "Mục tiêu tiết kiệm",
+                text = stringResource(R.string.saving_goals),
                 style = MaterialTheme.typography.headlineSmall,
                 color = SavingGoalTheme.White,
                 fontWeight = FontWeight.Bold
@@ -278,9 +278,8 @@ private fun SavingGoalHeader(
                 )
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Text(
-                text = "Tổng quan",
+        ) {            Text(
+                text = stringResource(R.string.overview),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = SavingGoalTheme.TextPrimary
@@ -291,19 +290,19 @@ private fun SavingGoalHeader(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 StatisticItem(
-                    title = "Tổng mục tiêu",
+                    title = stringResource(R.string.total_goals),
                     value = totalGoals.toString(),
                     color = SavingGoalTheme.PrimaryGreen
                 )
                 
                 StatisticItem(
-                    title = "Đã hoàn thành",
+                    title = stringResource(R.string.completed_goals),
                     value = completedGoals.toString(),
                     color = SavingGoalTheme.SuccessGreen
                 )
                 
                 StatisticItem(
-                    title = "Đang thực hiện",
+                    title = stringResource(R.string.in_progress_goals),
                     value = (totalGoals - completedGoals).toString(),
                     color = SavingGoalTheme.WarningOrange
                 )
@@ -382,7 +381,7 @@ private fun EmptyStateCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Chưa có mục tiêu tiết kiệm",
+                    text = stringResource(R.string.no_saving_goals_yet),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = SavingGoalTheme.TextPrimary,
@@ -390,7 +389,7 @@ private fun EmptyStateCard(
                 )
                 
                 Text(
-                    text = "Tạo mục tiêu tiết kiệm đầu tiên để bắt đầu hành trình tích lũy của bạn!",
+                    text = stringResource(R.string.create_first_saving_goal),
                     style = MaterialTheme.typography.bodyMedium,
                     color = SavingGoalTheme.TextSecondary,
                     textAlign = TextAlign.Center,
@@ -415,7 +414,7 @@ private fun EmptyStateCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Tạo mục tiêu",
+                    text = stringResource(R.string.create_goal),
                     fontWeight = FontWeight.SemiBold
                 )
             }

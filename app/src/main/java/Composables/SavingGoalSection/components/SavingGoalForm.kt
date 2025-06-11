@@ -87,16 +87,16 @@ fun SavingGoalForm(
     }
     
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-      Column(
+
+    Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        // Description Field
+    ) {        // Description Field
         CustomTextField(
             value = description,
             onValueChange = onDescriptionChange,
-            label = "Mô tả mục tiêu",
-            placeholder = "Ví dụ: Mua xe máy mới",
+            label = stringResource(R.string.goal_description),
+            placeholder = stringResource(R.string.goal_description_placeholder),
             icon = Icons.Outlined.Description,
             enabled = !isLoading
         )
@@ -124,7 +124,7 @@ fun SavingGoalForm(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Số tiền mục tiêu",
+                        text = stringResource(R.string.goal_target_amount),
                         style = MaterialTheme.typography.labelMedium,
                         color = SavingGoalTheme.TextPrimary,
                         fontWeight = FontWeight.Medium
@@ -179,13 +179,12 @@ fun SavingGoalForm(
                 }
             }
         }
-        
-        // Category Dropdown
+          // Category Dropdown
         CustomDropdownField(
             value = selectedCategory?.name ?: "",
             onValueChange = { },
-            label = "Danh mục",
-            placeholder = "Chọn danh mục",
+            label = stringResource(R.string.category),
+            placeholder = stringResource(R.string.select_category_placeholder),
             icon = Icons.Outlined.Category,
             expanded = showCategoryDropdown,
             onExpandedChange = { showCategoryDropdown = it },
@@ -201,13 +200,12 @@ fun SavingGoalForm(
                 )
             }
         }
-        
-        // Wallet Dropdown
+          // Wallet Dropdown
         CustomDropdownField(
             value = selectedWallet?.walletName ?: "",
             onValueChange = { },
-            label = "Ví",
-            placeholder = "Chọn ví",
+            label = stringResource(R.string.wallet),
+            placeholder = stringResource(R.string.select_wallet_placeholder),
             icon = Icons.Outlined.AccountBalanceWallet,
             expanded = showWalletDropdown,
             onExpandedChange = { showWalletDropdown = it },
@@ -228,12 +226,11 @@ fun SavingGoalForm(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Start Date
+        ) {            // Start Date
             CustomDateField(
                 value = startDate.format(dateFormatter),
                 onValueChange = { },
-                label = "Ngày bắt đầu",
+                label = stringResource(R.string.goal_start_date),
                 placeholder = "dd/mm/yyyy",
                 modifier = Modifier.weight(1f),
                 onClick = { showStartDatePicker = true },
@@ -244,7 +241,7 @@ fun SavingGoalForm(
             CustomDateField(
                 value = endDate.format(dateFormatter),
                 onValueChange = { },
-                label = "Ngày kết thúc",
+                label = stringResource(R.string.goal_end_date),
                 placeholder = "dd/mm/yyyy",
                 modifier = Modifier.weight(1f),
                 onClick = { showEndDatePicker = true },
@@ -299,7 +296,7 @@ fun SavingGoalForm(
                         strokeWidth = 2.dp
                     )
                     Text(
-                        text = "Đang xử lý...",
+                        text = stringResource(R.string.processing),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -553,9 +550,8 @@ private fun CustomDatePickerDialog(
                 },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = SavingGoalTheme.PrimaryGreen
-                )
-            ) {
-                Text("OK")
+                )            ) {
+                Text(stringResource(R.string.ok))
             }
         },
         dismissButton = {
@@ -565,7 +561,7 @@ private fun CustomDatePickerDialog(
                     contentColor = SavingGoalTheme.TextSecondary
                 )
             ) {
-                Text("Hủy")
+                Text(stringResource(R.string.cancel))
             }
         }
     ) {

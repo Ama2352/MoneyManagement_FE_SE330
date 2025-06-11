@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ import android.widget.Toast
 import androidx.compose.ui.Alignment
 import java.math.BigDecimal
 import java.time.LocalDate
+import com.example.moneymanagement_frontend.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -262,7 +264,7 @@ fun CreateEditSavingGoalScreen(
                             currencyConverterViewModel = currencyConverterViewModel,
                             onSave = ::saveGoal,
                             isFormValid = isFormValid,
-                            saveButtonText = if (isEditMode) "Cập nhật mục tiêu" else "Tạo mục tiêu"
+                            saveButtonText = if (isEditMode) stringResource(R.string.edit_saving_goal) else stringResource(R.string.save_goal)
                         )
                     }
                 }
@@ -308,7 +310,7 @@ private fun CreateEditTopBar(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Quay lại",
+                contentDescription = stringResource(R.string.back),
                 tint = SavingGoalTheme.White,
                 modifier = Modifier.size(24.dp)
             )
@@ -316,7 +318,7 @@ private fun CreateEditTopBar(
         
         // Title in the center
         Text(
-            text = if (isEditMode) "Chỉnh sửa mục tiêu" else "Tạo mục tiêu mới",
+            text = if (isEditMode) stringResource(R.string.edit_saving_goal) else stringResource(R.string.create_saving_goal),
             style = MaterialTheme.typography.titleLarge,
             color = SavingGoalTheme.White,
             fontWeight = FontWeight.Bold,

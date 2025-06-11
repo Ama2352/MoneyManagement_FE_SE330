@@ -14,9 +14,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.moneymanagement_frontend.R
 
 @Composable
 fun SavingGoalProgressIndicator(
@@ -101,13 +103,12 @@ fun SavingGoalProgressIndicator(
                     color = SavingGoalTheme.TextPrimary,
                     fontSize = 14.sp
                 )
-                
-                val statusText = when {
-                    progress >= 1.0f -> "Hoàn thành"
-                    progress >= 0.8f -> "Gần hoàn thành"
-                    progress >= 0.5f -> "Đang tiến triển"
-                    progress >= 0.3f -> "Cần cố gắng"
-                    else -> "Bắt đầu tiết kiệm"
+                  val statusText = when {
+                    progress >= 1.0f -> stringResource(R.string.progress_completed)
+                    progress >= 0.8f -> stringResource(R.string.progress_almost_completed)
+                    progress >= 0.5f -> stringResource(R.string.progress_in_progress)
+                    progress >= 0.3f -> stringResource(R.string.progress_need_effort)
+                    else -> stringResource(R.string.progress_start_saving)
                 }
                 
                 val statusColor = when {

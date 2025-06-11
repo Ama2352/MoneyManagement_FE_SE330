@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.moneymanagement_frontend.R
 
 @Composable
 fun SavingGoalDeleteDialog(
@@ -57,10 +59,10 @@ fun SavingGoalDeleteDialog(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-                
+
                 // Title
                 Text(
-                    text = "Xác nhận xóa",
+                    text = stringResource(R.string.confirm_delete),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = SavingGoalTheme.TextPrimary,
@@ -73,7 +75,7 @@ fun SavingGoalDeleteDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Bạn có chắc chắn muốn xóa mục tiêu tiết kiệm này không?",
+                        text = stringResource(R.string.delete_saving_goal_confirmation),
                         style = MaterialTheme.typography.bodyMedium,
                         color = SavingGoalTheme.TextSecondary,
                         textAlign = TextAlign.Center,
@@ -93,9 +95,8 @@ fun SavingGoalDeleteDialog(
                             )
                             .padding(horizontal = 12.dp, vertical = 6.dp)
                     )
-                    
-                    Text(
-                        text = "Hành động này không thể hoàn tác.",
+                      Text(
+                        text = stringResource(R.string.action_cannot_be_undone),
                         style = MaterialTheme.typography.bodySmall,
                         color = SavingGoalTheme.DangerRed,
                         textAlign = TextAlign.Center,
@@ -121,7 +122,7 @@ fun SavingGoalDeleteDialog(
                         )
                     ) {
                         Text(
-                            text = "Hủy",
+                            text = stringResource(R.string.cancel),
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
@@ -138,7 +139,7 @@ fun SavingGoalDeleteDialog(
                         )
                     ) {
                         Text(
-                            text = "Xóa",
+                            text = stringResource(R.string.delete),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
