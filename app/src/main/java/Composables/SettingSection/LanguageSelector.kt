@@ -97,26 +97,27 @@ fun LanguageSelector() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "EN",
+                    text = "VI",
                     fontSize = 12.sp,
-                    color = if (!isVietnamese) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = if (!isVietnamese) FontWeight.Bold else FontWeight.Normal
+                    color = if (isVietnamese) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = if (isVietnamese) FontWeight.Bold else FontWeight.Normal
                 )
-                  Switch(
-                    checked = isVietnamese, // Switch is checked when Vietnamese is selected
+                Switch(
+                    checked = !isVietnamese, // Switch is checked when English is selected
                     onCheckedChange = { checked ->
                         scope.launch {
                             try {
-                                val newLanguageCode = if (checked) "vi" else "en"
-                                
+                                val newLanguageCode = if (checked) "en" else "vi"
+
                                 // Save preference and update locale
                                 LanguageManager.saveLanguagePreference(context, newLanguageCode)
-                                
+
                                 // Force app restart to apply language changes
                                 if (context is Activity) {
                                     // Clear all activities and restart the app
                                     val packageManager = context.packageManager
-                                    val intent = packageManager.getLaunchIntentForPackage(context.packageName)
+                                    val intent =
+                                        packageManager.getLaunchIntentForPackage(context.packageName)
                                     intent?.let {
                                         it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                         context.startActivity(it)
@@ -137,12 +138,11 @@ fun LanguageSelector() {
                         uncheckedTrackColor = Color.Gray
                     )
                 )
-                
                 Text(
-                    text = "VI",
+                    text = "EN",
                     fontSize = 12.sp,
-                    color = if (isVietnamese) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = if (isVietnamese) FontWeight.Bold else FontWeight.Normal
+                    color = if (!isVietnamese) Color(0xFF53dba9) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = if (!isVietnamese) FontWeight.Bold else FontWeight.Normal
                 )
             }
         }

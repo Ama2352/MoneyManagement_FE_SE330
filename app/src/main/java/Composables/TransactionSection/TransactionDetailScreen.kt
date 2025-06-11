@@ -93,12 +93,12 @@ object TransactionDetailColors {
 fun TransactionDetailScreen(
     transactionId: String,
     navController: NavController,
-    transactionViewModel: TransactionViewModel = hiltViewModel(),
-    categoryViewModel: CategoryViewModel = hiltViewModel(),
-    walletViewModel: WalletViewModel = hiltViewModel(),
-    currencyConverterViewModel: CurrencyConverterViewModel = hiltViewModel(),
-    savingGoalViewModel: SavingGoalViewModel = hiltViewModel(),
-    budgetViewModel: BudgetViewModel = hiltViewModel()
+    transactionViewModel: TransactionViewModel,
+    categoryViewModel: CategoryViewModel,
+    walletViewModel: WalletViewModel,
+    currencyConverterViewModel: CurrencyConverterViewModel,
+    savingGoalViewModel: SavingGoalViewModel,
+    budgetViewModel: BudgetViewModel
 ) {
     val strings = rememberAppStrings()
     val context = LocalContext.current
@@ -134,32 +134,9 @@ fun TransactionDetailScreen(
             if (it.contains("deleted", ignoreCase = true)) {
                 // Show success toast for transaction deletion using localized string
                 Toast.makeText(context, strings.deleteTransactionSuccess, Toast.LENGTH_SHORT).show()
-                
-                if (transactionType == TransactionType.INCOME) {
-                    savingGoalViewModel.getSavingGoalProgressAndAlerts()
-                    savingGoals?.getOrNull()?.forEach { goal ->
-                        if (goal.progressStatus == "At Risk" &&
-                            goal.notification != null &&
-                            goal.walletID == selectedWallet?.walletID &&
-                            goal.categoryID == selectedCategory?.categoryID
-                        ) {
-                            Toast.makeText(context, goal.notification, Toast.LENGTH_LONG).show()
-                        }
-                    }
-                } else if (transactionType == TransactionType.EXPENSE) {
-                    budgetViewModel.getBudgetProgressAndAlerts()
-                    budgets?.getOrNull()?.forEach { budget ->
-                        if ((budget.progressStatus == "Warning" || budget.progressStatus == "Critical") &&
-                            budget.notification != null &&
-                            budget.walletId == selectedWallet?.walletID &&
-                            budget.categoryId == selectedCategory?.categoryID
-                        ) {
-                            Toast.makeText(context, budget.notification, Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
                 navController.popBackStack()
-            }        }
+            }
+        }
     }
 
     // Handle error messages

@@ -190,7 +190,13 @@ private fun InnerNavHost(
             val transactionId = backStackEntry.arguments?.getString("transactionId") ?: ""
             TransactionDetailScreen(
                 transactionId = transactionId,
-                navController = navController
+                navController = navController,
+                transactionViewModel = transactionViewModel,
+                categoryViewModel = categoryViewModel,
+                walletViewModel = walletViewModel,
+                currencyConverterViewModel = currencyConverterViewModel,
+                budgetViewModel = budgetViewModel,
+                savingGoalViewModel = savingGoalViewModel
             )
         }
 

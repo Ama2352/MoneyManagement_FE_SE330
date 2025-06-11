@@ -110,7 +110,6 @@
     <string name="expense_uppercase">CHI TIÊU</string>
     <string name="type_income">Thu nhập</string>
     <string name="type_expense">Chi tiêu</string>
-    <string name="add_first_transaction">Thêm giao dịch đầu tiên của bạn</string>
 
     <!-- Transaction Form -->
     <string name="transaction_type">Loại giao dịch</string>
@@ -506,6 +505,7 @@
     <string name="transaction_created_successfully">Tạo giao dịch thành công</string>
     <string name="fill_required_fields">Vui lòng điền tất cả các trường bắt buộc</string>
     <string name="transaction_type_cannot_change">Không thể thay đổi loại giao dịch để tránh không nhất quán dữ liệu</string>
+    <string name="add_first_transaction">Thêm giao dịch đầu tiên của bạn</string>
 
     <!-- Transaction Screen Strings -->
     <string name="track_your_money_flow">Theo dõi dòng tiền của bạn</string>
@@ -552,5 +552,35 @@
     <string name="select_language">Chọn ngôn ngữ</string>
     <string name="english">English</string>
     <string name="vietnamese">Tiếng Việt</string>
+
+    <!-- ================== REPORT SECTION ================== -->
+    <string name="create_report">Tạo báo cáo</string>
+    <string name="create_share_financial_reports">Tạo và chia sẻ báo cáo tài chính của bạn</string>
+    <string name="time_period">Khoảng thời gian</string>
+    <string name="report_type">Loại báo cáo</string>
+    <string name="select_report_type">Chọn loại báo cáo</string>
+    <string name="select_currency">Chọn tiền tệ</string>
+    <string name="generate_report">Tạo báo cáo</string>
+    <string name="generating_report">Đang tạo báo cáo…</string>
+    <string name="report_ready">Báo cáo đã sẵn sàng</string>
+    <string name="report_saved_success">Đã tạo báo cáo: %1$s</string>
+    <string name="report_failed">Không thể tạo báo cáo</string>
+    <string name="save_report">Lưu</string>
+    <string name="share_report">Chia sẻ</string>
+    <string name="file_name">Tên file: %1$s</string>
+    <string name="saved_to_downloads">Đã lưu vào Downloads: %1$s</string>
+    <string name="report_type_category_breakdown">Phân tích theo danh mục</string>
+    <string name="report_type_cash_flow">Dòng tiền</string>
+    <string name="report_type_daily_summary">Tóm tắt hàng ngày</string>
+    <string name="report_type_weekly_summary">Tóm tắt hàng tuần</string>
+    <string name="report_type_monthly_summary">Tóm tắt hàng tháng</string>
+    <string name="report_type_yearly_summary">Tóm tắt hàng năm</string>
+    <string name="error_save_file">Không thể lưu file vào Downloads</string>
+    <string name="error_save_file_details">Lỗi khi lưu file vào Downloads: %1$s</string>
+    <string name="error_share_file">Không thể lưu file để chia sẻ</string>
+    <string name="error_share_file_details">Lỗi khi chia sẻ file PDF: %1$s</string>
+    <string name="no_app_share">Không tìm thấy ứng dụng để chia sẻ file PDF</string>
+    <string name="select_date_placeholder">Chọn ngày</string>
+    <string name="share_report_title">Chia sẻ báo cáo</string>
 
 </resources>

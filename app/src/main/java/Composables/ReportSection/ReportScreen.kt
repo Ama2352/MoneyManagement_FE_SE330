@@ -30,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import com.example.moneymanagement_frontend.R
 import java.io.File
 import java.io.FileOutputStream
 import android.os.Environment
@@ -67,12 +69,12 @@ fun ReportScreen(
     var currencyExpanded by remember { mutableStateOf(false) }
 
     val reportTypes = listOf(
-        "category-breakdown" to "Phân tích theo danh mục",
-        "cash-flow" to "Dòng tiền",
-        "daily-summary" to "Tóm tắt hàng ngày",
-        "weekly-summary" to "Tóm tắt hàng tuần",
-        "monthly-summary" to "Tóm tắt hàng tháng",
-        "yearly-summary" to "Tóm tắt hàng năm"
+        "category-breakdown" to stringResource(R.string.report_type_category_breakdown),
+        "cash-flow" to stringResource(R.string.report_type_cash_flow),
+        "daily-summary" to stringResource(R.string.report_type_daily_summary),
+        "weekly-summary" to stringResource(R.string.report_type_weekly_summary),
+        "monthly-summary" to stringResource(R.string.report_type_monthly_summary),
+        "yearly-summary" to stringResource(R.string.report_type_yearly_summary)
     )
 
     val currencies = listOf("VND", "USD")
@@ -111,13 +113,13 @@ fun ReportScreen(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Tạo báo cáo",
+                        text = stringResource(R.string.create_report),
                         style = MaterialTheme.typography.headlineMedium,
                         color = TextPrimary,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Tạo và chia sẻ báo cáo tài chính của bạn",
+                        text = stringResource(R.string.create_share_financial_reports),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray,
                         modifier = Modifier.padding(top = 4.dp)
@@ -148,7 +150,7 @@ fun ReportScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Khoảng thời gian",
+                        text = stringResource(R.string.time_period),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimary
@@ -161,11 +163,10 @@ fun ReportScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 3.dp),
                         horizontalArrangement = Arrangement.spacedBy(17.dp)
-                    ) {
-                        DatePickerField(
+                    ) {                        DatePickerField(
                             value = startDate,
                             onValueChange = { startDate = it },
-                            label = "Ngày bắt đầu",
+                            label = stringResource(R.string.start_date),
                             modifier = Modifier.weight(1f),
                             context = context
                         )
@@ -173,16 +174,15 @@ fun ReportScreen(
                         DatePickerField(
                             value = endDate,
                             onValueChange = { endDate = it },
-                            label = "Ngày kết thúc",
+                            label = stringResource(R.string.end_date),
                             modifier = Modifier.weight(1f),
                             context = context
                         )
                     }
-                } else {
-                    DatePickerField(
+                } else {                    DatePickerField(
                         value = startDate,
                         onValueChange = { startDate = it },
-                        label = "Chọn ngày",
+                        label = stringResource(R.string.select_date),
                         modifier = Modifier.fillMaxWidth(),
                         context = context
                     )
@@ -200,7 +200,7 @@ fun ReportScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Loại báo cáo",
+                        text = stringResource(R.string.report_type),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimary
@@ -215,7 +215,7 @@ fun ReportScreen(
                         value = reportTypes.find { it.first == type }?.second ?: type,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Chọn loại báo cáo") },
+                        label = { Text(stringResource(R.string.select_report_type)) },
                         trailingIcon = {
                             Icon(
                                 Icons.Default.KeyboardArrowDown,
@@ -263,7 +263,7 @@ fun ReportScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Tiền tệ",
+                        text = stringResource(R.string.currency),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimary
@@ -278,7 +278,7 @@ fun ReportScreen(
                         value = currency,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Chọn tiền tệ") },
+                        label = { Text(stringResource(R.string.select_currency)) },
                         trailingIcon = {
                             Icon(
                                 Icons.Default.KeyboardArrowDown,
@@ -324,12 +324,11 @@ fun ReportScreen(
                     if (success && reportData != null) {
                         val (pdfBytes, fileName) = reportData!!
                         val defaultFileName = fileName ?: "report_${type}_${System.currentTimeMillis()}.pdf"
-
                         Log.d("ReportScreen", "Report generated: $defaultFileName, bytes size: ${pdfBytes.size}")
-                        Toast.makeText(context, "Đã tạo báo cáo: $defaultFileName", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.report_saved_success, defaultFileName), Toast.LENGTH_LONG).show()
                     } else {
                         Log.e("ReportScreen", "Failed to generate report or reportData is null")
-                        Toast.makeText(context, "Không thể tạo báo cáo", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.report_failed), Toast.LENGTH_LONG).show()
                     }
                 }
             },
@@ -364,7 +363,7 @@ fun ReportScreen(
                             strokeWidth = 2.dp
                         )
                         Text(
-                            "Đang tạo báo cáo...",
+                            stringResource(R.string.generating_report),
                             color = Color.White,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -381,7 +380,7 @@ fun ReportScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            "Tạo báo cáo",
+                            stringResource(R.string.generate_report),
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium
@@ -406,7 +405,7 @@ fun ReportScreen(
                     verticalArrangement = Arrangement.spacedBy(11.dp)
                 ) {
                     Text(
-                        text = "Báo cáo đã sẵn sàng",
+                        text = stringResource(R.string.report_ready),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontSize = 17.sp,
                             fontWeight = FontWeight.SemiBold
@@ -415,7 +414,7 @@ fun ReportScreen(
                     )
 
                     Text(
-                        text = "Tên file: $defaultFileName",
+                        text = stringResource(R.string.file_name, defaultFileName),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )
@@ -431,7 +430,7 @@ fun ReportScreen(
                                     if (error != null) {
                                         Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
                                     } else {
-                                        Toast.makeText(context, "Đã lưu vào Downloads: $defaultFileName", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, context.getString(R.string.saved_to_downloads, defaultFileName), Toast.LENGTH_LONG).show()
                                     }
                                 }
                             },
@@ -452,7 +451,7 @@ fun ReportScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                "Lưu",
+                                stringResource(R.string.save_report),
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
@@ -495,7 +494,7 @@ fun ReportScreen(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Text(
-                                        "Chia sẻ",
+                                        stringResource(R.string.share_report),
                                         color = Color.White,
                                         fontWeight = FontWeight.SemiBold
                                     )
@@ -622,8 +621,7 @@ fun DatePickerField(
                 text = label,
                 maxLines = 1
             )
-        },
-        placeholder = {
+        },        placeholder = {
             Text(
                 text = "dd/mm/yyyy",
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
@@ -638,7 +636,7 @@ fun DatePickerField(
             ) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
-                    contentDescription = "Chọn ngày",
+                    contentDescription = stringResource(R.string.select_date_placeholder),
                     tint = TextPrimary
                 )
             }
@@ -672,10 +670,9 @@ private fun saveToDownloads(context: Context, pdfBytes: ByteArray, fileName: Str
         val file = File(downloadsDir, fileName)
         FileOutputStream(file).use { it.write(pdfBytes) }
         Log.d("ReportScreen", "PDF saved to Downloads at ${file.absolutePath}")
-
         if (!file.exists()) {
             Log.e("ReportScreen", "PDF file does not exist after saving to Downloads: ${file.absolutePath}")
-            onError("Không thể lưu file vào Downloads")
+            onError(context.getString(R.string.error_save_file))
             return
         }
 
@@ -689,10 +686,9 @@ private fun saveToDownloads(context: Context, pdfBytes: ByteArray, fileName: Str
             Log.d("ScanFile", "-> uri=$uri")
             Log.d("ReportScreen", "MediaScanner notified for file: $path")
             onError(null)
-        }
-    } catch (e: Exception) {
+        }    } catch (e: Exception) {
         Log.e("ReportScreen", "Error saving to Downloads: ${e.localizedMessage}", e)
-        onError("Lỗi khi lưu file vào Downloads: ${e.localizedMessage}")
+        onError(context.getString(R.string.error_save_file_details, e.localizedMessage))
     }
 }
 
@@ -708,10 +704,9 @@ private fun sharePdf(
         val cacheFile = File(context.cacheDir, fileName)
         FileOutputStream(cacheFile).use { it.write(pdfBytes) }
         Log.d("ReportScreen", "PDF saved to cache for sharing at ${cacheFile.absolutePath}")
-
         if (!cacheFile.exists()) {
             Log.e("ReportScreen", "PDF file does not exist after saving to cache: ${cacheFile.absolutePath}")
-            onError("Không thể lưu file để chia sẻ")
+            onError(context.getString(R.string.error_share_file))
             return
         }
 
@@ -724,18 +719,15 @@ private fun sharePdf(
             type = "application/pdf"
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-
-        // Check application can share file
+        }        // Check application can share file
         if (shareIntent.resolveActivity(context.packageManager) != null) {
-            shareLauncher.launch(Intent.createChooser(shareIntent, "Chia sẻ báo cáo"))
+            shareLauncher.launch(Intent.createChooser(shareIntent, context.getString(R.string.share_report_title)))
             Log.d("ReportScreen", "Launched share Intent")
         } else {
             Log.e("ReportScreen", "No app found to share PDF")
-            onError("Không tìm thấy ứng dụng để chia sẻ file PDF")
-        }
-    } catch (e: Exception) {
+            onError(context.getString(R.string.no_app_share))
+        }    } catch (e: Exception) {
         Log.e("ReportScreen", "Error sharing PDF: ${e.localizedMessage}", e)
-        onError("Lỗi khi chia sẻ file PDF: ${e.localizedMessage}")
+        onError(context.getString(R.string.error_share_file_details, e.localizedMessage))
     }
 }
