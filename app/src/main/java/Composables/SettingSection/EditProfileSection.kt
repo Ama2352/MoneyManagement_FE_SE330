@@ -516,11 +516,11 @@ fun EditProfileScreen(navController: NavController, profileViewModel: ProfileVie
                     // Create updated profile
                     val updatedProfile =
                         UpdatedProfile(
-                            FirstName = firstName,
-                            LastName = lastName,
-                            CurrentPassword = currentPassword,
-                            NewPassword = newPassword,
-                            ConfirmNewPassword = confirmPassword
+                            firstName = firstName,
+                            lastName = lastName,
+                            currentPassword = currentPassword,
+                            newPassword = newPassword,
+                            confirmNewPassword = confirmPassword
                         )
 
                     // Handle password change separately
